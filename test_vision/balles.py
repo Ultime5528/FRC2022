@@ -3,20 +3,20 @@ import cv2
 
 
 
-def balles(img, color):
+def Balles(img, color):
     centreX = 0
     centreY = 0
 
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-    if color == "red":
+    if color == "rouge":
         mask1 = cv2.inRange(hsv, (0, 100, 100), (10, 255, 255))
         mask2 = cv2.inRange(hsv, (170, 100, 100), (180, 255, 255))
         mask = cv2.bitwise_or(mask1, mask2)
         circleColor = (0, 0, 255)
 
 
-    if color == "blue":
+    if color == "bleu":
         mask = cv2.inRange(hsv, (90, 100, 50), (130, 255, 255))
         circleColor = (255, 0 ,0)
 
@@ -26,6 +26,7 @@ def balles(img, color):
     cnts, _ = cv2.findContours(blur, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     infoCercles = []
+    cond = False
     if circles is not None:
         centres = []
         for cnt in cnts:
@@ -41,8 +42,8 @@ def balles(img, color):
                 if centreX >= i[0] - i[2] and centreX <= i[0] + i[2] and centreY >= i[1] - i[2] and centreY <= i[1] + i[2]:
                     cercleX = i[0] - i[2]
                     cercleY = i[1] + i[2]
-                    cercleWH = i[2]
+                    cercleWH = i[2] * 2
                     infoCercles.append((cercleX, cercleY, cercleWH))
                     break
-
-    return infoCercles
+    cond = True
+    return cond, infoCercles
