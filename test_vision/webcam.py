@@ -4,15 +4,11 @@ import cv2
 cam = cv2.VideoCapture(0)
 centreX = 0
 centreY = 0
-redMin = (0, 0, 0)
-redMax = (30, 255, 255)
-blueMin = (100, 100, 20)
-blueMax = (130, 255, 255)
-
 
 
 while True:
     _, img = cam.read()
+
 
 
     def red():
