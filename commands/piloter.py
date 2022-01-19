@@ -1,9 +1,6 @@
 from commands2 import CommandBase
-
 import wpilib
 from wpilib._wpilib import Joystick
-
-from constants import Proprietes
 from subsystems.basepilotable import BasePilotable
 
 
@@ -19,10 +16,4 @@ class Piloter(CommandBase):
         
 
     def execute(self):
-        if Proprietes.mode_pilotage == 'joystick':
-            if self.stick.getRawButton(2):
-                self.base_pilotable.deadzoneDriveCartesian(
-                    Proprietes.pilotage_max_x * self.stick.getX(),
-                    Proprietes.pilotage_max_y * -self.stick.getY(),
-                    Proprietes.pilotage_max_z * self.stick.getZ()
-                )
+        self.base_pilotable.arcadeDrive(self.stick.getX(), self.stick.getY())
