@@ -116,16 +116,21 @@ class CandidateCircle:
     inlier_count: int
     mae: float
 
+    def to_xywh(self):
+        rect = np.array([self.center[0] - self.radius, self.center[1] - self.radius, self.radius * 2, self.radius * 2])
+        return tuple(rect.round().astype(int))
 
-def findCirclesInContours(contours: List[np.ndarray], max_iterations: int) -> list:
+
+def findCirclesInContours(contours: List[np.ndarray], max_iterations: int) -> list[tuple[int, int, int, int]]:
     """
+    :rtype: object
     :param contours: Contours with probable circles
     :param max_iterations: Amount of iterations to run it for
-    :return: The circles found in the contours in format (center x, center y, radius)
+    :return: The circles found in the contours in format (x, y, w, h) (bounding rect)
     """
     threshold_distance_percentage = 0.15
     threshold_inlier_count = 35
-    circles = []
+    rects = []
 
     for cnt in contours:
         # cnt.shape : (n, 1, 2)
@@ -189,8 +194,8 @@ def findCirclesInContours(contours: List[np.ndarray], max_iterations: int) -> li
 
                 # Go back to the first step and repeat for max iterations number of times
 
-            # Then max iterations is completed, examine the shortlist of candidate circles and pick the circle with
-            # maximum inlier count. If more than candidate circles with same inliner count then pick the candidate
+            # Then max iterations is completed, examine the shortlist of candidate rects and pick the circle with
+            # maximum inlier count. If more than candidate rects with same inliner count then pick the candidate
             # circle with lesser mean absolute error
             if len(candidate_circles) > 0:
                 best = candidate_circles[0]
@@ -201,9 +206,9 @@ def findCirclesInContours(contours: List[np.ndarray], max_iterations: int) -> li
                         if c.mae < best.mae:
                             best = c
 
-                circles.append((best.center.astype(int), best.radius))
+                rects.append(best.to_xywh())
 
-    return circles
+    return rects
 
 
 def findEdges(img: np.ndarray) -> np.ndarray:
@@ -213,7 +218,7 @@ def findEdges(img: np.ndarray) -> np.ndarray:
     """
     blurred = cv2.blur(img, (7, 7))
     edges = cv2.Canny(blurred, 10, 75)
-    return cv2.dilate(edges, None, anchor=(-1, -1), iterations=2)
+    return cv2.dilate(edges, None, anchor=(-1, -1), iterations=1)
 
 
 def skeletonization(img: np.ndarray) -> np.ndarray:
