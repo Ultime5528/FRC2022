@@ -1,8 +1,7 @@
-
 import numpy as np
 import cv2
 
-img = cv2.imread(r'C:\Users\plega\OneDrive\Bureau\New folder (2)\TarmacCenter3ft10in.png')
+img = cv2.imread(r'C:\Users\plega\Downloads\FarLaunchpad7ft10inV2')
 
 
 def but(img):
@@ -25,9 +24,18 @@ def but(img):
                 if 1.25 <= w / h <= 3.5 and w >= 10 and h >= 10:
                     cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 255), 3)
                     validRects.append((x, y, w, h))
-
     validXs = []
     validYs = []
+    correctnessValue = []
+    for x, y, w, h in validRects:
+        coVal = yValye - y
+        correctnessValue.append(coVal)
+    print(correctnessValue)
+    for coVal in correctnessValue:
+        a = coVal / max(correctnessValue)
+        if a >= 0.20:
+            correctnessValue.remove(coVal)
+    print(correctnessValue)
     for x, y, w, h in validRects:
         xCenter = x + (w / 2)
         validXs.append(xCenter)
