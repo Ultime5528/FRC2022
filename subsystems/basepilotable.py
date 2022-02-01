@@ -7,6 +7,7 @@ import rev
 # from utils.sparkmaxsim import SparkMaxSim
 # from wpimath.kinematics import DifferentialDriveKinematics
 
+
 class BasePilotable(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
