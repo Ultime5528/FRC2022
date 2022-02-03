@@ -12,7 +12,7 @@ class Circle:
     center: np.ndarray
     radius: float
 
-minRadiusDefault = 10
+minRadiusPercDefault = 0.1 #10
 
 def _convertToCircles(contours: np.ndarray) -> np.ndarray:
     """
@@ -25,18 +25,27 @@ def _convertToCircles(contours: np.ndarray) -> np.ndarray:
         circles.append(Circle((x + (w // 2), y + (h // 2)), (w + h) // 4))
     return circles
 
+def _computeMinRadius(img: np.ndarray, minRadiusPerc: float) -> int:
+    """
+    :param img: The image containing the radius
+    :param minRadiusPerc: The minimal percentage of the image allowed for the radius
+    :return: The minimal length (px) in the image allowed for the radius
+    """
+    return int(img.shape[0] * minRadiusPerc if img.shape[0] < img.shape[1] else img.shape[1] * minRadiusPerc)
 
-def houghCircles(img: np.ndarray, color: balldetection.Color, error: float = 10, minRadius: float = minRadiusDefault):
+def houghCircles(img: np.ndarray, color: balldetection.Color, error: float = 10, minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
     :param error: Distance error threshold
-    :param minRadius: Minimum radius for circles
+    :param minRadiusPerc: Minimum percentage of the smallest side of the image allowed for the circles' radius
     :return: The circles found in the contours in format (center x, center y, average radius)
     """
+    minRadius = _computeMinRadius(img, minRadiusPerc)
+
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blur = cv2.medianBlur(gray, 5)
-    circles = cv2.HoughCircles(blur, cv2.HOUGH_GRADIENT, 1.5, 100, param1=100, param2=30, minRadius=20, maxRadius=100)
+    circles = cv2.HoughCircles(blur, cv2.HOUGH_GRADIENT, 1.5, 100, param1=100, param2=90, minRadius=minRadius)
 
     res = []
     if circles is not None:
@@ -63,14 +72,16 @@ def houghCircles(img: np.ndarray, color: balldetection.Color, error: float = 10,
     return res
 
 
-def circularity(img: np.ndarray, color: balldetection.Color, error: float = 0.5, minRadius: float = minRadiusDefault):
+def circularity(img: np.ndarray, color: balldetection.Color, error: float = 0.5, minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
     :param error: Circularity error threshold
-    :param minRadius: Minimum radius for circles
+    :param minRadiusPerc: Minimum percentage of the smallest side of the image allowed for the circles' radius
     :return: The circles found in the contours in format (center x, center y, average radius)
     """
+    minRadius = _computeMinRadius(img, minRadiusPerc)
+
     cnts = balldetection.findColorContours(img, color)
     circles = balldetection.filterCircles(cnts, error)
 
@@ -83,14 +94,16 @@ def circularity(img: np.ndarray, color: balldetection.Color, error: float = 0.5,
                 res.append(rect)
     return res
 
-def circularityConvex(img: np.ndarray, color: balldetection.Color, error: float = 0.1, minRadius: float = minRadiusDefault):
+def circularityConvex(img: np.ndarray, color: balldetection.Color, error: float = 0.1, minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
     :param error: Circularity error threshold
-    :param minRadius: Minimum radius for circles
+    :param minRadiusPerc: Minimum percentage of the smallest side of the image allowed for the circles' radius
     :return: The circles found in the contours in format (center x, center y, average radius)
     """
+    minRadius = _computeMinRadius(img, minRadiusPerc)
+
     cnts = balldetection.findColorContours(img, color)
     hulls = balldetection.convexContours(cnts)
     circles = balldetection.filterCircles(hulls, error)
@@ -104,14 +117,16 @@ def circularityConvex(img: np.ndarray, color: balldetection.Color, error: float 
                 res.append(rect)
     return res
 
-def circularityMoments(img: np.ndarray, color: balldetection.Color, error: float = 0.2, minRadius: float = minRadiusDefault):
+def circularityMoments(img: np.ndarray, color: balldetection.Color, error: float = 0.2, minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
     :param error: Circularity error threshold
-    :param minRadius: Minimum radius for circles
+    :param minRadiusPerc: Minimum percentage of the smallest side of the image allowed for the circles' radius
     :return: The circles found in the contours in format (center x, center y, average radius)
     """
+    minRadius = _computeMinRadius(img, minRadiusPerc)
+
     cnts = balldetection.findColorContours(img, color)
     circles = balldetection.filterCirclesMoments(cnts, error)
 
@@ -124,14 +139,16 @@ def circularityMoments(img: np.ndarray, color: balldetection.Color, error: float
                 res.append(rect)
     return res
 
-def circularityConvexMoments(img: np.ndarray, color: balldetection.Color, error: float = 0.05, minRadius: float = minRadiusDefault):
+def circularityConvexMoments(img: np.ndarray, color: balldetection.Color, error: float = 0.05, minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
     :param error: Circularity error threshold
-    :param minRadius: Minimum radius for circles
+    :param minRadiusPerc: Minimum percentage of the smallest side of the image allowed for the circles' radius
     :return: The circles found in the contours in format (center x, center y, average radius)
     """
+    minRadius = _computeMinRadius(img, minRadiusPerc)
+
     cnts = balldetection.findColorContours(img, color)
     hulls = balldetection.convexContours(cnts)
     circles = balldetection.filterCirclesMoments(hulls, error)
@@ -145,30 +162,32 @@ def circularityConvexMoments(img: np.ndarray, color: balldetection.Color, error:
                 res.append(rect)
     return res
 
-def RANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: float = 10, minRadius: float = minRadiusDefault):
+def RANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: float = 10, minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
     :param maxIterations: Maximum RANSAC iterations
-    :param minRadius: Minimum radius for circles
+    :param minRadiusPerc: Minimum percentage of the smallest side of the image allowed for the circles' radius
     :return: The circles found in the contours in format (center x, center y, average radius)
     """
+    minRadius = _computeMinRadius(img, minRadiusPerc)
+
     cnts = balldetection.findColorContours(img, color)
+    cnts = filter(lambda x: cv2.boundingRect(x)[3] > minRadius*2, cnts)
     res = balldetection.findCirclesInContours(cnts, maxIterations)
-    res = filter(lambda x: x[3] > minRadius*2, res)
 
     return res
 
-def cannyRANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: float = 30, minRadius: float = minRadiusDefault, ratioThreshold: float = 0.3, minColorRatio: float = 0.5):
+def cannyRANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: float = 30, minRadiusPerc: float = minRadiusPercDefault, ratioThreshold: float = 0.3, minColorRatio: float = 0.5):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
     :param maxIterations: Maximum RANSAC iterations
-    :param minRadius: Minimum radius for circles
+    :param minRadiusPerc: Minimum percentage of the smallest side of the image allowed for the circles' radius
     :param minColorRatio: Minimum color in circle
     :return: The circles found in the contours in format (center x, center y, average radius)
     """
-
+    minRadius = _computeMinRadius(img, minRadiusPerc)
     absLogRatioThreshold = abs(math.log10(ratioThreshold))
 
     edges = balldetection.findEdges(img)

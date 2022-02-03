@@ -19,14 +19,15 @@ def maskColor(img: np.ndarray, color: Color) -> np.ndarray:
     :param color: Color to mask
     :return: A binary mask of only the color to keep
     """
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    blurred = cv2.medianBlur(img, 15)
+    hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
     if color == Color.RED:
-        mask1 = cv2.inRange(hsv, (0, 100, 100), (10, 255, 255))
-        mask2 = cv2.inRange(hsv, (170, 100, 100), (180, 255, 255))
+        mask1 = cv2.inRange(hsv, (0, 126, 108), (7, 255, 255)) #cv2.inRange(hsv, (0, 100, 100), (10, 255, 255))
+        mask2 = cv2.inRange(hsv, (163, 89, 64), (180, 255, 255)) #cv2.inRange(hsv, (170, 100, 100), (180, 255, 255))
         mask = cv2.bitwise_or(mask1, mask2)
     elif color == Color.BLUE:
-        mask = cv2.inRange(hsv, (90, 86, 50), (130, 255, 255))
+        mask = cv2.inRange(hsv, (87, 7, 53), (112, 255, 255)) #cv2.inRange(hsv, (90, 86, 50), (130, 255, 255))
     else:
         raise Exception("No valid color was passed!")
 
@@ -128,7 +129,7 @@ def findCirclesInContours(contours: List[np.ndarray], max_iterations: int) -> li
     :param max_iterations: Amount of iterations to run it for
     :return: The circles found in the contours in format (x, y, w, h) (bounding rect)
     """
-    threshold_distance_percentage = 0.15
+    threshold_distance_percentage = 0.10
     threshold_inlier_count = 35
     rects = []
 
@@ -216,8 +217,8 @@ def findEdges(img: np.ndarray) -> np.ndarray:
     :param img: Source image, BGR
     :return: A black and white image of every edge in the source image
     """
-    blurred = cv2.blur(img, (7, 7))
-    edges = cv2.Canny(blurred, 10, 75)
+    blurred = cv2.medianBlur(img, 11)
+    edges = cv2.Canny(blurred, 30, 100)
     return cv2.dilate(edges, None, anchor=(-1, -1), iterations=1)
 
 
