@@ -13,6 +13,7 @@ from wpimath.kinematics import DifferentialDriveKinematics, DifferentialDriveOdo
 from wpilib.simulation import DifferentialDrivetrainSim, ADXRS450_GyroSim
 from wpimath.geometry import Rotation2d, Pose2d
 
+
 class BasePilotable(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
