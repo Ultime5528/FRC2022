@@ -14,8 +14,8 @@ class BasePilotable(commands2.SubsystemBase):
         self.x_wheelbase = 0.58 / 2
         self.y_wheelbase = 0.515 / 2
         # Motors
-        self.motor_front_left = rev.CANSparkMax(0, rev.MotorType.kBrushless)
-        self.motor_front_right = rev.CANSparkMax(1, rev.MotorType.kBrushless)
+        self.motor_front_left = rev.CANSparkMax(0, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_front_right = rev.CANSparkMax(1, rev.CANSparkMax.MotorType.kBrushless)
         self.motor_front_left.restoreFactoryDefaults() 
         self.motor_front_right.restoreFactoryDefaults()
         self.drive = wpilib.drive.DifferentialDrive(self.motor_front_left, self.motor_front_right)
