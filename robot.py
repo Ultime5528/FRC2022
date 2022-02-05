@@ -15,7 +15,6 @@ class Robot(commands2.TimedCommandRobot):
         self.stick = wpilib.Joystick(0)
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 0.80))
-        # TODO add shooter motor simulator
 
 if __name__ == "__main__":
     wpilib.run(Robot)
