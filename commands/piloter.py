@@ -16,4 +16,4 @@ class Piloter(CommandBase):
         
 
     def execute(self):
-        self.base_pilotable.arcadeDrive(self.stick.getX(), self.stick.getY())
+        self.base_pilotable.arcadeDrive(self.stick.getX()*-1, self.stick.getY()*-1)
