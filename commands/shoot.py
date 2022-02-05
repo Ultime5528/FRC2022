@@ -14,3 +14,6 @@ class Shoot(commands2.CommandBase):
 
     def execute(self) -> None:
         self.shooter.shoot(self.setpoint)
+
+    def end(self, interrupted: bool) -> None:
+        self.shooter.motor_left.set(0)
