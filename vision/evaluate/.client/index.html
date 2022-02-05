@@ -1,0 +1,133 @@
+<!doctype html>
+
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <title>Vision</title>
+
+  <!-- <link rel="icon" href="/favicon.ico"> -->
+  <link href="libs/roboto.css" rel="stylesheet">
+  <link href="libs/materialdesignicons.min.css" rel="stylesheet">
+  <link href="libs/vuetify.min.css" rel="stylesheet">
+
+  <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+  <style>
+    #tabs-items {
+      background: transparent !important;
+    }
+
+    .v-input {
+      align-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <div style="position: sticky; top: 0; z-index: 1;">
+        <v-theme-provider dark>
+        <v-sheet dark color="primary" elevation="4">
+            <div>
+              <v-expand-transition>
+                <div v-if="showOptions" style="width: 100%;">
+                  <div style="padding: 16px; padding-bottom: 0px;">
+                    <div class="text-button">Configuration</div>
+                    <v-slider
+                      v-model="height"
+                      label="Hauteur"
+                      min="100"
+                      max="800"
+                    >
+                      <template v-slot:append>
+                        <v-text-field
+                          v-model="height"
+                          class="mt-0 pt-0"
+                          type="number"
+                          style="width: 60px"
+                        ></v-text-field>
+                      </template>
+                    </v-slider>
+                  </div>
+                  <v-divider></v-divider>
+                </div>
+              </v-expand-transition>
+              <div style="display: flex; align-items: center;">
+                <v-tabs v-model="tab" background-color="transparent">
+                  <v-tab v-for="name in tabs" :key="name">
+                    {{ name }}
+                  </v-tab>
+                </v-tabs>
+                <v-btn icon @click="showOptions = !showOptions" style="margin-right: 8px;">
+                  <v-icon>{{ showOptions ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                </v-btn>
+              </div>
+            </div>
+          </v-sheet>
+        </v-theme-provider>
+      </div>
+      <!-- <v-app-bar app dark color="primary">
+        <v-tabs v-model="tab">
+            <v-tab
+              v-for="name in tabs"
+              :key="name"
+            >
+              {{ name }}
+            </v-tab>
+        </v-tabs>
+        <v-spacer></v-spacer>
+
+        <v-btn
+          icon
+          @click="showOptions = !showOptions"
+        >
+          <v-icon>{{ showOptions ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+        </v-btn>
+        <template v-slot:extension>
+          <v-expand-transition>
+            <div v-if="showOptions" style="width: 100% ">
+              <v-slider
+                v-model="height"
+                min="100"
+                max="800"
+                thumb-label
+              ></v-slider>
+            </div>
+          </v-expand-transition>
+        </template>
+      </v-app-bar>  -->
+      <v-main class="grey lighten-3">
+        <v-tabs-items v-model="tab" id="tabs-items">
+          <v-tab-item :key="tabs[0]">
+            <summary-component></summary-component>
+          </v-tab-item>
+          <v-tab-item :key="tabs[1]">
+            {{ tabs[1] }}
+          </v-tab-item>
+          <v-tab-item :key="tabs[2]">
+            {{ tabs[2] }}
+          </v-tab-item>
+        </v-tabs-items>
+      </v-main>
+    </v-app>
+  </div>
+
+  <script type="text/javascript" src="/eel.js"></script>
+  <script src="libs/lodash.min.ijs"></script>
+  <script src="libs/vue.ijs"></script>
+  <script src="libs/vuex.min.ijs"></script>
+  <script src="libs/vuetify.ijs"></script>
+  <script src="libs/httpVueLoader.ijs"></script>
+  <script src="libs/v-hotkey.umd.min.ijs"></script>
+  <!-- <script src="libs/vue.min.ijs"></script>
+  <script src="libs/vuetify.min.ijs"></script> -->
+  <script src="store.config.js"></script>
+  <script src="store.vision.js"></script>
+  <script src="eel.mock.js"></script>
+  <script src="index.js"></script>
+</body>
+
+</html>
