@@ -119,3 +119,8 @@ def evaluate(func: VisionAlgorithm):
 
     inst = EelEvaluate(func)
     inst.start()
+
+
+if __name__ == '__main__':
+    from ..balldetection import algorithms
+    evaluate(algorithms.circularityConvexMoments)

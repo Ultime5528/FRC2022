@@ -12,7 +12,7 @@ class Circle:
     center: np.ndarray
     radius: float
 
-minRadiusPercDefault = 0.1 #10
+minRadiusPercDefault = 0.05 #10
 
 def _convertToCircles(contours: np.ndarray) -> np.ndarray:
     """
