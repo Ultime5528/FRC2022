@@ -1,4 +1,4 @@
-import balldetection
+from . import balldetection
 
 import cv2
 import numpy as np

@@ -22,7 +22,97 @@
 from collections import defaultdict
 
 import numpy as np
+from scipy.interpolate import InterpolatedUnivariateSpline
+
 from .enumerators import BBFormat
+
+
+def safe_div(num, denom):
+    return num / denom if denom else 0
+
+
+def get_summary(groundtruth_bbs, detected_bbs):
+    # separate bbs per image X class
+    _bbs = _group_detections(detected_bbs, groundtruth_bbs)
+
+    # pairwise ious
+    _ious = {k: _compute_ious(**v) for k, v in _bbs.items()}
+
+    def _evaluate(iou_threshold):
+        # accumulate evaluations on a per-class basis
+        stats_by_class = defaultdict(lambda: {"tp": 0, "fp": 0, "NP": 0})
+        stats_by_img = defaultdict(lambda: {"tp": 0, "fp": 0, "NP": 0})
+
+        for img_id, class_id in _bbs:
+            ev = _evaluate_image(
+                _bbs[img_id, class_id]["dt"],
+                _bbs[img_id, class_id]["gt"],
+                _ious[img_id, class_id],
+                iou_threshold,
+            )
+            tp = sum(ev["matched"])
+            fp = len(ev["matched"]) - tp
+            NP = ev["NP"]
+
+            for stats in (stats_by_class[class_id], stats_by_img[img_id]):
+                stats["tp"] += tp
+                stats["fp"] += fp
+                stats["NP"] += NP
+
+        # now reduce accumulations
+        for stats in (stats_by_class, stats_by_img):
+            for stat in stats.values():
+                stat["recall"] = safe_div(stat["tp"], stat["NP"])
+                stat["precision"] = safe_div(stat["tp"], stat["tp"] + stat["fp"])
+                stat["f1"] = safe_div(2 * stat["recall"] * stat["precision"], stat["recall"] + stat["precision"])
+
+        return {"stats_by_class": stats_by_class, "stats_by_img": stats_by_img}
+
+    iou_thresholds = np.arange(0.5, 1.0, 0.01).round(2)
+
+    # compute simple AP with all thresholds, using up to 100 dets, and all areas
+    full = {
+        i: _evaluate(iou_threshold=i)
+        for i in iou_thresholds
+    }
+
+    red_recalls = np.array([stats["stats_by_class"]["RED"]["recall"] for stats in full.values()])
+    blue_recalls = np.array([stats["stats_by_class"]["BLUE"]["recall"] for stats in full.values()])
+
+    def _ar(recalls):
+        spline = InterpolatedUnivariateSpline(iou_thresholds, recalls, k=1)
+        return 2 * spline.integral(0.5, 0.99)
+
+    all_stats = {
+        "iou_thresholds": np.array(iou_thresholds),
+        "Precision[blue]@.50": full[0.50]["stats_by_class"]["BLUE"]["precision"],
+        "Precision[red]@.50": full[0.50]["stats_by_class"]["RED"]["precision"],
+        "Recall[blue]@.50": full[0.50]["stats_by_class"]["BLUE"]["recall"],
+        "Recall[red]@.50": full[0.50]["stats_by_class"]["RED"]["recall"],
+        "F1[blue]@.50": full[0.50]["stats_by_class"]["BLUE"]["f1"],
+        "F1[red]@.50": full[0.50]["stats_by_class"]["RED"]["f1"],
+        "Precision[blue]@.75": full[0.75]["stats_by_class"]["BLUE"]["precision"],
+        "Precision[red]@.75": full[0.75]["stats_by_class"]["RED"]["precision"],
+        "Recall[blue]@.75": full[0.75]["stats_by_class"]["BLUE"]["recall"],
+        "Recall[red]@.75": full[0.75]["stats_by_class"]["RED"]["recall"],
+        "F1[blue]@.75": full[0.75]["stats_by_class"]["BLUE"]["f1"],
+        "F1[red]@.75": full[0.75]["stats_by_class"]["RED"]["f1"],
+        "AR[red]": _ar(red_recalls),
+        "AR[red] curve": red_recalls,
+        "AR[blue]": _ar(blue_recalls),
+        "AR[blue] curve": blue_recalls,
+        "AR avg curve": (red_recalls + blue_recalls) / 2.0,
+    }
+
+    all_stats["AveragePrecision@.50"] = np.mean([all_stats["Precision[blue]@.50"], all_stats["Precision[red]@.50"]])
+    all_stats["AverageRecall@.50"] = np.mean([all_stats["Recall[blue]@.50"], all_stats["Recall[red]@.50"]])
+    all_stats["AverageF1@.50"] = np.mean([all_stats["F1[blue]@.50"], all_stats["F1[red]@.50"]])
+    all_stats["AveragePrecision@.75"] = np.mean([all_stats["Precision[blue]@.75"], all_stats["Precision[red]@.75"]])
+    all_stats["AverageRecall@.75"] = np.mean([all_stats["Recall[blue]@.75"], all_stats["Recall[red]@.75"]])
+    all_stats["AverageF1@.75"] = np.mean([all_stats["F1[blue]@.75"], all_stats["F1[red]@.75"]])
+    all_stats["mAR"] = np.mean([all_stats["AR[red]"], all_stats["AR[blue]"]])
+
+    return all_stats
 
 
 def get_coco_summary(groundtruth_bbs, detected_bbs):
@@ -285,10 +375,7 @@ def _jaccard(a, b):
     Ab = max(x2b - xb, 0) * max(y2b - yb, 0)
     Ai = max(x2i - xi, 0) * max(y2i - yi, 0)
 
-    try:
-        return Ai / (Aa + Ab - Ai)
-    except ZeroDivisionError:
-        raise
+    return Ai / (Aa + Ab - Ai)
 
 
 def _compute_ious(dt, gt):

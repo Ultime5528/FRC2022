@@ -15,7 +15,7 @@ from .evaluate.metrics.bounding_box import BoundingBox, BBFormat
 
 TEAM_NAME = "Ultime 5528"
 WORKSPACE_NAME = "FRC 2022"
-PROJECT_NAME = "cargo"
+PROJECT_NAME = "cargo_resized"
 DATASET_DIR = Path(__file__).parent / "dataset_cache"
 
 
@@ -123,7 +123,7 @@ def download_dataset():
 
         images = api.image.get_list(dataset.id)
         with tqdm(total=len(images), desc="Process") as progress_bar:
-            for batch in sly.batched(images):
+            for batch in sly.batched(images, batch_size=10):
                 image_ids = [image_info.id for image_info in batch]
                 image_names = [image_info.name for image_info in batch]
 

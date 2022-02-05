@@ -6,11 +6,7 @@ from skimage.morphology import skeletonize
 from scipy.optimize import minimize
 from typing import List
 from dataclasses import dataclass
-
-
-class Color(Enum):
-    RED = "red"
-    BLUE = "blue"
+from ..dataset import Color
 
 
 def maskColor(img: np.ndarray, color: Color) -> np.ndarray:
@@ -42,7 +38,7 @@ def findColorContours(img: np.ndarray, color) -> np.ndarray:
     """
     mask = maskColor(img, color)
 
-    cv2.imshow("mask", mask)
+    # cv2.imshow("mask", mask)
 
     cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 

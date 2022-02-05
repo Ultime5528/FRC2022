@@ -69,14 +69,14 @@ class EelEvaluate:
                 img = cv2.resize(img, None, fx=f, fy=f)
                 photo.resize_cargos(f)
 
-            self.images[photo_to_filename(photo)] = img
+            self.images[photo.name] = img
         print("Cached dataset in memory.")
 
     def start(self):
         web_folder = Path(__file__).parent / ".client"
         eel.init(web_folder, allowed_extensions=['.js'])
         self._start_file_observer()
-        eel.start("index.html")
+        eel.start("index.html", mode='edge')
         self._stop_file_observer()
 
     def _start_file_observer(self):
@@ -95,18 +95,17 @@ class EelEvaluate:
         eel.spawn(self._eval)
 
     def _eval(self):
-        filenames = list(map(photo_to_filename, self.dataset))
+        filenames = list(map(lambda p: p.name, self.dataset))
         eel.setPhotoNames(filenames)()
         print("Sent photo names")
 
         for photo in self.dataset:
-            filename = photo_to_filename(photo)
-            cached_img = self.images[filename].copy()
+            cached_img = self.images[photo.name].copy()
             preds = {color: self.func(cached_img, color) for color in Color}
             cached_img = annotate_photo(cached_img, photo.cargos, preds)
 
             eel.setPhotoData({
-                "name": photo_to_filename(photo),
+                "name": photo.name,
                 "data": image_to_base64(cached_img)
             })()
             eel.sleep(0.001)
