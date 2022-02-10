@@ -28,9 +28,6 @@ class Shooter(commands2.SubsystemBase):
             self.backspin_motor_sim = SparkMaxSim(self.backspin_motor)
             self.backspin_flywheel_sim = FlywheelSim(DCMotor.NEO(1), 1, 0.0025)
 
-
-
-
     def shoot(self, setpoint, backspin_setpoint):
         self.motor_left.set(self.bang_bang_controller.calculate(self.encoder.getVelocity(), setpoint)
                             + 0.9 * self.feed_forward_controller.calculate(setpoint))
