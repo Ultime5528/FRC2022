@@ -45,6 +45,12 @@ class BasePilotable(commands2.SubsystemBase):
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
         self.drive.arcadeDrive(forwardSpeed, rotation)
 
+    def leftDrive(self, speed: float) -> None:
+        self.motor_front_left.set(speed)
+
+    def rightDrive(self, speed: float) -> None:
+        self.motor_front_right.set(speed)
+
     def simulationPeriodic(self):
 
         self.drive_sim.setInputs(self.motor_front_left.get()*RobotController.getInputVoltage(), self.motor_front_right.get()*RobotController.getInputVoltage())
