@@ -1,6 +1,6 @@
 from commands2 import CommandBase
 from subsystems.basepilotable import BasePilotable
-from subsystems.visionhub import VisionHub
+from subsystems.visiontargets import VisionHub
 import properties
 
 
