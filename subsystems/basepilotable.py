@@ -12,6 +12,7 @@ from utils.sparkmaxsim import SparkMaxSim
 from wpimath.kinematics import DifferentialDriveKinematics, DifferentialDriveOdometry
 from wpilib.simulation import DifferentialDrivetrainSim, ADXRS450_GyroSim
 from wpimath.geometry import Rotation2d, Pose2d
+from constants import Ports
 
 
 class BasePilotable(commands2.SubsystemBase):
@@ -21,8 +22,8 @@ class BasePilotable(commands2.SubsystemBase):
         self.x_wheelbase = 0.58 / 2
         self.y_wheelbase = 0.515 / 2
         # Motors
-        self.motor_front_left = rev.CANSparkMax(0, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_front_right = rev.CANSparkMax(1, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_front_left = rev.CANSparkMax(Ports.basepilotable_left, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_front_right = rev.CANSparkMax(Ports.basepilotable_right, rev.CANSparkMax.MotorType.kBrushless)
         self.motor_front_left.restoreFactoryDefaults() 
         self.motor_front_right.restoreFactoryDefaults()
         self.encoder_front_left = self.motor_front_left.getEncoder()

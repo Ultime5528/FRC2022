@@ -1,6 +1,7 @@
 from commands2 import CommandBase
 from subsystems.basepilotable import BasePilotable
 from subsystems.visionhub import VisionHub
+from constants import Properties
 
 
 class ViserHub(CommandBase):
@@ -11,8 +12,8 @@ class ViserHub(CommandBase):
         self.visionhub = visionhub
         self.setName("Viser hub")
         self.targetX = targetX
-        self.speed = 0.3  # TODO constants
-        self.offset = 0.05  # TODO constants
+        self.speed = Properties.viser_speed
+        self.offset = Properties.viser_offset
 
     def initialize(self) -> None:
         self.error = float("inf")
