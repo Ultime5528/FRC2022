@@ -17,5 +17,6 @@ class Robot(commands2.TimedCommandRobot):
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
         JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
 
+
 if __name__ == "__main__":
     wpilib.run(Robot)

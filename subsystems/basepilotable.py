@@ -1,9 +1,6 @@
-from typing import Any
-import wpilib
 import wpilib.drive
 import commands2
 import rev
-
 import wpilib
 from wpilib import RobotBase, RobotController
 from wpimath.system import LinearSystemId
@@ -23,14 +20,15 @@ class BasePilotable(commands2.SubsystemBase):
         # Motors
         self.motor_front_left = rev.CANSparkMax(0, rev.MotorType.kBrushless)
         self.motor_front_right = rev.CANSparkMax(1, rev.MotorType.kBrushless)
-        self.motor_front_left.restoreFactoryDefaults() 
+        self.motor_front_left.restoreFactoryDefaults()
         self.motor_front_right.restoreFactoryDefaults()
+        self.drive = wpilib.drive.DifferentialDrive(self.motor_front_left, self.motor_front_right)
+        self.drive.setRightSideInverted(True)
+        # Odometry
         self.encoder_front_left = self.motor_front_left.getEncoder()
         self.encoder_front_right = self.motor_front_right.getEncoder()
-        self.drive = wpilib.drive.DifferentialDrive(self.motor_front_left, self.motor_front_right)
-
         self.gyro = wpilib.ADXRS450_Gyro()
-   
+
         if RobotBase.isSimulation():
             self.motor_front_left_sim = SparkMaxSim(self.motor_front_left)
             self.motor_front_right_sim = SparkMaxSim(self.motor_front_right)
@@ -41,22 +39,41 @@ class BasePilotable(commands2.SubsystemBase):
             self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
             self.field = wpilib.Field2d()
             wpilib.SmartDashboard.putData("Field", self.field)
-    
+
+    def interpoler(self, valeur: float, courbure=1.0, deadzoneY=0.1, deadzoneX=0.1):
+
+        if valeur >= deadzoneX:
+            return deadzoneY + (1 - deadzoneY) * (courbure * valeur * valeur * valeur + (1 - courbure) * valeur);
+        elif valeur <= -deadzoneX:
+            return -deadzoneY + (1 - deadzoneY) * (courbure * valeur * valeur * valeur + (1 - courbure) * valeur);
+        else:
+            return 0.0  # interpolate(deadzoneX) / deadzoneX * valeur;
+
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
-        self.drive.arcadeDrive(forwardSpeed, rotation)
+        self.drive.arcadeDrive(self.interpoler(forwardSpeed), self.interpoler(rotation))
 
     def simulationPeriodic(self):
-
-        self.drive_sim.setInputs(self.motor_front_left.get()*RobotController.getInputVoltage(), self.motor_front_right.get()*RobotController.getInputVoltage())
+        self.drive_sim.setInputs(
+            self.motor_front_left.get()*RobotController.getInputVoltage(),
+            -self.motor_front_right.get()*RobotController.getInputVoltage())
         self.drive_sim.update(0.02)
         self.motor_front_left_sim.setPosition(self.drive_sim.getLeftPosition())
-        self.motor_front_left_sim.setVelocity(self.drive_sim.getLeftPosition())
+        self.motor_front_left_sim.setVelocity(self.drive_sim.getLeftVelocity())
         self.motor_front_right_sim.setPosition(self.drive_sim.getRightPosition())
-        self.motor_front_right_sim.setVelocity(self.drive_sim.getRightPosition())
-        self.gyro_sim.setAngle(self.drive_sim.getHeading().degrees())
-    
+        self.motor_front_right_sim.setVelocity(self.drive_sim.getRightVelocity())
+        self.gyro_sim.setAngle(-self.drive_sim.getHeading().degrees())
+
+    def resetOdometry(self) -> None:
+        self.encoder_front_left.setPosition(0)
+        self.encoder_front_right.setPosition(0)
+        self.gyro.reset()
+        self.odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
+
+        if RobotBase.isSimulation():
+            self.drive_sim.resetOdometry()
+
+
+
     def periodic(self):
-
         self.odometry.update(self.gyro.getRotation2d(), self.encoder_front_left.getPosition(), self.encoder_front_right.getPosition())
-
         self.field.setRobotPose(self.odometry.getPose())
