@@ -24,5 +24,6 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.visionhub, 0))
 
+
 if __name__ == "__main__":
     wpilib.run(Robot)

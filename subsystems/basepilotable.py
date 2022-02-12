@@ -1,18 +1,16 @@
-from typing import Any
 import wpilib
 import wpilib.drive
-import commands2
-import rev
-
-import wpilib
 from wpilib import RobotBase, RobotController
 from wpimath.system import LinearSystemId
 from wpimath.system.plant import DCMotor
 from utils.sparkmaxsim import SparkMaxSim
 from wpimath.kinematics import DifferentialDriveKinematics, DifferentialDriveOdometry
 from wpilib.simulation import DifferentialDrivetrainSim, ADXRS450_GyroSim
-from wpimath.geometry import Rotation2d, Pose2d
-from constants import Ports
+
+import commands2
+import rev
+
+import ports
 
 
 class BasePilotable(commands2.SubsystemBase):
@@ -22,8 +20,8 @@ class BasePilotable(commands2.SubsystemBase):
         self.x_wheelbase = 0.58 / 2
         self.y_wheelbase = 0.515 / 2
         # Motors
-        self.motor_front_left = rev.CANSparkMax(Ports.basepilotable_left, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_front_right = rev.CANSparkMax(Ports.basepilotable_right, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_front_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_front_right = rev.CANSparkMax(ports.basepilotable_right_motor_1, rev.CANSparkMax.MotorType.kBrushless)
         self.motor_front_left.restoreFactoryDefaults() 
         self.motor_front_right.restoreFactoryDefaults()
         self.encoder_front_left = self.motor_front_left.getEncoder()
