@@ -17,4 +17,4 @@ class LinearInterpolator:
         if i == len(self.points):
             return self.points[i - 1][1]
 
-        return (self.points[i][1] - self.points[i - 1][1]) / (self.points[i][0] - self.points[i - 1][0]) * (x - self.points[i - 1][0]) + self.points[i - 1][0]
+        return (self.points[i][1] - self.points[i - 1][1]) / (self.points[i][0] - self.points[i - 1][0]) * (x - self.points[i - 1][0]) + self.points[i - 1][1]
