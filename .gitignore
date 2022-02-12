@@ -276,4 +276,8 @@ cython_debug/
 
 imgui.ini
 
+/simgui-window.json
+/simgui.json
+/simgui-ds.json
+
 vision/dataset_cache/
