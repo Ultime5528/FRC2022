@@ -28,7 +28,7 @@ def main():
     camera.setFPS(30)
     camera.setBrightness(0)
     camera.setExposureManual(0)
-    # camera.setWhiteBalanceManual(6000)
+    camera.setWhiteBalanceManual(6000)
 
     cvSink = cs.getVideo()
 
@@ -64,8 +64,8 @@ def main():
                 rectangularity = area / minArea if minArea else 0
                 if rectangularity >= 0.75:
                     x, y, w, h = cv2.boundingRect(cnt)
-                    # if 1.25 <= minW / minH <= 3.5 and minH >= 10 and minW >= 10:
-                    validRects.append((x, y, w, h))
+                    if 1.25 <= minW / minH <= 3.5 and minH >= 10 and minW >= 10:
+                        validRects.append((x, y, w, h))
         validPositions = []
 
         for x, y, w, h in validRects:
