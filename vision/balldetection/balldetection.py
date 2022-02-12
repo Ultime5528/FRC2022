@@ -4,41 +4,39 @@ import math
 from enum import Enum
 from skimage.morphology import skeletonize
 from scipy.optimize import minimize
-from typing import List
+from typing import List, Optional
 from dataclasses import dataclass
 from ..dataset import Color
 
 
-def maskColor(img: np.ndarray, color: Color) -> np.ndarray:
+def maskColor(img: np.ndarray, color: Color, rs: Optional[int]=None, rv: Optional[int]=None, bs: Optional[int]=None, bv: Optional[int]=None) -> np.ndarray:
     """
     :param img: Source image, BGR
     :param color: Color to mask
     :return: A binary mask of only the color to keep
     """
-    blurred = cv2.medianBlur(img, 15)
-    hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
+    # blurred = cv2.medianBlur(img, 15)
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     if color == Color.RED:
-        mask1 = cv2.inRange(hsv, (0, 126, 108), (7, 255, 255)) #cv2.inRange(hsv, (0, 100, 100), (10, 255, 255))
-        mask2 = cv2.inRange(hsv, (163, 89, 64), (180, 255, 255)) #cv2.inRange(hsv, (170, 100, 100), (180, 255, 255))
+        mask1 = cv2.inRange(hsv, (0, rs or 120, rv or 70), (7, 255, 255)) #cv2.inRange(hsv, (0, 100, 100), (10, 255, 255))
+        mask2 = cv2.inRange(hsv, (163, rs or 120, rv or 70), (180, 255, 255)) #cv2.inRange(hsv, (170, 100, 100), (180, 255, 255))
         mask = cv2.bitwise_or(mask1, mask2)
     elif color == Color.BLUE:
-        mask = cv2.inRange(hsv, (87, 7, 53), (112, 255, 255)) #cv2.inRange(hsv, (90, 86, 50), (130, 255, 255))
+        mask = cv2.inRange(hsv, (87, bs or 100, bv or 60), (112, 255, 255)) #cv2.inRange(hsv, (90, 86, 50), (130, 255, 255))
     else:
         raise Exception("No valid color was passed!")
 
     return mask
 
 
-def findColorContours(img: np.ndarray, color) -> np.ndarray:
+def findColorContours(img: np.ndarray, color, rs: Optional[int]=None, rv: Optional[int]=None, bs: Optional[int]=None, bv: Optional[int]=None) -> np.ndarray:
     """
     :param img: Source image, BGR
     :param color: Color of the contours to find
     :return: The detected contours of the corresponding color
     """
-    mask = maskColor(img, color)
-
-    # cv2.imshow("mask", mask)
+    mask = maskColor(img, color, rs, rv, bs, bv)
 
     cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -118,15 +116,15 @@ class CandidateCircle:
         return tuple(rect.round().astype(int))
 
 
-def findCirclesInContours(contours: List[np.ndarray], max_iterations: int) -> list[tuple[int, int, int, int]]:
+def findCirclesInContours(contours: List[np.ndarray], max_iterations: int=10, threshold_distance_percentage:Optional[float] = None, threshold_inlier_count:Optional[int] = None) -> list[tuple[int, int, int, int]]:
     """
     :rtype: object
     :param contours: Contours with probable circles
     :param max_iterations: Amount of iterations to run it for
     :return: The circles found in the contours in format (x, y, w, h) (bounding rect)
     """
-    threshold_distance_percentage = 0.10
-    threshold_inlier_count = 35
+    threshold_distance_percentage = threshold_distance_percentage or 0.21
+    threshold_inlier_count = threshold_inlier_count or 60
     rects = []
 
     for cnt in contours:

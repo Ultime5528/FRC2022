@@ -123,4 +123,4 @@ def evaluate(func: VisionAlgorithm):
 
 if __name__ == '__main__':
     from ..balldetection import algorithms
-    evaluate(algorithms.circularityConvexMoments)
+    evaluate(algorithms.RANSAC)
