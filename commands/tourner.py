@@ -18,8 +18,8 @@ class Tourner(CommandBase):
         self.base_pilotable.resetOdometry()
 
     def execute(self):
-        self.base_pilotable.arcadeDrive(-1, 1)
-        self.error = self.drive.getAngle() - self.angle
+        # self.base_pilotable.arcadeDrive(-1, 1)
+        self.error = self.base_pilotable.getAngle() - self.angle
         self.base_pilotable.arcadeDrive(0, math.copysign(self.speed, self.error))
 
     def end(self, interrupted: bool) -> None:

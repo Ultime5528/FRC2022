@@ -1,3 +1,5 @@
+import math
+
 import wpilib.drive
 import commands2
 import rev
@@ -70,9 +72,15 @@ class BasePilotable(commands2.SubsystemBase):
         self.odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
 
         if RobotBase.isSimulation():
-            self.drive_sim.resetOdometry()
+            self.motor_front_left_sim.setPosition(0)
+            self.motor_front_right_sim.setPosition(0)
+            self.drive_sim.setPose(Pose2d())
 
+    def getAngle(self):
+        return -math.remainder(self.gyro.getAngle(), 360.0)
 
+    def getAverageEncoderPosition(self):
+        return (self.encoder_front_left.getPosition() + self.encoder_front_right.getPosition()) / 2
 
     def periodic(self):
         self.odometry.update(self.gyro.getRotation2d(), self.encoder_front_left.getPosition(), self.encoder_front_right.getPosition())
