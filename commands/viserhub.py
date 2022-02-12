@@ -5,7 +5,7 @@ import properties
 
 
 class ViserHub(CommandBase):
-    def __init__(self, base_pilotable: BasePilotable, visionhub: VisionHub,):
+    def __init__(self, base_pilotable: BasePilotable, visionhub: VisionHub):
         super().__init__()
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)

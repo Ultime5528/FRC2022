@@ -6,14 +6,16 @@ from utils.sparkmaxsim import SparkMaxSim
 from wpilib.simulation import FlywheelSim
 from wpimath.system.plant import DCMotor
 
+import ports
+
 
 class Shooter(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
-        self.motor_left = rev.CANSparkMax(2, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_right = rev.CANSparkMax(3, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_left = rev.CANSparkMax(ports.shooter_motor_1, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_right = rev.CANSparkMax(ports.shooter_motor_2, rev.CANSparkMax.MotorType.kBrushless)
         self.motor_right.follow(self.motor_left, invert=True)
-        self.backspin_motor = rev.CANSparkMax(4, rev.CANSparkMax.MotorType.kBrushless)
+        self.backspin_motor = rev.CANSparkMax(ports.shooter_backspin_motor, rev.CANSparkMax.MotorType.kBrushless)
 
         self.backspin_encoder = self.backspin_motor.getEncoder()
         self.encoder = self.motor_left.getEncoder()
