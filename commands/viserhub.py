@@ -1,11 +1,11 @@
 from commands2 import CommandBase
 from subsystems.basepilotable import BasePilotable
-from subsystems.visiontargets import VisionHub
+from subsystems.visiontargets import VisionTargets
 import properties
 
 
 class ViserHub(CommandBase):
-    def __init__(self, base_pilotable: BasePilotable, visionhub: VisionHub):
+    def __init__(self, base_pilotable: BasePilotable, visionhub: VisionTargets):
         super().__init__()
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)

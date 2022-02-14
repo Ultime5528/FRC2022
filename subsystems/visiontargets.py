@@ -1,7 +1,7 @@
 from networktables import NetworkTables
 
 
-class VisionHub:
+class VisionTargets:
     def __init__(self) -> None:
         self.normxEntry = NetworkTables.getEntry("Vision/Norm_X")
         self.normyEntry = NetworkTables.getEntry("Vision/Norm_Y")
