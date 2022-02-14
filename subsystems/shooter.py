@@ -44,7 +44,6 @@ class Shooter(commands2.SubsystemBase):
 
     def shoot_at_height(self, height):
         self.shoot(self.main_interpolator.interpolate(height), self.backspin_interpolator.interpolate(height))
-        print("main: " + str(self.main_interpolator.interpolate(height)), "backspin: " + str(self.backspin_interpolator.interpolate(height)))
 
     def simulationPeriodic(self) -> None:
         motor_value = self.motor_left.get()
