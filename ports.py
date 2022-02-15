@@ -10,5 +10,6 @@ shooter_backspin_motor = 7
 
 
 # PWM
+led_strip = 0
 # Intake
 # Courroie

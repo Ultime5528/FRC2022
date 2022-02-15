@@ -8,6 +8,7 @@ from subsystems.intake import Intake
 from subsystems.basepilotable import BasePilotable
 from commands.prendreballon import PrendreBallon
 from subsystems.shooter import Shooter
+from LED import LEDController
 
 from commands.piloter import Piloter
 from commands.viserhub import ViserHub
@@ -24,6 +25,7 @@ class Robot(commands2.TimedCommandRobot):
         self.base_pilotable = BasePilotable()
         self.vision_targets = VisionTargets()
         self.shooter = Shooter()
+        self.led_controller = LEDController()
 
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
 
@@ -31,7 +33,6 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
 
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
-
 
 
 
