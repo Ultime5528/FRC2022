@@ -11,6 +11,7 @@
 <body>
     <frc-dashboard onload="ntLoaded()">
         <div style="display: flex;align-items: center;">
+            <img src="Ultime-5528-Monochrome-Rouge.svg" width="100px" height="100px" style="margin-right: 36px"/>
             <div style="display: inline-block; margin-right: 36px;">
                 NetworkTables websocket: <span id="connectstate">Unknown state</span><br/>
                 Robot: <span id="robotstate">Unknown state</span> @ <span id="robotAddress">disconnected</span>
@@ -18,24 +19,25 @@
             <frc-basic-fms-info></frc-basic-fms-info>
         </div>
         <hr/>
-        <div style="display: flex; align-items: center;">
-            <div id="camera_container"></div>
-        </div>
-        <h2>Commandes Trois dents</h2>
-        <div>
-            <frc-robot-command label="Hold" source-key="/SmartDashboard/Commandes/Hold"></frc-robot-command>
-            <frc-robot-command label="Drop" source-key="/SmartDashboard/Commandes/DropReset"></frc-robot-command>
-            <frc-robot-command label="Reset" source-key="/SmartDashboard/Commandes/Reset"></frc-robot-command>
+
+        <div style="display: flex; flex-wrap: wrap">
+            <div style="width: min(100%, 640px)">
+                <h2 class="secondary-text">Vision Hub</h2>
+                <div id="camera_container" style="width: 100%"></div>
+            </div>
+            <div style="width: min(100%, 640px)">
+                <h2 class="secondary-text">Vision Cargo</h2>
+            </div>
         </div>
 
         <div id="Properties">
-            <h2>Propriétés</h2>
-			<nt-number key="Properties/ViserHubSpeed" value="1"></nt-number>
-			<nt-number key="Properties/ViserHubThreshold" value="1"></nt-number>
-			<nt-number key=Properties/ViserHubXOffset" value="1"></nt-number>
-            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Vitesse" source-key="Properties/ViserHubSpeed"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Threshold" source-key="/Proprietes/ViserHubThreshold"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Offset X" source-key="/Proprietes/ViserHubXoffset"></frc-number-field>
+            <h2 class="secondary-text">Propriétés</h2>
+			<nt-number key="/Properties/ViserHubSpeed" value="1" ></nt-number>
+			<nt-number key="/Properties/ViserHubThreshold" value="1"></nt-number>
+			<nt-number key="/Properties/ViserHubXOffset" value="1"></nt-number>
+            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Vitesse" source-key="/Properties/ViserHubSpeed"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Threshold" source-key="/Properties/ViserHubThreshold"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Offset X" source-key="/Properties/ViserHubXOffset"></frc-number-field>
         </div>
         <script src="./frc-web-components.min.js"></script>
         <script>
