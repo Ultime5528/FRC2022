@@ -3,6 +3,7 @@ import wpilib
 import commands2
 from commands2.button import JoystickButton
 
+from commands.monterprimaire import MonterPrimaire
 from subsystems.visiontargets import VisionTargets
 from subsystems.intake import Intake
 from subsystems.basepilotable import BasePilotable
@@ -31,7 +32,7 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
 
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
-
+        wpilib.SmartDashboard.putData("grimper", MonterPrimaire(self.bras_gauche, self.switch))
 
 
 
