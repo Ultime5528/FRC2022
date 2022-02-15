@@ -9,8 +9,13 @@ class Intake(commands2.SubsystemBase):
 
         # Motors
         self.intakeMotor = wpilib.VictorSP(1)
+        # Sensors
+        # TODO trouver bon ports
+        self.sensorShooter = wpilib.DigitalInput(5)
+        self.sensorIntake = wpilib.DigitalInput(6)
 
+    def HasBallIntake(self) -> bool:
+        return self.sensorIntake.get()
 
-
-
-
+    def HasBallShooter(self) -> bool:
+        return self.sensorShooter.get()

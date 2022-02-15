@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import wpilib
 import commands2
 from commands2._impl.button import JoystickButton
@@ -19,9 +18,9 @@ class Robot(commands2.TimedCommandRobot):
         self.stick = wpilib.Joystick(0)
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
         JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
-        JoystickButton(self.stick, 2).whenPressed(Tourner(self.base_pilotable, 45.0, 0.75))
-        JoystickButton(self.stick, 3).whenPressed(Tourner(self.base_pilotable, -45.0, 0.75))
-        JoystickButton(self.stick, 4).whenPressed(Avancer(self.base_pilotable, 1.0, 0.75))
+        JoystickButton(self.stick, 2).whenPressed(Tourner(self.base_pilotable, 180.0, 0.50))
+        JoystickButton(self.stick, 3).whenPressed(Tourner(self.base_pilotable, -90.0, 0.75))
+        JoystickButton(self.stick, 4).whenPressed(Avancer(self.base_pilotable, 0.5, 0.75))
 
 
 if __name__ == '__main__':

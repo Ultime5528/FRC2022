@@ -16,7 +16,7 @@ from wpimath.geometry import Rotation2d, Pose2d
 class BasePilotable(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
-        # TODO correct mesurements
+        # TODO correct measurements
         self.x_wheelbase = 0.58 / 2
         self.y_wheelbase = 0.515 / 2
         # Motors
@@ -26,6 +26,12 @@ class BasePilotable(commands2.SubsystemBase):
         self.motor_front_right.restoreFactoryDefaults()
         self.drive = wpilib.drive.DifferentialDrive(self.motor_front_left, self.motor_front_right)
         self.drive.setRightSideInverted(True)
+        self.motor_rear_left_slave = rev.CANSparkMax(2, rev.MotorType.kBrushless)
+        self.motor_rear_right_slave = rev.CANSparkMax(3, rev.MotorType.kBrushless)
+        self.motor_rear_left_slave.follow(self.motor_front_left)
+        self.motor_rear_right_slave.follow(self.motor_front_right)
+        self.motor_rear_left_slave.restoreFactoryDefaults()
+        self.motor_rear_right_slave.restoreFactoryDefaults()
         # Odometry
         self.encoder_front_left = self.motor_front_left.getEncoder()
         self.encoder_front_right = self.motor_front_right.getEncoder()
@@ -42,17 +48,8 @@ class BasePilotable(commands2.SubsystemBase):
             self.field = wpilib.Field2d()
             wpilib.SmartDashboard.putData("Field", self.field)
 
-    def interpoler(self, valeur: float, courbure=1.0, deadzoneY=0.1, deadzoneX=0.1):
-
-        if valeur >= deadzoneX:
-            return deadzoneY + (1 - deadzoneY) * (courbure * valeur * valeur * valeur + (1 - courbure) * valeur);
-        elif valeur <= -deadzoneX:
-            return -deadzoneY + (1 - deadzoneY) * (courbure * valeur * valeur * valeur + (1 - courbure) * valeur);
-        else:
-            return 0.0  # interpolate(deadzoneX) / deadzoneX * valeur;
-
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
-        self.drive.arcadeDrive(self.interpoler(forwardSpeed), self.interpoler(rotation))
+        self.drive.arcadeDrive(forwardSpeed, rotation)
 
     def simulationPeriodic(self):
         self.drive_sim.setInputs(
