@@ -74,14 +74,14 @@ def main():
             yCenter = y + (h / 2)
             validPositions.append((xCenter, yCenter))
 
-        errorX = int(img.shape[1] / 2.5)
-        errorY = int(img.shape[0] / 5)
+        maxErrorX = int(img.shape[1] * 0.4)
+        maxErrorY = int(img.shape[0] * 0.20)
         targets = []
 
         for targetX, targetY in validPositions:
             target = Target(targetY)
             for x, y in validPositions:
-                if abs(targetY - y) < errorY and abs(targetX - x) < errorX:
+                if abs(targetY - y) < maxErrorY and abs(targetX - x) < maxErrorX:
                     target.positions.append((x, y))
                     target.error += abs(targetY - y)
             targets.append(target)
