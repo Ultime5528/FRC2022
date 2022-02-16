@@ -17,7 +17,8 @@ from commands.shoot import Shoot
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
         wpilib.CameraServer.launch("visionhub.py:main")
-        
+        wpilib.CameraServer.launch("visioncargo.py:main")
+
         self.stick = wpilib.Joystick(0)
         
         self.intake = Intake()
