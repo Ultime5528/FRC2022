@@ -33,7 +33,7 @@ def main():
 
     cvSink = cs.getVideo()
 
-    outputStream = cs.putVideo("Name", 320, 240)
+    outputStream = cs.putVideo("Hub", 320, 240)
 
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
@@ -43,11 +43,10 @@ def main():
 
 
     while True:
-        time, img = cvSink.grabFrame(img)
-        if time == 0:
-            outputStream.notifyError(cvSink.getError());
+        ret, img = cvSink.grabFrame(img)
+        if ret == 0:
+            outputStream.notifyError(cvSink.getError())
             continue
-
 
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lowerGreen, highGreen)
