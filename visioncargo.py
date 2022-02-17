@@ -1,12 +1,21 @@
+import time
+
 import numpy as np
 import cv2
 from networktables import NetworkTables
 from cscore import CameraServer
-from vision.balldetection.balldetection import Color
+from vision.dataset import Color
 from vision.balldetection.algorithms import circularityMoments
+
 
 def main():
     NetworkTables.initialize(server="127.0.0.1")
+    cs = CameraServer.getInstance()
+    cs.enableLogging()
+    camera = cs.startAutomaticCapture()
+
+    while True:
+        time.sleep(0.01)
 
     nt_isredalliance = NetworkTables.getEntry("FMSInfo/IsRedAlliance")
     isRedAlliance = nt_isredalliance.getBoolean(None)
