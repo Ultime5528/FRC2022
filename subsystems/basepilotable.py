@@ -10,7 +10,11 @@ from wpimath.system.plant import DCMotor
 from utils.sparkmaxsim import SparkMaxSim
 from wpimath.kinematics import DifferentialDriveKinematics, DifferentialDriveOdometry
 from wpilib.simulation import DifferentialDrivetrainSim, ADXRS450_GyroSim
-from wpimath.geometry import Rotation2d, Pose2d
+
+import commands2
+import rev
+
+import ports
 
 
 class BasePilotable(commands2.SubsystemBase):
@@ -50,6 +54,12 @@ class BasePilotable(commands2.SubsystemBase):
 
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
         self.drive.arcadeDrive(forwardSpeed, rotation)
+
+    def leftDrive(self, speed: float) -> None:
+        self.motor_front_left.set(speed)
+
+    def rightDrive(self, speed: float) -> None:
+        self.motor_front_right.set(speed)
 
     def simulationPeriodic(self):
         self.drive_sim.setInputs(
