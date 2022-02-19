@@ -4,6 +4,7 @@ import ports
 from wpilib import DigitalInput, RobotBase
 
 #import properties
+import properties
 from utils.sparkmaxsim import SparkMaxSim
 
 
@@ -27,10 +28,10 @@ class Grimpeur(commands2.SubsystemBase):
         self.motor_front_right_sim.setVelocity(self.bras_droit.get())
 
     def monter(self):
-        self.bras_gauche.set(0.5)
+        self.bras_gauche.set(properties.vitesse_grimpeur_monter)
 
     def descend(self):
-        self.bras_gauche.set(0.5)
+        self.bras_gauche.set(properties.vitesse_grimpeur_descend)
 
     def stop(self):
         self.bras_gauche.set(0)
