@@ -2,6 +2,7 @@ import wpilib
 import commands2
 from commands2.button import JoystickButton
 
+from commands.arreterintake import ArreterIntake
 from commands.ejecterintake import EjecterIntake
 from subsystems.basepilotable import BasePilotable
 from subsystems.intake import Intake
@@ -38,6 +39,8 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 4).whenPressed(Avancer(self.base_pilotable, 0.5, 0.75))
         JoystickButton(self.stick, 5).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
         JoystickButton(self.stick, 6).whenPressed(EjecterIntake(self.intake))
+        JoystickButton(self.stick, 7).whenPressed(PrendreBallon(self.intake))
+        JoystickButton(self.stick, 12).whenPressed(ArreterIntake(self.intake))
 
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
         

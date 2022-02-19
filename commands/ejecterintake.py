@@ -1,6 +1,7 @@
 import wpilib
 from commands2 import CommandBase
 
+import properties
 from subsystems.intake import Intake
 
 
@@ -17,12 +18,11 @@ class EjecterIntake(CommandBase):
         self.timer.start()
 
     def execute(self) -> None:
-        self.intake.intakeMotor.set(-1)
-        self.intake.transporterMotor.set(-1)
+        self.intake.ejecter()
 
     def end(self, interrupted: bool) -> None:
-        self.intake.intakeMotor.set(0)
-        self.intake.transporterMotor.set(0)
+        self.intake.stopIntake()
+        self.intake.stopTransporter()
 
     def isFinished(self) -> bool:
-        return self.timer.get() >= 1.5  # TODO Trouver temps adéquat
+        return self.timer.get() >= properties.values.intake_duree_ejection
