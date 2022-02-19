@@ -16,5 +16,4 @@ class Shoot(commands2.CommandBase):
         self.shooter.shoot(self.setpoint, self.backspin_setpoint)
 
     def end(self, interrupted: bool) -> None:
-        self.shooter.motor_left.set(0)
-        self.shooter.backspin_motor.set(0)
+        self.shooter.disable()

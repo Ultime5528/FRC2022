@@ -15,5 +15,4 @@ class InterpolatedShoot(commands2.CommandBase):
         self.shooter.shoot_at_height(self.vision_targets.normY)
 
     def end(self, interrupted: bool) -> None:
-        self.shooter.motor_left.set(0)
-        self.shooter.backspin_motor.set(0)
+        self.shooter.disable()

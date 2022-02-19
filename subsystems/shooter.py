@@ -1,4 +1,5 @@
 import commands2
+import wpilib
 from wpimath.controller import SimpleMotorFeedforwardMeters, BangBangController
 import rev
 from wpilib import RobotBase, RobotController
@@ -6,6 +7,7 @@ from utils.sparkmaxsim import SparkMaxSim
 from wpilib.simulation import FlywheelSim
 from wpimath.system.plant import DCMotor
 from utils.linearInterpolator import  LinearInterpolator
+import properties
 
 import ports
 
@@ -39,11 +41,25 @@ class Shooter(commands2.SubsystemBase):
     def shoot(self, setpoint, backspin_setpoint):
         self.motor_left.set(self.bang_bang_controller.calculate(self.encoder.getVelocity(), setpoint)
                             + 0.9 * self.feed_forward_controller.calculate(setpoint))
-        self.backspin_motor.set(self.bang_bang_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
-                                + 0.9 * self.feed_forward_controller.calculate(backspin_setpoint))
+        self.backspin_motor.set(
+            self.bang_bang_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
+            + 0.9 * self.feed_forward_controller.calculate(backspin_setpoint))
 
     def shoot_at_height(self, height):
         self.shoot(self.main_interpolator.interpolate(height), self.backspin_interpolator.interpolate(height))
+
+    def disable(self):
+        self.motor_left.set(0)
+        self.backspin_motor.set(0)
+
+    def periodic(self) -> None:
+        wpilib.SmartDashboard.putNumber("Backspin Motor", self.backspin_encoder.getVelocity())
+        wpilib.SmartDashboard.putNumber("Main Motors", self.encoder.getVelocity())
+        if (self.encoder.getVelocity() / properties.shooter_speed * 100) > 100:
+            wpilib.SmartDashboard.putNumber("Main Motor percent speed", 100)
+        else:
+            wpilib.SmartDashboard.putNumber("Main Motor percent speed",
+                                            round(self.encoder.getVelocity() / properties.shooter_speed * 100))
 
     def simulationPeriodic(self) -> None:
         motor_value = self.motor_left.get()
