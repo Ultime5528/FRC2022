@@ -24,14 +24,14 @@ class BasePilotable(commands2.SubsystemBase):
         self.x_wheelbase = 0.58 / 2
         self.y_wheelbase = 0.515 / 2
         # Motors
-        self.motor_front_left = rev.CANSparkMax(0, rev.MotorType.kBrushless)
-        self.motor_front_right = rev.CANSparkMax(1, rev.MotorType.kBrushless)
+        self.motor_front_left = rev.CANSparkMax(0, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_front_right = rev.CANSparkMax(1, rev.CANSparkMax.MotorType.kBrushless)
         self.motor_front_left.restoreFactoryDefaults()
         self.motor_front_right.restoreFactoryDefaults()
+        self.motor_front_right.setInverted(True)
         self.drive = wpilib.drive.DifferentialDrive(self.motor_front_left, self.motor_front_right)
-        self.drive.setRightSideInverted(True)
-        self.motor_rear_left_slave = rev.CANSparkMax(2, rev.MotorType.kBrushless)
-        self.motor_rear_right_slave = rev.CANSparkMax(3, rev.MotorType.kBrushless)
+        self.motor_rear_left_slave = rev.CANSparkMax(2, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_rear_right_slave = rev.CANSparkMax(3, rev.CANSparkMax.MotorType.kBrushless)
         self.motor_rear_left_slave.follow(self.motor_front_left)
         self.motor_rear_right_slave.follow(self.motor_front_right)
         self.motor_rear_left_slave.restoreFactoryDefaults()
@@ -92,3 +92,4 @@ class BasePilotable(commands2.SubsystemBase):
     def periodic(self):
         self.odometry.update(self.gyro.getRotation2d(), self.encoder_front_left.getPosition(), self.encoder_front_right.getPosition())
         self.field.setRobotPose(self.odometry.getPose())
+

@@ -9,6 +9,7 @@ class Avancer(commands2.CommandBase):
         self.distance = distance
         self.speed = speed
         self.addRequirements(base_pilotable)
+        self.setName('Avancer')
 
     def initialize(self) -> None:
         self.base_pilotable.resetOdometry()
