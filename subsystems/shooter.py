@@ -1,4 +1,5 @@
-import commands2
+from utils.subsystembase import SubsystemBase
+
 from wpimath.controller import SimpleMotorFeedforwardMeters, BangBangController
 import rev
 from wpilib import RobotBase, RobotController
@@ -9,7 +10,7 @@ from wpimath.system.plant import DCMotor
 import ports
 
 
-class Shooter(commands2.SubsystemBase):
+class Shooter(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
         self.motor_left = rev.CANSparkMax(ports.shooter_motor_1, rev.CANSparkMax.MotorType.kBrushless)
@@ -22,6 +23,7 @@ class Shooter(commands2.SubsystemBase):
 
         self.bang_bang_controller = BangBangController()
         self.feed_forward_controller = SimpleMotorFeedforwardMeters()
+
 
         if RobotBase.isSimulation():
             self.motor_left_sim = SparkMaxSim(self.motor_left)
