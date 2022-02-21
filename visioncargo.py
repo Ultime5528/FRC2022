@@ -10,9 +10,10 @@ from vision.balldetection.algorithms import circularityMoments
 
 def main():
     NetworkTables.initialize(server="127.0.0.1")
+    CameraServer.kBasePort = 1181
     cs = CameraServer.getInstance()
     cs.enableLogging()
-    camera = cs.startAutomaticCapture()
+    camera = cs.startAutomaticCapture(dev=1)
 
     while True:
         time.sleep(0.01)

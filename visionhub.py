@@ -21,10 +21,11 @@ def main():
     nt_normx = NetworkTables.getEntry("Vision/Hub/Norm_X")
     nt_normy = NetworkTables.getEntry("Vision/Hub/Norm_Y")
 
+    CameraServer.kBasePort = 1183
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture()
+    camera = cs.startAutomaticCapture(dev=0)
     camera.setResolution(320, 240)
     camera.setFPS(30)
     camera.setBrightness(0)
