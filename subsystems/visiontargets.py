@@ -1,7 +1,11 @@
+import math
+import time
+
 import commands2
 from networktables import NetworkTables
 from pyfrc.physics.visionsim import VisionSim
-from wpilib import RobotBase
+from wpimath.geometry import Pose2d
+from wpilib import RobotBase, Field2d
 
 
 class VisionTargets(commands2.SubsystemBase):
@@ -12,10 +16,15 @@ class VisionTargets(commands2.SubsystemBase):
 
         self.cargoNormxEntry = NetworkTables.getEntry("Vision/Cargo/Norm_X")
         self.cargoNormyEntry = NetworkTables.getEntry("Vision/Cargo/Norm_Y")
+        self.cargoFoundEntry = NetworkTables.getEntry("Vision/Cargo/Found")
 
         if RobotBase.isSimulation():
             self.basepilotable = basepilotable
-            self.cargo_sim = VisionSim([VisionSim.Target(23,53,0,360)], 120, 0, 100)
+            x, y = 4, 1
+            self.cargo_sim = VisionSim([VisionSim.Target(x, y,0,359)], 120, 0, 100)
+
+            fakecargo = basepilotable.field.getObject("CARGO")
+            fakecargo.setPose(Pose2d(x, y, 0))
 
     @property
     def hubNormX(self):
@@ -33,12 +42,25 @@ class VisionTargets(commands2.SubsystemBase):
     def cargoNormY(self):
         return self.cargoNormyEntry.getDouble(0)
 
+    @property
+    def cargoFound(self):
+        return self.cargoFoundEntry.getBoolean(False)
+
     def simulationPeriodic(self):
         pose = self.basepilotable.odometry.getPose()
-        targets = self.cargo_sim.compute(pose.X(), pose.Y(), pose.rotation())
+        targets = self.cargo_sim.compute(time.time(), pose.X(), pose.Y(), -pose.rotation().degrees())
 
-        norm_x = targets[0][2] / 120
-        norm_y = targets[0][3] / 100
+        if targets:
+            print(targets[0])
+            if targets[0][0]:
+                norm_x = targets[0][3] / 60
+                norm_y = targets[0][2] / 100
 
-        self.cargoNormxEntry.setDouble(norm_x)
-        self.cargoNormxEntry.setDouble(norm_y)
+                self.cargoNormxEntry.setDouble(norm_x)
+                self.cargoNormyEntry.setDouble(norm_y)
+                self.cargoFoundEntry.setBoolean(True)
+            else:
+                self.cargoFoundEntry.setBoolean(False)
+        else:
+            self.cargoFoundEntry.setBoolean(False)
+
