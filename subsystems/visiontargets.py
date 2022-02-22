@@ -5,11 +5,7 @@ from wpilib import RobotBase
 
 
 class VisionTargets(commands2.SubsystemBase):
-    def __init__(self, basepilotable) -> None:
-        super().__init__()
-        self.hubNormxEntry = NetworkTables.getEntry("Vision/Hub/Norm_X")
-        self.hubNormyEntry = NetworkTables.getEntry("Vision/Hub/Norm_Y")
-
+     def __init__(self, basepilotable) -> None:
         self.cargoNormxEntry = NetworkTables.getEntry("Vision/Cargo/Norm_X")
         self.cargoNormyEntry = NetworkTables.getEntry("Vision/Cargo/Norm_Y")
 
