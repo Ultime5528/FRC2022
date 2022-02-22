@@ -11,6 +11,7 @@ from subsystems.basepilotable import BasePilotable
 from commands.prendreballon import PrendreBallon
 from subsystems.shooter import Shooter
 
+from wpimath.geometry import Pose2d
 
 from commands.viserhub import ViserHub
 from commands.shoot import Shoot
@@ -18,7 +19,7 @@ from commands.piloter import Piloter
 from commands.avancer import Avancer
 from commands.tourner import Tourner
 from commands.prendreballon import PrendreBallon
-
+from commands.suivretrajectoire import SuivreTrajectoire
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
@@ -43,6 +44,8 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 12).whenPressed(ArreterIntake(self.intake))
 
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
-        
+        wpilib.SmartDashboard.putData("suivre trajectoire", SuivreTrajectoire(self.base_pilotable, [Pose2d(12, 4, 2), Pose2d(15, 7, 5), Pose2d(19, 1, 3)], 13, 12))
+
+
 if __name__ == "__main__":
     wpilib.run(Robot)

@@ -24,21 +24,25 @@ class BasePilotable(commands2.SubsystemBase):
         self.y_wheelbase = 0.515 / 2
         # Motors
         self.motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1, rev.CANSparkMax.MotorType.kBrushless)
         self.motor_left.restoreFactoryDefaults()
+        self.motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_left_follower.restoreFactoryDefaults()
+        self.motor_left_follower.follow(self.motor_left)
+
+        self.motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1, rev.CANSparkMax.MotorType.kBrushless)
         self.motor_right.restoreFactoryDefaults()
         self.motor_right.setInverted(True)
+        self.motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2, rev.CANSparkMax.MotorType.kBrushless)
+        self.motor_right_follower.restoreFactoryDefaults()
+        self.motor_right_follower.follow(self.motor_right)
+
         self.drive = wpilib.drive.DifferentialDrive(self.motor_left, self.motor_right)
-        self.motor_left_slave = rev.CANSparkMax(ports.basepilotable_left_motor_2, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_right_slave = rev.CANSparkMax(ports.basepilotable_right_motor_2, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_left_slave.restoreFactoryDefaults()
-        self.motor_right_slave.restoreFactoryDefaults()
-        self.motor_left_slave.follow(self.motor_left)
-        self.motor_right_slave.follow(self.motor_right)
         # Odometry
         self.encoder_left = self.motor_left.getEncoder()
         self.encoder_right = self.motor_right.getEncoder()
         self.gyro = wpilib.ADXRS450_Gyro()
+        self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
+        self.field = wpilib.Field2d()
 
         if RobotBase.isSimulation():
             self.motor_left_sim = SparkMaxSim(self.motor_left)
@@ -47,12 +51,13 @@ class BasePilotable(commands2.SubsystemBase):
             self.system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
             self.drive_sim = DifferentialDrivetrainSim(self.system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005])
             self.kinematics = DifferentialDriveKinematics(0.64)
-            self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
-            self.field = wpilib.Field2d()
             wpilib.SmartDashboard.putData("Field", self.field)
 
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
-        self.drive.arcadeDrive(forwardSpeed, rotation)
+        self.drive.arcadeDrive(forwardSpeed, rotation, False)
+
+    def tankDrive(self, left: float, right: float) -> None:
+        self.drive.tankDrive(left, right, False)
 
     def leftDrive(self, speed: float) -> None:
         self.motor_left.set(speed)
