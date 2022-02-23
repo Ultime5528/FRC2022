@@ -8,11 +8,14 @@ shooter_motor_1 = 5
 shooter_motor_2 = 6
 shooter_backspin_motor = 7
 
-grimpeur_motor_1 = 8
-grimpeur_motor_2 = 9
+grimpeur_follower_motor_ = 8
+grimpeur_leader_motor_ = 9
+grimpeur_secondaire_motor_ = 10
 
 # PWM
 # Intake
 # Courroie
-digital_switch_grimpeur_haut = 0
-digital_switch_grimpeur_bas = 1
+grimpeur_switch_haut = 0
+grimpeur_switch_bas = 1
+grimpeur_switch_haut_secondaire = 2
+grimpeur_switch_bas_secondaire = 3
