@@ -68,7 +68,7 @@ class BasePilotable(commands2.SubsystemBase):
     def simulationPeriodic(self):
         self.drive_sim.setInputs(
             self.motor_left.get() * RobotController.getInputVoltage(),
-            -self.motor_right.get() * RobotController.getInputVoltage())
+            self.motor_right.get() * RobotController.getInputVoltage())
         self.drive_sim.update(0.02)
         self.motor_left_sim.setPosition(self.drive_sim.getLeftPosition())
         self.motor_left_sim.setVelocity(self.drive_sim.getLeftVelocity())
