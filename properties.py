@@ -9,6 +9,8 @@ class Properties:
     viser_hub_x_offset = ntproperty("Properties/ViserHubXOffset", 0.05, writeDefault=False)
     backspin_shooter_speed = ntproperty("Properties/BackspinShooterSpeed", 1, writeDefault=False)
     shooter_speed = ntproperty("Properties/ShooterSpeed", 1, writeDefault=False)
-    ejecter_ballon_temps = 4
+    ejecter_shooter_speed = ntproperty("Properties/EjecterShooterSpeed", 1, writeDefault=False)
+    ejecter_backspin_shooter_speed = ntproperty("Properties/BackspinShooterSpeed", 1, writeDefault=False)
+    ejecter_shooter_temps = 4
 
 values = Properties()

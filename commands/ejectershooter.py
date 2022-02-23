@@ -4,7 +4,7 @@ import wpilib
 from properties import values
 
 
-class EjecterBallonShooter(commands2.CommandBase):
+class EjecterShooter(commands2.CommandBase):
     def __init__(self, shooter: Shooter):
         super().__init__()
         self.shooter = shooter
@@ -15,11 +15,11 @@ class EjecterBallonShooter(commands2.CommandBase):
         self.timer.start()
 
     def execute(self) -> None:
-        self.shooter.motor_left.set(0.25)
+        self.shooter.shoot(values.ejecter_shooter_speed, values.ejecter_backspin_shooter_speed)
 
     def isFinished(self) -> bool:
-        return self.timer.get() >= values.ejecter_ballon_temps
+        return self.timer.get() >= values.ejecter_shooter_temps
 
     def end(self, interrupted: bool) -> None:
         self.timer.stop()
-        self.shooter.motor_left.set(0)
+        self.shooter.disable()

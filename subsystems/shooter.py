@@ -6,7 +6,7 @@ from wpilib import RobotBase, RobotController
 from utils.sparkmaxsim import SparkMaxSim
 from wpilib.simulation import FlywheelSim
 from wpimath.system.plant import DCMotor
-from utils.linearInterpolator import  LinearInterpolator
+from utils.linearInterpolator import LinearInterpolator
 import properties
 
 import ports
@@ -27,13 +27,13 @@ class Shooter(commands2.SubsystemBase):
 
     def __init__(self) -> None:
         super().__init__()
-        self.motor_left = rev.CANSparkMax(ports.shooter_motor_1, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_right = rev.CANSparkMax(ports.shooter_motor_2, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_right.follow(self.motor_left, invert=True)
-        self.backspin_motor = rev.CANSparkMax(ports.shooter_backspin_motor, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_left = rev.CANSparkMax(ports.shooter_motor_1, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_right = rev.CANSparkMax(ports.shooter_motor_2, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_right.follow(self._motor_left, invert=True)
+        self._backspin_motor = rev.CANSparkMax(ports.shooter_backspin_motor, rev.CANSparkMax.MotorType.kBrushless)
 
-        self.backspin_encoder = self.backspin_motor.getEncoder()
-        self.encoder = self.motor_left.getEncoder()
+        self.backspin_encoder = self._backspin_motor.getEncoder()
+        self.encoder = self._motor_left.getEncoder()
 
         self.bang_bang_controller = BangBangController()
         self.feed_forward_controller = SimpleMotorFeedforwardMeters()
@@ -42,16 +42,16 @@ class Shooter(commands2.SubsystemBase):
         self.backspin_setpoint = 1
 
         if RobotBase.isSimulation():
-            self.motor_left_sim = SparkMaxSim(self.motor_left)
+            self.motor_left_sim = SparkMaxSim(self._motor_left)
             self.flywheel_sim = FlywheelSim(DCMotor.NEO(2), 1, 0.0025)
 
-            self.backspin_motor_sim = SparkMaxSim(self.backspin_motor)
+            self.backspin_motor_sim = SparkMaxSim(self._backspin_motor)
             self.backspin_flywheel_sim = FlywheelSim(DCMotor.NEO(1), 1, 0.0025)
 
-    def shoot(self, setpoint, backspin_setpoint):
-        self.motor_left.set(self.bang_bang_controller.calculate(self.encoder.getVelocity(), setpoint)
-                            + 0.9 * self.feed_forward_controller.calculate(setpoint))
-        self.backspin_motor.set(
+    def shoot(self, setpoint: float, backspin_setpoint):
+        self._motor_left.set(self.bang_bang_controller.calculate(self.encoder.getVelocity(), setpoint)
+                             + 0.9 * self.feed_forward_controller.calculate(setpoint))
+        self._backspin_motor.set(
             self.bang_bang_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
             + 0.9 * self.feed_forward_controller.calculate(backspin_setpoint))
         self.setpoint = setpoint
@@ -61,8 +61,8 @@ class Shooter(commands2.SubsystemBase):
         self.shoot(self.main_interpolator.interpolate(height), self.backspin_interpolator.interpolate(height))
 
     def disable(self):
-        self.motor_left.set(0)
-        self.backspin_motor.set(0)
+        self._motor_left.set(0)
+        self._backspin_motor.set(0)
         self.setpoint = 0
         self.backspin_setpoint = 0
 
@@ -76,11 +76,11 @@ class Shooter(commands2.SubsystemBase):
 
 
     def simulationPeriodic(self) -> None:
-        motor_value = self.motor_left.get()
+        motor_value = self._motor_left.get()
         self.flywheel_sim.setInputVoltage(motor_value * RobotController.getInputVoltage())
         self.flywheel_sim.update(0.02)
         self.motor_left_sim.setVelocity(self.flywheel_sim.getAngularVelocity() / 6.28 * 60)
-        backspin_motor_value = self.backspin_motor.get()
+        backspin_motor_value = self._backspin_motor.get()
         self.backspin_flywheel_sim.setInputVoltage(backspin_motor_value * RobotController.getInputVoltage())
         self.backspin_flywheel_sim.update(0.02)
         self.backspin_motor_sim.setVelocity(self.backspin_flywheel_sim.getAngularVelocity() / 6.28 * 60)
