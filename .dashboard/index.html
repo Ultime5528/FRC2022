@@ -32,13 +32,22 @@
         </div>
 
         <div id="Properties">
-            <h2 class="secondary-text">Propriétés</h2>
+            <h2 class="secondary-text">Propriété vison</h2>
 			<nt-number key="/Properties/ViserHubSpeed" value="1" ></nt-number>
-			<nt-number key="/Properties/ViserHubThreshold" value="1"></nt-number>
-			<nt-number key="/Properties/ViserHubXOffset" value="1"></nt-number>
+			<nt-number key="/Properties/ViserHubThreshold" value="2"></nt-number>
+			<nt-number key="/Properties/ViserHubXOffset" value="3"></nt-number>
             <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Vitesse" source-key="/Properties/ViserHubSpeed"></frc-number-field>
             <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Threshold" source-key="/Properties/ViserHubThreshold"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Offset X" source-key="/Properties/ViserHubXOffset"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Offset X" source-key="/Properties/ViserHubXOffset"></frc-number-field>
+            <h2 class="secondary-text">Propriétés</h2>
+            <nt-number key="Backspin Motor" value="4"></nt-number>
+            <nt-number key="Main Motors" value="5"></nt-number>
+            <nt-number key="Main Motor percent speed" value="6"></nt-number>
+            <nt-number key="Backspin Motor percent speed" value="7"></nt-number>
+            <frc-number-field label="Viser Hub Vitesse" source-key="/Properties/ViserHubSpeed"></frc-number-field>
+            <frc-number-field label="Main Motors" source-key="/Properties/ViserHubSpeed"></frc-number-field>
+            <frc-number-field label="Main Motor percent speed" source-key="/Properties/ViserHubSpeed"></frc-number-field>
+            <frc-number-field label="Backspin Motor percent speed" source-key="/Properties/ViserHubSpeed"></frc-number-field>
         </div>
         <script src="./frc-web-components.min.js"></script>
         <script>
