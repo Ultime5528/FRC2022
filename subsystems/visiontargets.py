@@ -1,11 +1,8 @@
-import math
-import time
-
 import commands2
 from networktables import NetworkTables
 from pyfrc.physics.visionsim import VisionSim
 from wpimath.geometry import Pose2d
-from wpilib import RobotBase, Field2d
+from wpilib import RobotBase, Timer
 
 
 class VisionTargets(commands2.SubsystemBase):
@@ -21,7 +18,7 @@ class VisionTargets(commands2.SubsystemBase):
         if RobotBase.isSimulation():
             self.basepilotable = basepilotable
             x, y = 4, 1
-            self.cargo_sim = VisionSim([VisionSim.Target(x, y,0,359)], 120, 0, 100)
+            self.cargo_sim = VisionSim([VisionSim.Target(x, y,0,359)], 120, 0, 10)
 
             fakecargo = basepilotable.field.getObject("CARGO")
             fakecargo.setPose(Pose2d(x, y, 0))
@@ -48,13 +45,13 @@ class VisionTargets(commands2.SubsystemBase):
 
     def simulationPeriodic(self):
         pose = self.basepilotable.odometry.getPose()
-        targets = self.cargo_sim.compute(time.time(), pose.X(), pose.Y(), -pose.rotation().degrees())
+        targets = self.cargo_sim.compute(Timer.getFPGATimestamp(), pose.X(), pose.Y(), pose.rotation().radians())
 
         if targets:
-            print(targets[0])
+            found, time, angle, distance = targets[0]
             if targets[0][0]:
-                norm_x = targets[0][3] / 60
-                norm_y = targets[0][2] / 100
+                norm_x = angle / 60
+                norm_y = distance / 10
 
                 self.cargoNormxEntry.setDouble(norm_x)
                 self.cargoNormyEntry.setDouble(norm_y)
