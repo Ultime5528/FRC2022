@@ -31,7 +31,7 @@ class SuivreTrajectoire(commands2.CommandBase):
     def execute(self) -> None:
         currentPose = self.basePilotable.odometry.getPose()
 
-        while (self.index < (len(self.states)) and currentPose.translation().distance(
+        while (self.index < (len(self.states) - 1) and currentPose.translation().distance(
                 self.states[self.index].pose.translation()) <= properties.values.trajectoire_vue_avant):
             self.index += 1
 
@@ -46,7 +46,7 @@ class SuivreTrajectoire(commands2.CommandBase):
         self.basePilotable.tankDrive(self.speed + correction, self.speed - correction)
 
     def isFinished(self) -> bool:
-        return self.index >= len(self.states)
+        return self.index >= len(self.states) - 1
 
     def end(self, interrupted: bool) -> None:
         self.basePilotable.tankDrive(0, 0)

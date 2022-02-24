@@ -10,7 +10,7 @@ class Properties:
     reverse_intake_speed = ntproperty("Properties/reverse_intake_speed", -1, writeDefault=False)
     reverse_transporter_speed = ntproperty("Properties/reverse_transporter_speed", -1, writeDefault=False)
     intake_duree_ejection = ntproperty("Properties/intake_duree_ejection", 1.5, writeDefault=False)
-    trajectoire_angle_p = ntproperty("Properties/trajectoire_angle_p", 0.015, writeDefault=False)
+    trajectoire_angle_p = ntproperty("Properties/trajectoire_angle_p", 0.008, writeDefault=False)
     trajectoire_vue_avant = ntproperty("Properties/trajectoire_vue_avant", 0.25, writeDefault=False)
 
 

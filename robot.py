@@ -47,12 +47,23 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("suivre trajectoire",
                                       SuivreTrajectoire(self.base_pilotable,
                                                         [
+                                                           # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                                           # Pose2d(2.5, 0.8, Rotation2d.fromDegrees(35)),
+                                                           # Pose2d(5, 5, Rotation2d.fromDegrees(90)),
+                                                           # Pose2d(7.5, 9.3, Rotation2d.fromDegrees(30)),
+                                                           # Pose2d(10, 9.8, Rotation2d.fromDegrees(0)),
+                                                           # Pose2d(12.5, 9, Rotation2d.fromDegrees(-30)),
+                                                           # Pose2d(15, 5, Rotation2d.fromDegrees(-90)),
+                                                           # Pose2d(12.5, 1.6, Rotation2d.fromDegrees(-150)),
+                                                           # Pose2d(10, 1, Rotation2d.fromDegrees(180)),
+                                                           # Pose2d(1, 0, Rotation2d.fromDegrees(180)),
                                                             Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                                                            Pose2d(2, 5, Rotation2d.fromDegrees(90)),
-                                                            Pose2d(5, 5, Rotation2d.fromDegrees(-90)),
-                                                            Pose2d(5, 1, Rotation2d.fromDegrees(-90)),
-                                                            Pose2d(7, 1, Rotation2d.fromDegrees(90)),
-                                                        ], speed=0.65))
+                                                            Pose2d(6, 6, Rotation2d.fromDegrees(90)),
+                                                            Pose2d(12, 12, Rotation2d.fromDegrees(0)),
+                                                            Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
+                                                            Pose2d(0, 0, Rotation2d.fromDegrees(180)),
+
+                                                        ], speed=0.55))
 
 
 if __name__ == "__main__":
