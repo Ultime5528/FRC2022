@@ -13,29 +13,36 @@ class ViserCargo(CommandBase):
         self.addRequirements(base_pilotable)
         self.visiontargets = visiontargets
         self.setName("Viser cargo")
+        self._reset()
 
-    def initialize(self) -> None:
+    def _reset(self):
         self.x_stop = False
         self.y_stop = False
 
+    def initialize(self) -> None:
+        self._reset()
+
     def execute(self) -> None:
-        x_error = self.visiontargets.cargoNormX - properties.viser_cargo_x_offset
-        y_error = self.visiontargets.cargoNormY - properties.viser_cargo_y_offset
+        if self.visiontargets.cargoFound:
+            x_error = self.visiontargets.cargoNormX - properties.values.viser_cargo_x_offset
+            y_error = self.visiontargets.cargoNormY - properties.values.viser_cargo_y_offset
 
-        self.x_stop = abs(x_error) <= properties.viser_cargo_x_threshold
-        self.y_stop = abs(y_error) <= properties.viser_cargo_y_threshold
+            self.x_stop = abs(x_error) <= properties.values.viser_cargo_x_threshold
+            self.y_stop = abs(y_error) <= properties.values.viser_cargo_y_threshold
 
-        if self.x_stop:
-            x_speed = 0
+            if self.x_stop:
+                x_speed = 0
+            else:
+                x_speed = math.copysign(properties.values.viser_cargo_turn_speed, x_error)
+
+            if self.y_stop:
+                y_speed = 0
+            else:
+                y_speed = math.copysign(properties.values.viser_cargo_forward_speed, y_error)
+
+            self.base_pilotable.arcadeDrive(y_speed, x_speed)
         else:
-            x_speed = math.copysign(properties.viser_cargo_turn_speed, x_error)
-
-        if self.y_stop:
-            y_speed = 0
-        else:
-            y_speed = math.copysign(properties.viser_cargo_forward_speed, y_error)
-
-        self.base_pilotable.arcadeDrive(y_speed, x_speed)
+            self.base_pilotable.arcadeDrive(0, 0)
 
     def end(self, interrupted: bool) -> None:
         self.base_pilotable.arcadeDrive(0, 0)

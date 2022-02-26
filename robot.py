@@ -3,6 +3,7 @@ import wpilib
 import commands2
 from commands2.button import JoystickButton
 
+from commands.visercargo import ViserCargo
 from subsystems.visiontargets import VisionTargets
 from subsystems.intake import Intake
 from subsystems.basepilotable import BasePilotable
@@ -27,13 +28,15 @@ class Robot(commands2.TimedCommandRobot):
         self.shooter = Shooter()
         self.vision_targets = VisionTargets(self.base_pilotable)
 
-        self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
+        # self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
+        self.base_pilotable.setDefaultCommand(ViserCargo(self.base_pilotable, self.vision_targets))
 
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
         wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets, self.stick))
         wpilib.SmartDashboard.putData("Speed Testing Shoot", DashboardShoot(self.shooter))
         wpilib.SmartDashboard.putData("Eject Ball", EjecterBallonShooter(self.shooter))
+
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 import time
 
+import threading
 import numpy as np
 import cv2
 from networktables import NetworkTables
@@ -7,22 +8,31 @@ from cscore import CameraServer
 from vision.dataset import Color
 from vision.balldetection.algorithms import circularityMoments
 
+isConnected = threading.Condition()
+notified = [False]
+
+def connectionListener(connected, info):
+    with isConnected:
+        notified[0] = True
+        isConnected.notify()
 
 def main():
     NetworkTables.initialize(server="127.0.0.1")
-    CameraServer.kBasePort = 1181
-    cs = CameraServer.getInstance()
-    cs.enableLogging()
-    camera = cs.startAutomaticCapture(dev=1)
+    NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
+    with isConnected:
+        print("Waiting for connection...")
+        if not notified[0]:
+            isConnected.wait()
+    print("Connected!")
 
-    nt_isredalliance = NetworkTables.getEntry("FMSInfo/IsRedAlliance")
+    nt_isredalliance = NetworkTables.getEntry("/FMSInfo/IsRedAlliance")
     isRedAlliance = nt_isredalliance.getBoolean(None)
 
     if isRedAlliance is not None:
         color = Color.RED if isRedAlliance else Color.BLUE
     else:
-        raise Exception("Variable FMSInfo/IsRedAlliance is not declared")
+        raise Exception("Variable /FMSInfo/IsRedAlliance is not declared")
 
     nt_normx = NetworkTables.getEntry("Vision/Cargo/Norm_X")
     nt_normy = NetworkTables.getEntry("Vision/Cargo/Norm_Y")
