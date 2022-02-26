@@ -19,7 +19,7 @@ from subsystems.grimpeur import Grimpeur
 from wpimath.geometry import Pose2d, Rotation2d
 
 from commands.viserhub import ViserHub
-from commands.shoot import Shoot
+from commands.manualShoot import Shoot
 from commands.piloter import Piloter
 from commands.avancer import Avancer
 from commands.tourner import Tourner
@@ -53,7 +53,6 @@ class Robot(commands2.TimedCommandRobot):
 
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-        wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
         wpilib.SmartDashboard.putData("Suivre Trajectoire",
                                       SuivreTrajectoire(self.base_pilotable,
                                                         [
@@ -72,6 +71,8 @@ class Robot(commands2.TimedCommandRobot):
                                                             Pose2d(12, 12, Rotation2d.fromDegrees(0)),
                                                             Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
                                                             Pose2d(0, 0, Rotation2d.fromDegrees(180)),
+                                                        ], speed=0.55))
+        wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, 3000, 3000))
         wpilib.SmartDashboard.putData("grimper", MonterPrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("descendre", DescendPrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("descendre secondaire", DescendreSecondaire(self.grimpeur))
@@ -80,8 +81,6 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Speed Testing Shoot", DashboardShoot(self.shooter))
         wpilib.SmartDashboard.putData("Eject Ball", EjecterShooter(self.shooter))
 
-
-                                                        ], speed=0.55))
 
 if __name__ == "__main__":
     wpilib.run(Robot)
