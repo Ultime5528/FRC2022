@@ -8,6 +8,7 @@ from commands.monterprimaire import MonterPrimaire
 from commands.descendprimaire import DescendPrimaire
 from commands.arreterintake import ArreterIntake
 from commands.ejecterintake import EjecterIntake
+from commands.visercargo import ViserCargo
 from subsystems.basepilotable import BasePilotable
 from subsystems.intake import Intake
 from subsystems.visiontargets import VisionTargets
@@ -32,24 +33,17 @@ from commands.ejectershooter import EjecterShooter
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
         wpilib.CameraServer.launch("visionhub.py:main")
+        wpilib.CameraServer.launch("visioncargo.py:main")
 
         self.stick = wpilib.Joystick(0)
 
         self.intake = Intake()
         self.base_pilotable = BasePilotable()
-        self.vision_targets = VisionTargets()
         self.shooter = Shooter()
-        self.grimpeur = Grimpeur()
-        self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
-        
-        JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
-        JoystickButton(self.stick, 2).whenPressed(Tourner(self.base_pilotable, 180.0, 0.50))
-        JoystickButton(self.stick, 3).whenPressed(Tourner(self.base_pilotable, -90.0, 0.75))
-        JoystickButton(self.stick, 4).whenPressed(Avancer(self.base_pilotable, 0.5, 0.75))
-        JoystickButton(self.stick, 5).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-        JoystickButton(self.stick, 6).whenPressed(EjecterIntake(self.intake))
-        JoystickButton(self.stick, 7).whenPressed(PrendreBallon(self.intake))
-        JoystickButton(self.stick, 12).whenPressed(ArreterIntake(self.intake))
+        self.vision_targets = VisionTargets(self.base_pilotable)
+
+        # self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
+        self.base_pilotable.setDefaultCommand(ViserCargo(self.base_pilotable, self.vision_targets))
 
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
