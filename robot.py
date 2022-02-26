@@ -3,6 +3,8 @@ import wpilib
 import commands2
 from commands2.button import JoystickButton
 
+from commands.descendresecondaire import DescendreSecondaire
+from commands.monterintake import MonterIntake
 from commands.monterprimaire import MonterPrimaire
 from commands.descendprimaire import DescendPrimaire
 from subsystems.visiontargets import VisionTargets
@@ -35,6 +37,8 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
         wpilib.SmartDashboard.putData("grimper", MonterPrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("descendre", DescendPrimaire(self.grimpeur))
+        wpilib.SmartDashboard.putData("descendre secondaire", DescendreSecondaire(self.grimpeur))
+        wpilib.SmartDashboard.putData("monter intake", MonterIntake(self.grimpeur))
 
 
 if __name__ == "__main__":
