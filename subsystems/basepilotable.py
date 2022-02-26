@@ -63,12 +63,6 @@ class BasePilotable(SubsystemBase):
     def tankDrive(self, left: float, right: float) -> None:
         self._drive.tankDrive(left, right, False)
 
-    def leftDrive(self, speed: float) -> None:
-        self._motor_left.set(speed)
-
-    def rightDrive(self, speed: float) -> None:
-        self._motor_right.set(speed)
-
     def simulationPeriodic(self):
         self._drive_sim.setInputs(
             self._motor_left.get() * RobotController.getInputVoltage(),
