@@ -11,6 +11,7 @@ class Properties:
     shooter_speed = ntproperty("Properties/ShooterSpeed", 1, writeDefault=False)
     ejecter_shooter_speed = ntproperty("Properties/EjecterShooterSpeed", 1, writeDefault=False)
     ejecter_backspin_shooter_speed = ntproperty("Properties/BackspinShooterSpeed", 1, writeDefault=False)
-    ejecter_shooter_temps = 4
+    ejecter_shooter_temps = ntproperty("Properties/EjecterShooterTemps", 4, writeDefault=False)
+
 
 values = Properties()
