@@ -10,5 +10,9 @@ shooter_backspin_motor = 7
 
 
 # PWM
-# Intake
-# Courroie
+intake_moteur_intake = 0
+intake_moteur_transporter = 1
+
+# DIO
+intake_sensor_intake = 0
+intake_sensor_transporter = 1
