@@ -12,6 +12,13 @@ class Properties:
     intake_duree_ejection = ntproperty("Properties/intake_duree_ejection", 1.5, writeDefault=False)
     trajectoire_angle_p = ntproperty("Properties/trajectoire_angle_p", 0.008, writeDefault=False)
     trajectoire_vue_avant = ntproperty("Properties/trajectoire_vue_avant", 0.25, writeDefault=False)
-
+    
+    grimpeur_vitesse_monter = ntproperty("Properties/VitesseGrimpeurmonter", 0.5, writeDefault=False)
+    vitesse_grimpeur_descend = ntproperty("Properties/VitesseGrimpeurDescend", -0.5, writeDefault=False)
+    grimpeur_vitesse_monter_secondaire = ntproperty("Properties/VitesseGrimpeurmonterSecondaire", 0.5, writeDefault=False)
+    vitesse_grimpeur_descend_secondaire = ntproperty("Properties/VitesseGrimpeurDescendSecondaire", -0.5, writeDefault=False)
 
 values = Properties()
+
+
+
