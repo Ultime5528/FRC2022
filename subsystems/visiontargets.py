@@ -1,6 +1,5 @@
 import commands2
 from networktables import NetworkTables
-from pyfrc.physics.visionsim import VisionSim
 from wpilib import RobotBase
 
 
@@ -14,6 +13,7 @@ class VisionTargets(commands2.SubsystemBase):
         self.cargoNormyEntry = NetworkTables.getEntry("Vision/Cargo/Norm_Y")
 
         if RobotBase.isSimulation():
+            from pyfrc.physics.visionsim import VisionSim
             self.basepilotable = basepilotable
             self.cargo_sim = VisionSim([VisionSim.Target(23,53,0,360)], 120, 0, 100)
 

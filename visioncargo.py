@@ -15,8 +15,6 @@ def main():
     cs.enableLogging()
     camera = cs.startAutomaticCapture(dev=1)
 
-    while True:
-        time.sleep(0.01)
 
     nt_isredalliance = NetworkTables.getEntry("FMSInfo/IsRedAlliance")
     isRedAlliance = nt_isredalliance.getBoolean(None)

@@ -60,6 +60,7 @@ def main():
                 area = cv2.contourArea(cnt)
                 minRect = cv2.minAreaRect(cnt)
                 (_, _), (minW, minH), angle = minRect
+
                 minRect = np.int0(cv2.boxPoints(minRect))
                 minArea = cv2.contourArea(minRect)
                 rectangularity = area / minArea if minArea else 0
