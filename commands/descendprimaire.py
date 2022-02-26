@@ -11,7 +11,7 @@ class DescendPrimaire(commands2.CommandBase):
         self.grimpeur.descend()
 
     def isFinished(self) -> bool:
-        return self.grimpeur.switch_bas.get()
+        return self.grimpeur._switch_bas.get()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()
