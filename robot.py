@@ -25,6 +25,9 @@ from commands.avancer import Avancer
 from commands.tourner import Tourner
 from commands.prendreballon import PrendreBallon
 from commands.suivretrajectoire import SuivreTrajectoire
+from commands.interpolatedShoot import InterpolatedShoot
+from commands.dashboardShoot import DashboardShoot
+from commands.ejectershooter import EjecterShooter
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
@@ -73,6 +76,10 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("descendre", DescendPrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("descendre secondaire", DescendreSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("monter intake", MonterIntake(self.grimpeur))
+        wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets, self.stick))
+        wpilib.SmartDashboard.putData("Speed Testing Shoot", DashboardShoot(self.shooter))
+        wpilib.SmartDashboard.putData("Eject Ball", EjecterShooter(self.shooter))
+
 
                                                         ], speed=0.55))
 

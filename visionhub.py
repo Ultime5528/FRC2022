@@ -17,7 +17,6 @@ class Target:
 
 def main():
     NetworkTables.initialize(server="127.0.0.1")
-
     nt_normx = NetworkTables.getEntry("Vision/Hub/Norm_X")
     nt_normy = NetworkTables.getEntry("Vision/Hub/Norm_Y")
 
