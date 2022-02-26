@@ -11,8 +11,9 @@ from subsystems.shooter import Shooter
 
 from commands.piloter import Piloter
 from commands.viserhub import ViserHub
-from commands.shoot import Shoot
-
+from commands.interpolatedShoot import InterpolatedShoot
+from commands.dashboardShoot import DashboardShoot
+from commands.ejecterballonshooter import EjecterBallonShooter
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
@@ -30,11 +31,9 @@ class Robot(commands2.TimedCommandRobot):
 
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-
-        wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
-
-
-
+        wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets, self.stick))
+        wpilib.SmartDashboard.putData("Speed Testing Shoot", DashboardShoot(self.shooter))
+        wpilib.SmartDashboard.putData("Eject Ball", EjecterBallonShooter(self.shooter))
 
 
 if __name__ == "__main__":
