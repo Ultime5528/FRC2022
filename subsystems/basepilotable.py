@@ -17,83 +17,85 @@ import ports
 
 
 class BasePilotable(commands2.SubsystemBase):
+
     def __init__(self) -> None:
         super().__init__()
-        # TODO correct measurements
-        self.x_wheelbase = 0.58 / 2
-        self.y_wheelbase = 0.515 / 2
         # Motors
-        self.motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_left.restoreFactoryDefaults()
-        self.motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_left_follower.restoreFactoryDefaults()
-        self.motor_left_follower.follow(self.motor_left)
+        self._motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_left.restoreFactoryDefaults()
+        self._motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_left_follower.restoreFactoryDefaults()
+        self._motor_left_follower.follow(self._motor_left)
+        self._motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_right.restoreFactoryDefaults()
+        self._motor_right.setInverted(True)
+        self._motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_right_follower.restoreFactoryDefaults()
+        self._motor_right_follower.follow(self._motor_right)
+        self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
 
-        self.motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_right.restoreFactoryDefaults()
-        self.motor_right.setInverted(True)
-        self.motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2, rev.CANSparkMax.MotorType.kBrushless)
-        self.motor_right_follower.restoreFactoryDefaults()
-        self.motor_right_follower.follow(self.motor_right)
-
-        self.drive = wpilib.drive.DifferentialDrive(self.motor_left, self.motor_right)
         # Odometry
-        self.encoder_left = self.motor_left.getEncoder()
-        self.encoder_right = self.motor_right.getEncoder()
-        self.gyro = wpilib.ADXRS450_Gyro()
-        self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
-        self.field = wpilib.Field2d()
+        self._encoder_left = self._motor_left.getEncoder()
+        self._encoder_right = self._motor_right.getEncoder()
+        self._gyro = wpilib.ADXRS450_Gyro()
+        self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d())
+        self._field = wpilib.Field2d()
+        self._left_encoder_offset = 0
+        self._right_encoder_offset = 0
 
         if RobotBase.isSimulation():
-            self.motor_left_sim = SparkMaxSim(self.motor_left)
-            self.motor_right_sim = SparkMaxSim(self.motor_right)
-            self.gyro_sim = ADXRS450_GyroSim(self.gyro)
-            self.system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
-            self.drive_sim = DifferentialDrivetrainSim(self.system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005])
-            self.kinematics = DifferentialDriveKinematics(0.64)
-            wpilib.SmartDashboard.putData("Field", self.field)
+            self._motor_left_sim = SparkMaxSim(self._motor_left)
+            self._motor_right_sim = SparkMaxSim(self._motor_right)
+            self._gyro_sim = ADXRS450_GyroSim(self._gyro)
+            self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
+            self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005])
+            wpilib.SmartDashboard.putData("Field", self._field)
 
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
-        self.drive.arcadeDrive(forwardSpeed, rotation, False)
+        self._drive.arcadeDrive(forwardSpeed, rotation, False)
 
     def tankDrive(self, left: float, right: float) -> None:
-        self.drive.tankDrive(left, right, False)
+        self._drive.tankDrive(left, right, False)
 
     def leftDrive(self, speed: float) -> None:
-        self.motor_left.set(speed)
+        self._motor_left.set(speed)
 
     def rightDrive(self, speed: float) -> None:
-        self.motor_right.set(speed)
+        self._motor_right.set(speed)
 
     def simulationPeriodic(self):
-        self.drive_sim.setInputs(
-            self.motor_left.get() * RobotController.getInputVoltage(),
-            self.motor_right.get() * RobotController.getInputVoltage())
-        self.drive_sim.update(0.02)
-        self.motor_left_sim.setPosition(self.drive_sim.getLeftPosition())
-        self.motor_left_sim.setVelocity(self.drive_sim.getLeftVelocity())
-        self.motor_right_sim.setPosition(self.drive_sim.getRightPosition())
-        self.motor_right_sim.setVelocity(self.drive_sim.getRightVelocity())
-        self.gyro_sim.setAngle(-self.drive_sim.getHeading().degrees())
+        self._drive_sim.setInputs(
+            self._motor_left.get() * RobotController.getInputVoltage(),
+            self._motor_right.get() * RobotController.getInputVoltage())
+        self._drive_sim.update(0.02)
+        self._motor_left_sim.setPosition(self._drive_sim.getLeftPosition() + self._left_encoder_offset)
+        self._motor_left_sim.setVelocity(self._drive_sim.getLeftVelocity())
+        self._motor_right_sim.setPosition(self._drive_sim.getRightPosition() + self._right_encoder_offset)
+        self._motor_right_sim.setVelocity(self._drive_sim.getRightVelocity())
+        self._gyro_sim.setAngle(-self._drive_sim.getHeading().degrees())
 
     def resetOdometry(self) -> None:
-        self.encoder_left.setPosition(0)
-        self.encoder_right.setPosition(0)
-        self.gyro.reset()
-        self.odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
+        self._left_encoder_offset = self._encoder_left.getPosition()
+        self._right_encoder_offset = self._encoder_right.getPosition()
+        self._gyro.reset()
+        self._odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
 
         if RobotBase.isSimulation():
-            self.motor_left_sim.setPosition(0)
-            self.motor_right_sim.setPosition(0)
-            self.drive_sim.setPose(Pose2d())
+            self._drive_sim.setPose(Pose2d())
 
     def getAngle(self):
-        return -math.remainder(self.gyro.getAngle(), 360.0)
+        return -math.remainder(self._gyro.getAngle(), 360.0)
+
+    def getLeftEncoderPosition(self):
+        return self._encoder_left.getPosition() - self._left_encoder_offset
+
+    def getRightEncoderPosition(self):
+        return self._encoder_right.getPosition() - self._right_encoder_offset
 
     def getAverageEncoderPosition(self):
-        return (self.encoder_left.getPosition() + self.encoder_right.getPosition()) / 2
+        return (self.getLeftEncoderPosition() + self.getRightEncoderPosition()) / 2
 
     def periodic(self):
-        self.odometry.update(self.gyro.getRotation2d(), self.encoder_left.getPosition(), self.encoder_right.getPosition())
-        self.field.setRobotPose(self.odometry.getPose())
+        self._odometry.update(self._gyro.getRotation2d(), self.getLeftEncoderPosition(), self.getRightEncoderPosition())
+        self._field.setRobotPose(self._odometry.getPose())
 

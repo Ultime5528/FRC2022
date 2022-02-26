@@ -44,7 +44,7 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 12).whenPressed(ArreterIntake(self.intake))
 
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
-        wpilib.SmartDashboard.putData("suivre trajectoire",
+        wpilib.SmartDashboard.putData("Suivre Trajectoire",
                                       SuivreTrajectoire(self.base_pilotable,
                                                         [
                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
