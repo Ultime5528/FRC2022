@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from networktables import NetworkTables
 from cscore import CameraServer
+import ports
 
 
 class Target:
@@ -24,7 +25,7 @@ def main():
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture(dev=0)
+    camera = cs.startAutomaticCapture(dev=ports.camera_hub)
     camera.setResolution(320, 240)
     camera.setFPS(30)
     camera.setBrightness(0)

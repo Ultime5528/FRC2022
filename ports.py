@@ -8,6 +8,8 @@ shooter_motor_1 = 5
 shooter_motor_2 = 6
 shooter_backspin_motor = 7
 
+camera_hub = 0
+camera_cargo = 1
 
 
 # PWM

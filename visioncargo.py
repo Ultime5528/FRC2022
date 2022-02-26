@@ -7,6 +7,7 @@ from networktables import NetworkTables
 from cscore import CameraServer
 from vision.color import Color
 from vision.balldetection.algorithms import circularityMoments
+import ports
 
 isConnected = threading.Condition()
 notified = [False]
@@ -40,7 +41,7 @@ def main():
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture(dev=1)
+    camera = cs.startAutomaticCapture(dev=ports.camera_cargo)
     camera.setResolution(320, 240) # TODO CHANGE
     camera.setFPS(30) # TODO CHANGE
 
