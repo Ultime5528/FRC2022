@@ -4,7 +4,7 @@ import sys
 
 
 class Properties:
-    viser_hub_speed = ntproperty("Properties/ViserHubSpeed", -0.1, writeDefault=False)
+    viser_hub_speed = ntproperty("Properties/ViserHubSpeed", 0.1, writeDefault=False)
     viser_hub_threshold = ntproperty("Properties/ViserHubThreshold", 0.2, writeDefault=False)
     viser_hub_x_offset = ntproperty("Properties/ViserHubXOffset", 0.05, writeDefault=False)
     intake_speed = ntproperty("Properties/intake_speed", 1, writeDefault=False)

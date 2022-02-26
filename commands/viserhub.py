@@ -1,3 +1,5 @@
+import math
+
 from commands2 import CommandBase
 from subsystems.basepilotable import BasePilotable
 from subsystems.visiontargets import VisionTargets
@@ -20,11 +22,11 @@ class ViserHub(CommandBase):
     def execute(self) -> None:
         if self.visiontargets.hubFound:
             self.error = self.visiontargets.hubNormX - properties.values.viser_hub_x_offset
+
             if self.error >= 0:
-                self.base_pilotable.
-                self.base_pilotable.rightDrive(properties.values.viser_hub_speed)
+                self.base_pilotable.tankDrive(math.copysign(properties.values.viser_hub_speed, -1), 0)
             else:
-                self.base_pilotable.leftDrive(properties.values.viser_hub_speed)
+                self.base_pilotable.tankDrive(0, math.copysign(properties.values.viser_hub_speed, -1))
 
     def end(self, interrupted: bool) -> None:
         self.base_pilotable.arcadeDrive(0, 0)

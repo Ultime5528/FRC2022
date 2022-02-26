@@ -40,6 +40,7 @@ class Robot(commands2.TimedCommandRobot):
         self.intake = Intake()
         self.base_pilotable = BasePilotable()
         self.shooter = Shooter()
+        self.grimpeur = Grimpeur()
         self.vision_targets = VisionTargets(self.base_pilotable)
 
         # self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))

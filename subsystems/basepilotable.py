@@ -43,7 +43,7 @@ class BasePilotable(SubsystemBase):
         self._encoder_left = self._motor_left.getEncoder()
         self._encoder_right = self._motor_right.getEncoder()
         self._gyro = wpilib.ADXRS450_Gyro()
-        self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d())
+        self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d(), initialPose=Pose2d(5,5,0))
         self._field = wpilib.Field2d()
         wpilib.SmartDashboard.putData("Field", self._field)
         self._left_encoder_offset = 0
@@ -100,6 +100,12 @@ class BasePilotable(SubsystemBase):
 
     def getAverageEncoderPosition(self):
         return (self.getLeftEncoderPosition() + self.getRightEncoderPosition()) / 2
+
+    def getPose(self):
+        return self._odometry.getPose()
+
+    def getField(self):
+        return self._field
 
     def periodic(self):
         self._odometry.update(self._gyro.getRotation2d(), self.getLeftEncoderPosition(), self.getRightEncoderPosition())
