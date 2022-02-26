@@ -38,7 +38,7 @@ class BasePilotable(SubsystemBase):
         self._motor_right_follower.follow(self._motor_right)
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
 
-        self.addChild("DifferentialDrive", self.drive)
+        self.addChild("DifferentialDrive", self._drive)
         # Odometry
         self._encoder_left = self._motor_left.getEncoder()
         self._encoder_right = self._motor_right.getEncoder()
@@ -47,7 +47,7 @@ class BasePilotable(SubsystemBase):
         self._field = wpilib.Field2d()
         self._left_encoder_offset = 0
         self._right_encoder_offset = 0
-        self.addChild("Gyro", self.gyro)
+        self.addChild("Gyro", self._gyro)
 
         if RobotBase.isSimulation():
             self._motor_left_sim = SparkMaxSim(self._motor_left)

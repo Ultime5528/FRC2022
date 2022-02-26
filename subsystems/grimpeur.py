@@ -2,12 +2,12 @@ import rev
 import commands2
 import ports
 from wpilib import DigitalInput, RobotBase
-
+from utils.subsystembase import SubsystemBase
 import properties
 from utils.sparkmaxsim import SparkMaxSim
 
 
-class Grimpeur(commands2.SubsystemBase):
+class Grimpeur(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
@@ -16,6 +16,12 @@ class Grimpeur(commands2.SubsystemBase):
 
         self.switch_bas_secondaire = DigitalInput(ports.grimpeur_switch_bas_secondaire)
         self.switch_haut_secondaire = DigitalInput(ports.grimpeur_switch_haut_secondaire)
+
+        self.addChild("SwitchBas", self.switch_bas)
+        self.addChild("SwitchHaut", self.switch_haut)
+        self.addChild("SwitchBasSecondaire", self.switch_bas_secondaire)
+        self.addChild("SwitchHautSecondaire", self.switch_haut_secondaire)
+
         # Motors
         self.motor_grimpeur_primaire_follower = rev.CANSparkMax(ports.grimpeur_follower_motor_,
                                                                 rev.CANSparkMax.MotorType.kBrushless)
