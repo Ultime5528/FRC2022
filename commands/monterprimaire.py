@@ -7,11 +7,12 @@ class MonterPrimaire(commands2.CommandBase):
         super().__init__()
         self.grimpeur = grimpeur
         self.setName("grimper")
+
     def execute(self) -> None:
         self.grimpeur.monter()
 
     def isFinished(self) -> bool:
-        return self.grimpeur.switch_haut.get()
+        return self.grimpeur._switch_haut.get()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()
