@@ -12,18 +12,22 @@ class ViserHub(CommandBase):
         self.visiontargets = visiontargets
         self.setName("Viser hub")
 
+        self.error = float("inf")
+
     def initialize(self) -> None:
         self.error = float("inf")
 
     def execute(self) -> None:
-        self.error = self.visiontargets.hubNormX - properties.viser_hub_x_offset
-        if self.error >= 0:
-            self.base_pilotable.rightDrive(-properties.viser_hub_speed)
-        else:
-            self.base_pilotable.leftDrive(-properties.viser_hub_speed)
+        if self.visiontargets.hubFound:
+            self.error = self.visiontargets.hubNormX - properties.values.viser_hub_x_offset
+            if self.error >= 0:
+                self.base_pilotable.
+                self.base_pilotable.rightDrive(properties.values.viser_hub_speed)
+            else:
+                self.base_pilotable.leftDrive(properties.values.viser_hub_speed)
 
     def end(self, interrupted: bool) -> None:
         self.base_pilotable.arcadeDrive(0, 0)
 
     def isFinished(self) -> bool:
-        return abs(self.error) <= properties.viser_hub_threshold
+        return abs(self.error) <= properties.values.viser_hub_threshold

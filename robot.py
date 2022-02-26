@@ -43,7 +43,7 @@ class Robot(commands2.TimedCommandRobot):
         self.vision_targets = VisionTargets(self.base_pilotable)
 
         # self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
-        self.base_pilotable.setDefaultCommand(ViserCargo(self.base_pilotable, self.vision_targets))
+        self.base_pilotable.setDefaultCommand(ViserHub(self.base_pilotable, self.vision_targets))
 
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))

@@ -1,8 +1,18 @@
+import threading
+
 import numpy as np
 import cv2
 from networktables import NetworkTables
 from cscore import CameraServer
 
+
+isConnected = threading.Condition()
+notified = [False]
+
+def connectionListener(connected, info):
+    with isConnected:
+        notified[0] = True
+        isConnected.notify()
 
 class Target:
     def __init__(self, y):
@@ -17,6 +27,14 @@ class Target:
 
 def main():
     NetworkTables.initialize(server="127.0.0.1")
+    NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
+
+    with isConnected:
+        print("Waiting for connection...")
+        if not notified[0]:
+            isConnected.wait()
+    print("Connected!")
+
     nt_normx = NetworkTables.getEntry("Vision/Hub/Norm_X")
     nt_normy = NetworkTables.getEntry("Vision/Hub/Norm_Y")
 
