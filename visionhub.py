@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from networktables import NetworkTables
 from cscore import CameraServer
+import ports
 
 
 class Target:
@@ -16,14 +17,15 @@ class Target:
 
 
 def main():
-    NetworkTables.initialize(server="127.0.0.1")
+    NetworkTables.initialize(server="169.254.104.211")
     nt_normx = NetworkTables.getEntry("Vision/Hub/Norm_X")
     nt_normy = NetworkTables.getEntry("Vision/Hub/Norm_Y")
 
+    CameraServer.kBasePort = 1183
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture()
+    camera = cs.startAutomaticCapture(dev=ports.camera_hub)
     camera.setResolution(320, 240)
     camera.setFPS(30)
     camera.setBrightness(0)
@@ -32,7 +34,7 @@ def main():
 
     cvSink = cs.getVideo()
 
-    outputStream = cs.putVideo("Name", 320, 240)
+    outputStream = cs.putVideo("Hub", 320, 240)
 
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
@@ -42,11 +44,10 @@ def main():
 
 
     while True:
-        time, img = cvSink.grabFrame(img)
-        if time == 0:
-            outputStream.notifyError(cvSink.getError());
+        ret, img = cvSink.grabFrame(img)
+        if ret == 0:
+            outputStream.notifyError(cvSink.getError())
             continue
-
 
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lowerGreen, highGreen)
@@ -59,6 +60,7 @@ def main():
                 area = cv2.contourArea(cnt)
                 minRect = cv2.minAreaRect(cnt)
                 (_, _), (minW, minH), angle = minRect
+
                 minRect = np.int0(cv2.boxPoints(minRect))
                 minArea = cv2.contourArea(minRect)
                 rectangularity = area / minArea if minArea else 0
@@ -73,14 +75,14 @@ def main():
             yCenter = y + (h / 2)
             validPositions.append((xCenter, yCenter))
 
-        errorX = int(img.shape[1] / 2.5)
-        errorY = int(img.shape[0] / 5)
+        maxErrorX = int(img.shape[1] * 0.4)
+        maxErrorY = int(img.shape[0] * 0.20)
         targets = []
 
         for targetX, targetY in validPositions:
             target = Target(targetY)
             for x, y in validPositions:
-                if abs(targetY - y) < errorY and abs(targetX - x) < errorX:
+                if abs(targetY - y) < maxErrorY and abs(targetX - x) < maxErrorX:
                     target.positions.append((x, y))
                     target.error += abs(targetY - y)
             targets.append(target)

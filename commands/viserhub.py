@@ -5,18 +5,18 @@ import properties
 
 
 class ViserHub(CommandBase):
-    def __init__(self, base_pilotable: BasePilotable, visionhub: VisionTargets):
+    def __init__(self, base_pilotable: BasePilotable, visiontargets: VisionTargets):
         super().__init__()
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)
-        self.visionhub = visionhub
+        self.visiontargets = visiontargets
         self.setName("Viser hub")
 
     def initialize(self) -> None:
         self.error = float("inf")
 
     def execute(self) -> None:
-        self.error = self.visionhub.normX - properties.viser_hub_x_offset
+        self.error = self.visiontargets.hubNormX - properties.viser_hub_x_offset
         if self.error >= 0:
             self.base_pilotable.rightDrive(-properties.viser_hub_speed)
         else:

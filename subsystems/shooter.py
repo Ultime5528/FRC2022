@@ -20,8 +20,7 @@ def compute_speed_percentage(speed, setpoint):
     else:
         return round(min(100.0, speed / setpoint * 100))
 
-
-class Shooter(SubsystemBase):
+class Shooter(commands2.SubsystemBase):
     main_verified_points = [[-1, 100], [0, 1000], [0.5, 2500], [1, 3000]]
     backspin_verified_points = [[-1, 100], [0, 1000], [0.5, 2500], [1, 3000]]
     main_interpolator = LinearInterpolator(main_verified_points)
@@ -77,11 +76,11 @@ class Shooter(SubsystemBase):
         self.backspin_setpoint = 0
 
     def periodic(self) -> None:
-        wpilib.SmartDashboard.putNumber("Backspin Motor", self.backspin_encoder.getVelocity())
-        wpilib.SmartDashboard.putNumber("Main Motors", self.encoder.getVelocity())
+        wpilib.SmartDashboard.putNumber("BackspinMotor", self.backspin_encoder.getVelocity())
+        wpilib.SmartDashboard.putNumber("MainMotors", self.encoder.getVelocity())
 
-        wpilib.SmartDashboard.putNumber("Main Motor percent speed", compute_speed_percentage(self.encoder.getVelocity(), self.setpoint))
-        wpilib.SmartDashboard.putNumber("Backspin Motor percent speed", compute_speed_percentage(self.backspin_encoder.getVelocity(), self.backspin_setpoint))
+        wpilib.SmartDashboard.putNumber("MainMotorPercentSpeed", compute_speed_percentage(self.encoder.getVelocity(), self.setpoint))
+        wpilib.SmartDashboard.putNumber("BackspinMotorPercentSpeed", compute_speed_percentage(self.backspin_encoder.getVelocity(), self.backspin_setpoint))
 
 
 

@@ -11,6 +11,9 @@ shooter_backspin_motor = 7
 grimpeur_follower_motor_ = 8
 grimpeur_leader_motor_ = 9
 grimpeur_secondaire_motor_ = 10
+camera_hub = 0
+camera_cargo = 1
+
 
 # PWM
 intake_moteur_intake = 0

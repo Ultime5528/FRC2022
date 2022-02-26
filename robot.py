@@ -2,6 +2,7 @@ import wpilib
 import commands2
 from commands2.button import JoystickButton
 
+from commands.visercargo import ViserCargo
 from commands.descendresecondaire import DescendreSecondaire
 from commands.monterintake import MonterIntake
 from commands.monterprimaire import MonterPrimaire
@@ -28,12 +29,15 @@ from commands.prendreballon import PrendreBallon
 from commands.suivretrajectoire import SuivreTrajectoire
 from commands.interpolatedShoot import InterpolatedShoot
 from commands.dashboardShoot import DashboardShoot
+from commands.ejecterballonshooter import EjecterBallonShooter
+from utils.cameraserver import CameraServer
 from commands.ejectershooter import EjecterShooter
+
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
-        wpilib.CameraServer.launch("visionhub.py:main")
-
+        CameraServer.launch("visionhub.py:main")
+        CameraServer.launch("visioncargo.py:main")
         self.stick = wpilib.Joystick(0)
 
         self.intake = Intake()
@@ -51,6 +55,7 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 6).whenPressed(EjecterIntake(self.intake))
         JoystickButton(self.stick, 7).whenPressed(PrendreBallon(self.intake))
         JoystickButton(self.stick, 12).whenPressed(ArreterIntake(self.intake))
+
 
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))

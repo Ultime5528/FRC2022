@@ -2,11 +2,9 @@ import cv2
 import numpy as np
 import math
 from enum import Enum
-from skimage.morphology import skeletonize
-from scipy.optimize import minimize
 from typing import List, Optional
 from dataclasses import dataclass
-from ..dataset import Color
+from ..color import Color
 
 
 def maskColor(img: np.ndarray, color: Color, rs: Optional[int]=None, rv: Optional[int]=None, bs: Optional[int]=None, bv: Optional[int]=None) -> np.ndarray:
@@ -123,6 +121,8 @@ def findCirclesInContours(contours: List[np.ndarray], max_iterations: int=10, th
     :param max_iterations: Amount of iterations to run it for
     :return: The circles found in the contours in format (x, y, w, h) (bounding rect)
     """
+    from scipy.optimize import minimize
+
     threshold_distance_percentage = threshold_distance_percentage or 0.21
     threshold_inlier_count = threshold_inlier_count or 60
     rects = []
@@ -221,4 +221,5 @@ def skeletonization(img: np.ndarray) -> np.ndarray:
     :param img: Binary image to skeletonize
     :return: The skeleton of the binary image
     """
+    from skimage.morphology import skeletonize
     return skeletonize(img / 255, method="lee")

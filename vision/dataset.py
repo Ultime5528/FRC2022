@@ -1,36 +1,22 @@
 from dataclasses import dataclass
 from enum import Enum
 import math
-import os
 from pathlib import Path
 import shutil
 from typing import List
-
 from dotenv import load_dotenv
 import supervisely_lib as sly
 from supervisely_lib.annotation.label import Label
 from tqdm.auto import tqdm
 
+from .color import Color
 from .evaluate.metrics.bounding_box import BoundingBox, BBFormat
+
 
 TEAM_NAME = "Ultime 5528"
 WORKSPACE_NAME = "FRC 2022"
 PROJECT_NAME = "cargo_resized"
 DATASET_DIR = Path(__file__).parent / "dataset_cache"
-
-
-class Color(Enum):
-    RED = "red_ball"
-    BLUE = "blue_ball"
-
-    @property
-    def bgr(self):
-        if self == Color.RED:
-            return 0, 0, 255
-        elif self == Color.BLUE:
-            return 255, 0, 0
-        else:
-            raise NotImplementedError()
 
 
 @dataclass
