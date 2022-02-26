@@ -1,12 +1,13 @@
 import commands2
 from networktables import NetworkTables
-from pyfrc.physics.visionsim import VisionSim
+# from pyfrc.physics.visionsim import VisionSim
 from wpimath.geometry import Pose2d
 from wpilib import RobotBase, Timer
 
 
 class VisionTargets(commands2.SubsystemBase):
-     def __init__(self, basepilotable) -> None:
+    def __init__(self, basepilotable) -> None:
+        super().__init__()
         self.cargoNormxEntry = NetworkTables.getEntry("Vision/Cargo/Norm_X")
         self.cargoNormyEntry = NetworkTables.getEntry("Vision/Cargo/Norm_Y")
         self.cargoFoundEntry = NetworkTables.getEntry("Vision/Cargo/Found")

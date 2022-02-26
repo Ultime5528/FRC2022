@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 from networktables import NetworkTables
 from cscore import CameraServer
-from vision.dataset import Color
+from vision.color import Color
 from vision.balldetection.algorithms import circularityMoments
 
 isConnected = threading.Condition()
@@ -17,7 +17,7 @@ def connectionListener(connected, info):
         isConnected.notify()
 
 def main():
-    NetworkTables.initialize(server="127.0.0.1")
+    NetworkTables.initialize(server="169.254.104.211")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
     with isConnected:
@@ -40,7 +40,7 @@ def main():
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture()
+    camera = cs.startAutomaticCapture(dev=1)
     camera.setResolution(320, 240) # TODO CHANGE
     camera.setFPS(30) # TODO CHANGE
 
@@ -58,18 +58,19 @@ def main():
 
         targets = circularityMoments(img, color)
 
-        nearest = max(targets, key=lambda t: t[0])
+        if targets:
+            nearest = max(targets, key=lambda t: t[0])
 
-        norm_x = (nearest[0] / img.shape[1]) * 2 - 1
-        norm_y = (nearest[1] / img.shape[0]) * 2 - 1
+            norm_x = (nearest[0] / img.shape[1]) * 2 - 1
+            norm_y = (nearest[1] / img.shape[0]) * 2 - 1
 
-        nt_normx.setDouble(norm_x)
-        nt_normy.setDouble(norm_y)
+            nt_normx.setDouble(norm_x)
+            nt_normy.setDouble(norm_y)
 
-        for t in targets:
-            cv2.circle(img, (t[2], t[3]), 3, (0, 0, 255), 3)
+            for t in targets:
+                cv2.circle(img, (t[2], t[3]), 3, (0, 0, 255), 3)
 
-        cv2.circle(img, (nearest[2], nearest[3]), 3, (0, 255, 0), 3)
+            cv2.circle(img, (nearest[2], nearest[3]), 3, (0, 255, 0), 3)
         outputStream.putFrame(img)
 
 if __name__ == '__main__':

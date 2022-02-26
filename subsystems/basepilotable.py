@@ -37,7 +37,7 @@ class BasePilotable(commands2.SubsystemBase):
             self.system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
             self.drive_sim = DifferentialDrivetrainSim(self.system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005])
             self.kinematics = DifferentialDriveKinematics(0.64)
-            self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
+            #self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
             self.field = wpilib.Field2d()
             wpilib.SmartDashboard.putData("Field", self.field)
     
@@ -60,8 +60,8 @@ class BasePilotable(commands2.SubsystemBase):
         self.motor_front_right_sim.setVelocity(self.drive_sim.getRightPosition())
         self.gyro_sim.setAngle(self.drive_sim.getHeading().degrees())
     
-    def periodic(self):
+   #def periodic(self):
 
-        self.odometry.update(self.gyro.getRotation2d(), self.encoder_front_left.getPosition(), self.encoder_front_right.getPosition())
+        #self.odometry.update(self.gyro.getRotation2d(), self.encoder_front_left.getPosition(), self.encoder_front_right.getPosition())
 
-        self.field.setRobotPose(self.odometry.getPose())
+        #self.field.setRobotPose(self.odometry.getPose())
