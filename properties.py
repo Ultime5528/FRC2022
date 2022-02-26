@@ -15,15 +15,16 @@ class Properties:
     trajectoire_angle_p = ntproperty("Properties/trajectoire_angle_p", 0.008, writeDefault=False)
     trajectoire_vue_avant = ntproperty("Properties/trajectoire_vue_avant", 0.25, writeDefault=False)
     
-    grimpeur_vitesse_monter = ntproperty("Properties/VitesseGrimpeurmonter", 0.5, writeDefault=False)
+    grimpeur_vitesse_monter = ntproperty("Properties/VitesseGrimpeurMonter", 0.5, writeDefault=False)
     vitesse_grimpeur_descend = ntproperty("Properties/VitesseGrimpeurDescend", -0.5, writeDefault=False)
-    grimpeur_vitesse_monter_secondaire = ntproperty("Properties/VitesseGrimpeurmonterSecondaire", 0.5, writeDefault=False)
+    grimpeur_vitesse_monter_secondaire = ntproperty("Properties/VitesseGrimpeurMonterSecondaire", 0.5, writeDefault=False)
     vitesse_grimpeur_descend_secondaire = ntproperty("Properties/VitesseGrimpeurDescendSecondaire", -0.5, writeDefault=False)
     backspin_shooter_speed = ntproperty("Properties/BackspinShooterSpeed", 1, writeDefault=False)
     shooter_speed = ntproperty("Properties/ShooterSpeed", 1, writeDefault=False)
     ejecter_shooter_speed = ntproperty("Properties/EjecterShooterSpeed", 1, writeDefault=False)
     ejecter_backspin_shooter_speed = ntproperty("Properties/BackspinShooterSpeed", 1, writeDefault=False)
     ejecter_shooter_temps = ntproperty("Properties/EjecterShooterTemps", 4, writeDefault=False)
+
 
 values = Properties()
 
