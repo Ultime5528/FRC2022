@@ -1,3 +1,5 @@
+from utils.subsystembase import SubsystemBase
+
 import commands2
 import wpilib
 from wpimath.controller import SimpleMotorFeedforwardMeters, BangBangController
@@ -19,7 +21,7 @@ def compute_speed_percentage(speed, setpoint):
         return round(min(100.0, speed / setpoint * 100))
 
 
-class Shooter(commands2.SubsystemBase):
+class Shooter(SubsystemBase):
     main_verified_points = [[-1, 100], [0, 1000], [0.5, 2500], [1, 3000]]
     backspin_verified_points = [[-1, 100], [0, 1000], [0.5, 2500], [1, 3000]]
     main_interpolator = LinearInterpolator(main_verified_points)

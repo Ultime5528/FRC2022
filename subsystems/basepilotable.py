@@ -10,16 +10,20 @@ from utils.sparkmaxsim import SparkMaxSim
 from wpimath.kinematics import DifferentialDriveKinematics, DifferentialDriveOdometry
 from wpilib.simulation import DifferentialDrivetrainSim, ADXRS450_GyroSim
 
+from utils.subsystembase import SubsystemBase
 import commands2
 import rev
 
 import ports
 
 
-class BasePilotable(commands2.SubsystemBase):
-
+class BasePilotable(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
+
+        # TODO correct measurements
+        self.x_wheelbase = 0.58 / 2
+        self.y_wheelbase = 0.515 / 2
         # Motors
         self._motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_left.restoreFactoryDefaults()
@@ -34,6 +38,7 @@ class BasePilotable(commands2.SubsystemBase):
         self._motor_right_follower.follow(self._motor_right)
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
 
+        self.addChild("DifferentialDrive", self.drive)
         # Odometry
         self._encoder_left = self._motor_left.getEncoder()
         self._encoder_right = self._motor_right.getEncoder()
@@ -42,6 +47,7 @@ class BasePilotable(commands2.SubsystemBase):
         self._field = wpilib.Field2d()
         self._left_encoder_offset = 0
         self._right_encoder_offset = 0
+        self.addChild("Gyro", self.gyro)
 
         if RobotBase.isSimulation():
             self._motor_left_sim = SparkMaxSim(self._motor_left)

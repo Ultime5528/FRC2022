@@ -1,22 +1,25 @@
 import wpilib
 import commands2
 from wpilib import RobotBase
-
+from utils.subsystembase import SubsystemBase
 import ports
 import properties
 
 
-class Intake(commands2.SubsystemBase):
+class Intake(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
         # Motors
         self._intakeMotor = wpilib.PWMVictorSPX(ports.intake_moteur_intake)
         self._transporterMotor = wpilib.PWMVictorSPX(ports.intake_moteur_transporter)
-
+        self.addChild("IntakeMotor", self._intakeMotor)
+        self.addChild("TransporterMotor", self._transporterMotor)
         # Sensors
         self._sensorIntake = wpilib.DigitalInput(ports.intake_sensor_intake)
         self._sensorTransporter = wpilib.DigitalInput(ports.intake_sensor_transporter)
+        self.addChild("SensorIntake", self._sensorIntake)
+        self.addChild("SensorTransporter", self._sensorTransporter)
 
     def activerIntake(self):
         self._intakeMotor.set(properties.values.intake_speed)
