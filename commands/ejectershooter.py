@@ -9,6 +9,7 @@ class EjecterShooter(commands2.CommandBase):
         super().__init__()
         self.shooter = shooter
         self.timer = wpilib.Timer()
+        self.setName("Ejecter Shooter")
 
     def initialize(self) -> None:
         self.timer.reset()

@@ -8,8 +8,8 @@ shooter_motor_1 = 5
 shooter_motor_2 = 6
 shooter_backspin_motor = 7
 
-grimpeur_follower_motor_ = 8
-grimpeur_leader_motor_ = 9
+grimpeur_follower_motor = 8
+grimpeur_leader_motor = 9
 grimpeur_secondaire_motor_ = 10
 camera_hub = 0
 camera_cargo = 1

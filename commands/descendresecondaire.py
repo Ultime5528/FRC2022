@@ -6,7 +6,7 @@ from subsystems.grimpeur import Grimpeur
 class DescendreSecondaire(commands2.CommandBase):
     def __init__(self, grimpeur: Grimpeur):
         super().__init__()
-        self.setName("descendre secondaire")
+        self.setName("Descendre Secondaire")
         self.grimpeur = grimpeur
         self.addRequirements(self.grimpeur)
 

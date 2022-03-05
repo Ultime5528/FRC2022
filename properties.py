@@ -31,6 +31,7 @@ class Properties:
     backspin_shooter_speed = ntproperty("Properties/BackspinShooterSpeed", 1, writeDefault=False)
     shooter_speed = ntproperty("Properties/ShooterSpeed", 1, writeDefault=False)
     ejecter_ballon_temps = 4
+    distance_alignement_grimpeur =ntproperty("Properties/DistanceAlignementGrimpeur", 1, writeDefault=False)
 values = Properties()
 
 

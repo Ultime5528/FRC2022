@@ -8,6 +8,7 @@ from wpilib import Joystick
 class InterpolatedShoot(commands2.CommandBase):
     def __init__(self, shooter: Shooter, vision_targets: VisionTargets, stick: Joystick):
         super().__init__()
+        self.setName("Interpolated Shoot")
         self.shooter = shooter
         self.vision_targets = vision_targets
 
