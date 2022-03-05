@@ -4,15 +4,11 @@ from commands2.button import JoystickButton
 
 from commands.arreterintake import ArreterIntake
 from commands.ejecterintake import EjecterIntake
-from subsystems.basepilotable import BasePilotable
 from subsystems.intake import Intake
 from subsystems.visiontargets import VisionTargets
 from subsystems.basepilotable import BasePilotable
-from commands.prendreballon import PrendreBallon
 from subsystems.shooter import Shooter
-
 from wpimath.geometry import Pose2d, Rotation2d
-
 from commands.viserhub import ViserHub
 from commands.shoot import Shoot
 from commands.piloter import Piloter
@@ -44,26 +40,43 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 12).whenPressed(ArreterIntake(self.intake))
 
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
-        wpilib.SmartDashboard.putData("Suivre Trajectoire",
+        wpilib.SmartDashboard.putData("Suivre Traj",
                                       SuivreTrajectoire(self.base_pilotable,
                                                         [
-                                                           # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                                                           # Pose2d(2.5, 0.8, Rotation2d.fromDegrees(35)),
-                                                           # Pose2d(5, 5, Rotation2d.fromDegrees(90)),
-                                                           # Pose2d(7.5, 9.3, Rotation2d.fromDegrees(30)),
-                                                           # Pose2d(10, 9.8, Rotation2d.fromDegrees(0)),
-                                                           # Pose2d(12.5, 9, Rotation2d.fromDegrees(-30)),
-                                                           # Pose2d(15, 5, Rotation2d.fromDegrees(-90)),
-                                                           # Pose2d(12.5, 1.6, Rotation2d.fromDegrees(-150)),
-                                                           # Pose2d(10, 1, Rotation2d.fromDegrees(180)),
-                                                           # Pose2d(1, 0, Rotation2d.fromDegrees(180)),
+
                                                             Pose2d(0, 0, Rotation2d.fromDegrees(0)),
                                                             Pose2d(6, 6, Rotation2d.fromDegrees(90)),
-                                                            Pose2d(12, 12, Rotation2d.fromDegrees(0)),
-                                                            Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
-                                                            Pose2d(0, 0, Rotation2d.fromDegrees(180)),
+                                                            # Pose2d(12, 12, Rotation2d.fromDegrees(0)),
+                                                            # Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
+                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(180)),
 
-                                                        ], speed=0.55))
+
+                                                        ], speed=0.55, doitReset=True))
+
+        wpilib.SmartDashboard.putData("Suivre Traj 2",
+                                      SuivreTrajectoire(self.base_pilotable,
+                                                        [
+
+                                                            # Pose2d(6, 6, Rotation2d.fromDegrees(90)),
+                                                            Pose2d (12, 12, Rotation2d.fromDegrees(0))
+                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                                            # Pose2d(2.5, 2.5, Rotation2d.fromDegrees(90)),
+                                                            # Pose2d(0, 5, Rotation2d.fromDegrees(-180)),
+                                                            # Pose2d(-2.5, 2.5, Rotation2d.fromDegrees(-90)),
+                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                                            # Pose2d(5, 5, Rotation2d.fromDegrees(90)),
+                                                            # Pose2d(0, 10, Rotation2d.fromDegrees(-180)),
+                                                            # Pose2d(-5, 5, Rotation2d.fromDegrees(-90)),
+                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                                            # Pose2d(10, 10, Rotation2d.fromDegrees(90)),
+                                                            # Pose2d(0, 20, Rotation2d.fromDegrees(-180)),
+                                                            # Pose2d(-10, 10, Rotation2d.fromDegrees(-90)),
+                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+
+
+                                                        ], speed=0.55, addRobotPose=True))
 
 
 if __name__ == "__main__":

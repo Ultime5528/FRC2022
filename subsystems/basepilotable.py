@@ -80,6 +80,7 @@ class BasePilotable(commands2.SubsystemBase):
         self._gyro.reset()
         self._odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
 
+
         if RobotBase.isSimulation():
             self._drive_sim.setPose(Pose2d())
 
@@ -98,4 +99,7 @@ class BasePilotable(commands2.SubsystemBase):
     def periodic(self):
         self._odometry.update(self._gyro.getRotation2d(), self.getLeftEncoderPosition(), self.getRightEncoderPosition())
         self._field.setRobotPose(self._odometry.getPose())
+
+    def getPose2D(self):
+        return self._odometry.getPose()
 
