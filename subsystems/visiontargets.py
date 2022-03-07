@@ -18,7 +18,7 @@ class VisionTargets(commands2.SubsystemBase):
             x, y = 4, 1
             self.cargo_sim = VisionSim([VisionSim.Target(x, y,0,359)], 120, 0, 10)
 
-            fakecargo = basepilotable.field.getObject("CARGO")
+            fakecargo = basepilotable._field.getObject("CARGO")
             fakecargo.setPose(Pose2d(x, y, 0))
 
     @property
