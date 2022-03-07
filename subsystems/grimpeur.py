@@ -11,8 +11,8 @@ class Grimpeur(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
-        self._switch_bas = DigitalInput(ports.grimpeur_switch_bas)
-        self._switch_haut = DigitalInput(ports.grimpeur_switch_haut)
+        self.switch_bas = DigitalInput(ports.grimpeur_switch_bas)
+        self.encoder_grimpeur = self.motor_front_left.getEncoder()
 
         self._switch_bas_secondaire = DigitalInput(ports.grimpeur_switch_bas_secondaire)
         self._switch_haut_secondaire = DigitalInput(ports.grimpeur_switch_haut_secondaire)
