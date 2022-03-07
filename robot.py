@@ -45,6 +45,7 @@ class Robot(commands2.TimedCommandRobot):
         self.vision_targets = VisionTargets()
         self.shooter = Shooter()
         self.grimpeur = Grimpeur()
+        self.vision_targets = VisionTargets(self.base_pilotable)
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
         
         JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
@@ -78,5 +79,6 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Eject Ball", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
+        
 if __name__ == "__main__":
     wpilib.run(Robot)
