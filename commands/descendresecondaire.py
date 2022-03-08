@@ -14,7 +14,7 @@ class DescendreSecondaire(commands2.CommandBase):
         self.grimpeur.descend_secondaire()
 
     def isFinished(self) -> bool:
-        return self.grimpeur._switch_bas_secondaire.get()
+        return self.grimpeur.getSwitchBasSecondaire()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()

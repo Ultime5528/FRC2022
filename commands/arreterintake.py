@@ -1,4 +1,3 @@
-import wpilib
 from commands2 import CommandBase
 from subsystems.intake import Intake
 

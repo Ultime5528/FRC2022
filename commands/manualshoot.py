@@ -1,12 +1,11 @@
-import wpilib
 import commands2
 from subsystems.shooter import Shooter
 
 
-class Shoot(commands2.CommandBase):
+class ManualShoot(commands2.CommandBase):
     def __init__(self, shooter: Shooter, setpoint, backspin_setpoint):
         super().__init__()
-        self.setName("Shoot")
+        self.setName("Manual Shoot")
         self.shooter = shooter
         self.addRequirements(self.shooter)
         self.setpoint = setpoint

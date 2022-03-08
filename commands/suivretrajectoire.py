@@ -1,4 +1,3 @@
-
 from typing import List
 import commands2
 from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
@@ -13,12 +12,13 @@ class SuivreTrajectoire(commands2.CommandBase):
 
     def __init__(self, basePilotable: BasePilotable, waypoints: List[Pose2d], speed: float) -> None:
         super().__init__()
-        self.setName("SuivreTrajectoire")
+        self.setName("Suivre Trajectoire")
         self.basePilotable = basePilotable
         self.addRequirements(basePilotable)
         config = TrajectoryConfig(self.maxAcceleration, self.maxVelocity)
         self.trajectory = TrajectoryGenerator.generateTrajectory(waypoints, config)
         self.speed = speed
+        self.index = 0
         self.states = self.trajectory.states()
         # TODO
         # self.angleInitial = self.trajectory.states()[0].pose.rotation()
@@ -50,4 +50,3 @@ class SuivreTrajectoire(commands2.CommandBase):
 
     def end(self, interrupted: bool) -> None:
         self.basePilotable.tankDrive(0, 0)
-

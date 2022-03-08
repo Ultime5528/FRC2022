@@ -22,14 +22,14 @@ from subsystems.grimpeur import Grimpeur
 from wpimath.geometry import Pose2d, Rotation2d
 
 from commands.viserhub import ViserHub
-from commands.manualShoot import Shoot
+from commands.manualshoot import Shoot
 from commands.piloter import Piloter
 from commands.avancer import Avancer
 from commands.tourner import Tourner
 from commands.prendreballon import PrendreBallon
 from commands.suivretrajectoire import SuivreTrajectoire
-from commands.interpolatedShoot import InterpolatedShoot
-from commands.dashboardShoot import DashboardShoot
+from commands.interpolatedshoot import InterpolatedShoot
+from commands.dashboardshoot import DashboardShoot
 from utils.cameraserver import CameraServer
 from commands.ejectershooter import EjecterShooter
 

@@ -12,7 +12,7 @@ class MonterPrimaire(commands2.CommandBase):
         self.grimpeur.monter()
 
     def isFinished(self) -> bool:
-        return self.grimpeur._switch_haut.get()
+        return self.grimpeur.getSwitchHaut()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()

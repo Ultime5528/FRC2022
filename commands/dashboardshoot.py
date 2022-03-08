@@ -1,9 +1,5 @@
 import commands2
-import wpilib
-
 from subsystems.shooter import Shooter
-from networktables import NetworkTables
-
 import properties
 
 

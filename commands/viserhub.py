@@ -10,7 +10,7 @@ class ViserHub(CommandBase):
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)
         self.visiontargets = visiontargets
-        self.setName("Viser hub")
+        self.setName("Viser Hub")
 
     def initialize(self) -> None:
         self.error = float("inf")

@@ -9,7 +9,7 @@ class EjecterIntake(CommandBase):
     def __init__(self, intake: Intake):
         super().__init__()
         self.addRequirements(intake)
-        self.setName("EjecterIntake")
+        self.setName("Ejecter Intake")
         self.timer = wpilib.Timer()
         self.intake = intake
 

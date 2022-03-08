@@ -13,7 +13,7 @@ class MonterSecondaire(commands2.CommandBase):
         self.grimpeur.monter_secondaire()
 
     def isFinished(self) -> bool:
-        return self.grimpeur._switch_haut_secondaire.get()
+        return self.grimpeur.getSwitchHautSecondaire()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()

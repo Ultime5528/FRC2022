@@ -61,3 +61,15 @@ class Grimpeur(SubsystemBase):
 
     def getPositionSecondaire(self):
         return self._encoder_secondaire.getPosition()
+
+    def getSwitchBas(self):
+        return self._switch_bas.get()
+
+    def getSwitchBasSecondaire(self):
+        return self._switch_bas_secondaire.get()
+
+    def getSwitchHaut(self):
+        return self._switch_haut.get()
+
+    def getSwitchHautSecondaire(self):
+        return self._switch_haut_secondaire

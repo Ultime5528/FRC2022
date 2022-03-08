@@ -1,12 +1,10 @@
 import commands2
 from subsystems.visiontargets import VisionTargets
-from utils.linearInterpolator import LinearInterpolator
 from subsystems.shooter import Shooter
-from wpilib import Joystick
 
 
 class InterpolatedShoot(commands2.CommandBase):
-    def __init__(self, shooter: Shooter, vision_targets: VisionTargets, stick: Joystick):
+    def __init__(self, shooter: Shooter, vision_targets: VisionTargets):
         super().__init__()
         self.setName("Interpolated Shoot")
         self.shooter = shooter

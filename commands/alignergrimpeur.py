@@ -15,13 +15,13 @@ class _AlignerGrimpeur(commands2.CommandBase):
         self.addRequirements(self.grimpeur)
 
     def initialize(self) -> None:
-        self.positionInitial = self.grimpeur.getPositionSecondaire()
+        self.positionInitiale = self.grimpeur.getPositionSecondaire()
 
     def execute(self) -> None:
         self.grimpeur.descend_secondaire()
 
     def isFinished(self) -> bool:
-        return (self.positionInitial - self.grimpeur.getPositionSecondaire()) >= \
+        return (self.positionInitiale - self.grimpeur.getPositionSecondaire()) >= \
                properties.values.distance_alignement_grimpeur
 
 
