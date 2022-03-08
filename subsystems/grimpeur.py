@@ -14,8 +14,8 @@ class Grimpeur(SubsystemBase):
         self.switch_bas = DigitalInput(ports.grimpeur_switch_bas)
         self.encoder_grimpeur = self.motor_front_left.getEncoder()
 
-        self._switch_bas_secondaire = DigitalInput(ports.grimpeur_switch_bas_secondaire)
-        self._switch_haut_secondaire = DigitalInput(ports.grimpeur_switch_haut_secondaire)
+        self._switch_bas_secondaire = DigitalInput(ports.grimpeur_switch_secondaire_bas)
+        self._switch_haut_secondaire = DigitalInput(ports.grimpeur_switch_secondaire_haut)
 
         self.addChild("SwitchBas", self._switch_bas)
         self.addChild("SwitchHaut", self._switch_haut)
@@ -23,13 +23,13 @@ class Grimpeur(SubsystemBase):
         self.addChild("SwitchHautSecondaire", self._switch_haut_secondaire)
 
         # Motors
-        self._motor_primaire = rev.CANSparkMax(ports.grimpeur_leader_motor,
+        self._motor_primaire = rev.CANSparkMax(ports.grimpeur_moteur_principal_droit,
                                                rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_primaire_follower = rev.CANSparkMax(ports.grimpeur_follower_motor,
+        self._motor_primaire_follower = rev.CANSparkMax(ports.grimpeur_moteur_principal_gauche,
                                                         rev.CANSparkMax.MotorType.kBrushless)
         self._motor_primaire_follower.follow(self._motor_primaire, invert=False)
 
-        self._motor_secondaire = rev.CANSparkMax(ports.grimpeur_secondaire_motor_,
+        self._motor_secondaire = rev.CANSparkMax(ports.grimpeur_moteur_secondaire,
                                                  rev.CANSparkMax.MotorType.kBrushless)
         self._encoder_secondaire = self._motor_secondaire.getEncoder()
 

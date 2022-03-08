@@ -28,11 +28,11 @@ class Shooter(commands2.SubsystemBase):
 
     def __init__(self) -> None:
         super().__init__()
-        self._motor_left = rev.CANSparkMax(ports.shooter_motor_1, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_left = rev.CANSparkMax(ports.shooter_motor_gauche, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_left.restoreFactoryDefaults()
         self._motor_left.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
 
-        self._motor_right = rev.CANSparkMax(ports.shooter_motor_2, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_right = rev.CANSparkMax(ports.shooter_motor_droit, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_right.restoreFactoryDefaults()
         self._motor_right.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
         self._motor_right.follow(self._motor_left, invert=True)
