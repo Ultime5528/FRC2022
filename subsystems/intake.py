@@ -16,8 +16,8 @@ class Intake(SubsystemBase):
         self.addChild("IntakeMotor", self._intakeMotor)
         self.addChild("TransporterMotor", self._transporterMotor)
         # Sensors
-        self._sensorIntake = wpilib.DigitalInput(ports.intake_sensor_intake)
-        self._sensorTransporter = wpilib.DigitalInput(ports.intake_sensor_transporter)
+        self._sensorIntake = wpilib.DigitalInput(ports.intake_sensor_bas)
+        self._sensorTransporter = wpilib.DigitalInput(ports.intake_sensor_haut)
         self.addChild("SensorIntake", self._sensorIntake)
         self.addChild("SensorTransporter", self._sensorTransporter)
 

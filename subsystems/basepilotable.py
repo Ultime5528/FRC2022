@@ -43,8 +43,9 @@ class BasePilotable(SubsystemBase):
         self._encoder_left = self._motor_left.getEncoder()
         self._encoder_right = self._motor_right.getEncoder()
         self._gyro = wpilib.ADXRS450_Gyro()
-        self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d())
+        self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d(), initialPose=Pose2d(5,5,0))
         self._field = wpilib.Field2d()
+        wpilib.SmartDashboard.putData("Field", self._field)
         self._left_encoder_offset = 0
         self._right_encoder_offset = 0
         self.addChild("Gyro", self._gyro)
@@ -55,19 +56,12 @@ class BasePilotable(SubsystemBase):
             self._gyro_sim = ADXRS450_GyroSim(self._gyro)
             self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
             self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005])
-            wpilib.SmartDashboard.putData("Field", self._field)
-
+            
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
         self._drive.arcadeDrive(forwardSpeed, rotation, False)
 
     def tankDrive(self, left: float, right: float) -> None:
         self._drive.tankDrive(left, right, False)
-
-    def leftDrive(self, speed: float) -> None:
-        self._motor_left.set(speed)
-
-    def rightDrive(self, speed: float) -> None:
-        self._motor_right.set(speed)
 
     def simulationPeriodic(self):
         self._drive_sim.setInputs(
@@ -100,6 +94,12 @@ class BasePilotable(SubsystemBase):
 
     def getAverageEncoderPosition(self):
         return (self.getLeftEncoderPosition() + self.getRightEncoderPosition()) / 2
+
+    def getPose(self):
+        return self._odometry.getPose()
+
+    def getField(self):
+        return self._field
 
     def periodic(self):
         self._odometry.update(self._gyro.getRotation2d(), self.getLeftEncoderPosition(), self.getRightEncoderPosition())
