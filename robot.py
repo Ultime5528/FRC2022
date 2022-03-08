@@ -32,7 +32,7 @@ from commands.interpolatedShoot import InterpolatedShoot
 from commands.dashboardShoot import DashboardShoot
 from utils.cameraserver import CameraServer
 from commands.ejectershooter import EjecterShooter
-
+import traceback
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
@@ -79,6 +79,13 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Eject Ball", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
-        
+
+    def robotPeriodic(self) -> None:
+        try:
+            commands2.CommandScheduler.getInstance().run()
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
+            
 if __name__ == "__main__":
     wpilib.run(Robot)

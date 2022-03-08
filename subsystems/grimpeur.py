@@ -11,21 +11,20 @@ class Grimpeur(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
-        self.switch_bas = DigitalInput(ports.grimpeur_switch_bas)
-        self.encoder_grimpeur = self.motor_front_left.getEncoder()
+        self._switch_bas = DigitalInput(ports.grimpeur_switch_bas)
 
         self._switch_bas_secondaire = DigitalInput(ports.grimpeur_switch_secondaire_bas)
         self._switch_haut_secondaire = DigitalInput(ports.grimpeur_switch_secondaire_haut)
 
         self.addChild("SwitchBas", self._switch_bas)
-        self.addChild("SwitchHaut", self._switch_haut)
         self.addChild("SwitchBasSecondaire", self._switch_bas_secondaire)
         self.addChild("SwitchHautSecondaire", self._switch_haut_secondaire)
 
         # Motors
         self._motor_primaire = rev.CANSparkMax(ports.grimpeur_moteur_principal_droit,
                                                rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_primaire_follower = rev.CANSparkMax(ports.grimpeur_moteur_principal_gauche,
+        self._encoder_primaire = self._motor_primaire.getEncoder()
+        self._motor_primaire_follower = rev.CANSparkMax(ports.grimpeur_follower_motor,
                                                         rev.CANSparkMax.MotorType.kBrushless)
         self._motor_primaire_follower.follow(self._motor_primaire, invert=False)
 
@@ -61,3 +60,8 @@ class Grimpeur(SubsystemBase):
 
     def getPositionSecondaire(self):
         return self._encoder_secondaire.getPosition()
+
+    def getEncoder(self):
+        return self._encoder_primaire
+    def resetEncoder(self):
+        self._motor_primaire.restoreFactoryDefaults()

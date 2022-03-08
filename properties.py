@@ -16,6 +16,7 @@ class Properties:
     trajectoire_vue_avant = ntproperty("Properties/trajectoire_vue_avant", 0.25, writeDefault=False)
     
     grimpeur_vitesse_monter = ntproperty("Properties/VitesseGrimpeurMonter", 0.5, writeDefault=False)
+    grimpeur_enconder_monter = ntproperty("Properties/EncoonderGrimpeurMonter", 10, writeDefault=False)
     vitesse_grimpeur_descend = ntproperty("Properties/VitesseGrimpeurDescend", -0.5, writeDefault=False)
     grimpeur_vitesse_monter_secondaire = ntproperty("Properties/VitesseGrimpeurMonterSecondaire", 0.5, writeDefault=False)
     vitesse_grimpeur_descend_secondaire = ntproperty("Properties/VitesseGrimpeurDescendSecondaire", -0.5, writeDefault=False)

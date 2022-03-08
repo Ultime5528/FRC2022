@@ -104,4 +104,3 @@ class BasePilotable(SubsystemBase):
     def periodic(self):
         self._odometry.update(self._gyro.getRotation2d(), self.getLeftEncoderPosition(), self.getRightEncoderPosition())
         self._field.setRobotPose(self._odometry.getPose())
-
