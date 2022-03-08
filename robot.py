@@ -80,6 +80,7 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
 
+
     def robotPeriodic(self) -> None:
         try:
             commands2.CommandScheduler.getInstance().run()

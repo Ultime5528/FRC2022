@@ -19,7 +19,6 @@ intake_moteur_transporter = 1
 # DIO
 intake_sensor_bas = 0
 intake_sensor_haut = 1
-grimpeur_switch_haut = 9
 grimpeur_switch_principal_bas = 2
 grimpeur_switch_secondaire_bas = 3
 grimpeur_switch_secondaire_haut = 4

@@ -17,7 +17,7 @@ class MonterPrimaire(commands2.CommandBase):
         self.grimpeur.monter()
 
     def isFinished(self) -> bool:
-        if self.grimpeur.getEnconder() >= properties.values.grimpeur_enconder_monter:
+        if self.grimpeur.getPositionPrincipale() >= properties.values.grimpeur_enconder_monter:
             return True
 
     def end(self, interrupted: bool) -> None:
