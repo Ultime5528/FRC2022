@@ -32,57 +32,66 @@
         </div>
 
         <div id="Properties">
-            <h2 class="secondary-text">Propriétés vison</h2>
+            <h2 class="secondary-text">Propriétés vision</h2>
 			<nt-number key="/Properties/viser_hub_speed" value="1" ></nt-number>
 			<nt-number key="/Properties/viser_hub_threshold" value="1"></nt-number>
 			<nt-number key="/Properties/viser_hub_x_offset" value="1"></nt-number>
-            <nt-number key="Properties/viser_cargo_forward_speed" value="0.3" ></nt-number>
-			<nt-number key="Properties/viser_cargo_turn_speed" value="0.3"></nt-number>
-			<nt-number key="Properties/viser_cargo_x_threshold" value="0.05"></nt-number>
-			<nt-number key="Properties/viser_cargo_y_threshold" value="0.05"></nt-number>
-			<nt-number key="Properties/viser_cargo_x_offset" value="0.05"></nt-number>
-			<nt-number key="Properties/viser_cargo_y_offset" value="0.05"></nt-number>
-            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Vitesse" source-key="/Properties/ViserHubSpeed"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Threshold" source-key="/Properties/ViserHubThreshold"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Offset X" source-key="/Properties/ViserHubXOffset"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Forward Speed" source-key="Properties/viser_cargo_forward_speed"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Turn Speed" source-key="Properties/viser_cargo_turn_speed"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo X Threshold" source-key="Properties/viser_cargo_x_threshold"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo X Offset" source-key="Properties/viser_cargo_x_offset"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Y Offset" source-key="Properties/viser_cargo_y_offset"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Y Threshold" source-key="Properties/viser_cargo_y_threshold"></frc-number-field>
+            <nt-number key="/Properties/viser_cargo_forward_speed" value="0.3" ></nt-number>
+			<nt-number key="/Properties/viser_cargo_turn_speed" value="0.3"></nt-number>
+			<nt-number key="/Properties/viser_cargo_x_threshold" value="0.05"></nt-number>
+			<nt-number key="/Properties/viser_cargo_y_threshold" value="0.05"></nt-number>
+			<nt-number key="/Properties/viser_cargo_x_offset" value="0.05"></nt-number>
+			<nt-number key="/Properties/viser_cargo_y_offset" value="0.05"></nt-number>
+            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Vitesse" source-key="/Properties/viser_hub_speed"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Threshold" source-key="/Properties/viser_hub_threshold"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Offset X" source-key="/Properties/viser_hub_x_offset"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Forward Speed" source-key="/Properties/viser_cargo_forward_speed"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Turn Speed" source-key="/Properties/viser_cargo_turn_speed"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo X Threshold" source-key="/Properties/viser_cargo_x_threshold"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo X Offset" source-key="/Properties/viser_cargo_x_offset"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Y Offset" source-key="/Properties/viser_cargo_y_offset"></frc-number-field>
+            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Y Threshold" source-key="/Properties/viser_cargo_y_threshold"></frc-number-field>
 
             <h2 class="secondary-text">Propriétés <i>shooter</i></h2>
             <nt-number key="/SmartDashboard/BackspinMotor" value="1"></nt-number>
             <nt-number key="/SmartDashboard/MainMotors" value="1"></nt-number>
             <nt-number key="/SmartDashboard/MainMotorPercentSpeed" value="1"></nt-number>
             <nt-number key="/SmartDashboard/BackspinMotorPercentSpeed" value="1"></nt-number>
-            <frc-number-field label="Backspin Motor" source-key="/SmartDashboard/BackspinMotor"></frc-number-field>
-            <frc-number-field label="Main Motors" source-key="/SmartDashboard/MainMotors"></frc-number-field>
-            <frc-number-field label="Main Motor percent speed" source-key="/SmartDashboard/MainMotorPercentSpeed"></frc-number-field>
-            <frc-number-field label="Backspin Motor percent speed" source-key="/SmartDashboard/BackspinMotorPercentSpeed"></frc-number-field>
-            <frc-number-field label="Shooter Backspin Speed" source-key="Properties/shooter_backspin_speed"></frc-number-field>
-            <frc-number-field label="Shooter Speed" source-key="Properties/shooter_speed"></frc-number-field>
+            <frc-number-field readonly label="Backspin Motor" source-key="/SmartDashboard/BackspinMotor"></frc-number-field>
+            <frc-number-field readonly label="Main Motors" source-key="/SmartDashboard/MainMotors"></frc-number-field>
+            <frc-number-field readonly label="Main Motor percent speed" source-key="/SmartDashboard/MainMotorPercentSpeed"></frc-number-field>
+            <frc-number-field readonly label="Backspin Motor percent speed" source-key="/SmartDashboard/BackspinMotorPercentSpeed"></frc-number-field>
+            <frc-number-field min="0" max="5200" step="100" has-controls label="Shooter Backspin Speed" source-key="/Properties/shooter_backspin_speed"></frc-number-field>
+            <frc-number-field min="0" max="5200" step="100" has-controls label="Shooter Speed" source-key="/Properties/shooter_speed"></frc-number-field>
+            <h3 class="secondary-text">Propriétés <i>shooter</i> ejecter</h3>
+            <nt-number key="/Properties/shooter_ejecter_speed" value="2000"></nt-number>
+            <nt-number key="/Properties/shooter_ejecter_backspin_speed" value="100"></nt-number>
+            <nt-number key="/Properties/shooter_ejecter_temps" value="4"></nt-number>
+            <frc-number-field label="Shooter Ejecter Speed" source-key="/Properties/shooter_ejecter_speed" value="2000"></frc-number-field>
+            <frc-number-field label="Shooter Ejecter Backspin Speed" source-key="/Properties/shooter_ejecter_backspin_speed"></frc-number-field>
+            <frc-number-field label="Shooter Ejecter Temps" source-key="/Properties/shooter_ejecter_temps"></frc-number-field>
+
+
 
             <h2 class="secondary-text">Propriétés <i>intake</i></h2>
-            <frc-number-field label="Intake Speed" source-key="Properties/intake_speed"></frc-number-field>
-            <frc-number-field label="Intake Durée Ejection" source-key="Properties/intake_duree_ejection"></frc-number-field>
-            <frc-number-field label="Intake Reverse Speed" source-key="Properties/intake_reverse_speed"></frc-number-field>
+            <frc-number-field label="Intake Speed" source-key="/Properties/intake_speed"></frc-number-field>
+            <frc-number-field label="Intake Durée Ejection" source-key="/Properties/intake_duree_ejection"></frc-number-field>
+            <frc-number-field label="Intake Reverse Speed" source-key="/Properties/intake_reverse_speed"></frc-number-field>
 
             <h2 class="secondary-text">Propriétés transporteur</h2>
-            <frc-number-field label="Transporter Speed" source-key="Properties/transporter_speed"></frc-number-field>
-            <frc-number-field label="Transporter Reverse Speed" source-key="Properties/transporter_reverse_speed"></frc-number-field>
+            <frc-number-field label="Transporter Speed" source-key="/Properties/transporter_speed"></frc-number-field>
+            <frc-number-field label="Transporter Reverse Speed" source-key="/Properties/transporter_reverse_speed"></frc-number-field>
 
             <h2 class="secondary-text">Propriétés trajectoire</h2>
-            <frc-number-field label="Trajectoire Angle P" source-key="Properties/trajectoire_angle_p"></frc-number-field>
-            <frc-number-field label="Trajectoire Vue Avant" source-key="Properties/trajectoire_vue_avant"></frc-number-field>
+            <frc-number-field label="Trajectoire Angle P" source-key="/Properties/trajectoire_angle_p"></frc-number-field>
+            <frc-number-field label="Trajectoire Vue Avant" source-key="/Properties/trajectoire_vue_avant"></frc-number-field>
 
             <h2 class="secondary-text">Propriétés grimpeur</h2>
-            <frc-number-field label="Grimpeur Vitesse Monter" source-key="Properties/grimpeur_vitesse_monter"></frc-number-field>
-            <frc-number-field label="Grimpeur Vitesse Descend" source-key="Properties/grimpeur_vitesse_descend"></frc-number-field>
-            <frc-number-field label="Grimpeur Vitesse Monter Secondaire" source-key="Properties/grimpeur_vitesse_monter_secondaire"></frc-number-field>
-            <frc-number-field label="Grimpeur Vitesse Descend Secondaire" source-key="Properties/grimpeur_vitesse_descend_secondaire"></frc-number-field>
-            <frc-number-field label="Grimpeur Distance Alignement" source-key="Properties/grimpeur_distance_alignement"></frc-number-field>
+            <frc-number-field label="Grimpeur Vitesse Monter" source-key="/Properties/grimpeur_vitesse_monter"></frc-number-field>
+            <frc-number-field label="Grimpeur Vitesse Descend" source-key="/Properties/grimpeur_vitesse_descend"></frc-number-field>
+            <frc-number-field label="Grimpeur Vitesse Monter Secondaire" source-key="/Properties/grimpeur_vitesse_monter_secondaire"></frc-number-field>
+            <frc-number-field label="Grimpeur Vitesse Descend Secondaire" source-key="/Properties/grimpeur_vitesse_descend_secondaire"></frc-number-field>
+            <frc-number-field label="Grimpeur Distance Alignement" source-key="/Properties/grimpeur_distance_alignement"></frc-number-field>
 
 
 
