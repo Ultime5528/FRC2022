@@ -26,10 +26,10 @@ class SuivreTrajectoire(commands2.CommandBase):
     def initialize(self) -> None:
         self.basePilotable.resetOdometry()
         self.index = 0
-        self.basePilotable._field.getObject("traj").setTrajectory(self.trajectory)
+        self.basePilotable.getField().getObject("traj").setTrajectory(self.trajectory)
 
     def execute(self) -> None:
-        currentPose = self.basePilotable._odometry.getPose()
+        currentPose = self.basePilotable.getPose()
 
         while (self.index < (len(self.states) - 1) and currentPose.translation().distance(
                 self.states[self.index].pose.translation()) <= properties.values.trajectoire_vue_avant):

@@ -1,6 +1,4 @@
 import wpilib
-import commands2
-from wpilib import RobotBase
 from utils.subsystembase import SubsystemBase
 import ports
 import properties

@@ -1,5 +1,4 @@
 import rev
-import commands2
 import ports
 from wpilib import DigitalInput, RobotBase
 from utils.subsystembase import SubsystemBase

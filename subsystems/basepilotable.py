@@ -7,11 +7,10 @@ from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.system import LinearSystemId
 from wpimath.system.plant import DCMotor
 from utils.sparkmaxsim import SparkMaxSim
-from wpimath.kinematics import DifferentialDriveKinematics, DifferentialDriveOdometry
+from wpimath.kinematics import DifferentialDriveOdometry
 from wpilib.simulation import DifferentialDrivetrainSim, ADXRS450_GyroSim
 
 from utils.subsystembase import SubsystemBase
-import commands2
 import rev
 
 import ports
@@ -27,13 +26,19 @@ class BasePilotable(SubsystemBase):
         # Motors
         self._motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_left.restoreFactoryDefaults()
-        self._motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2,
+                                                    rev.CANSparkMax.MotorType.kBrushless)
+
         self._motor_left_follower.restoreFactoryDefaults()
         self._motor_left_follower.follow(self._motor_left)
-        self._motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1,
+                                            rev.CANSparkMax.MotorType.kBrushless)
+
         self._motor_right.restoreFactoryDefaults()
         self._motor_right.setInverted(True)
-        self._motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2, rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2,
+                                                     rev.CANSparkMax.MotorType.kBrushless)
+
         self._motor_right_follower.restoreFactoryDefaults()
         self._motor_right_follower.follow(self._motor_right)
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
@@ -43,7 +48,7 @@ class BasePilotable(SubsystemBase):
         self._encoder_left = self._motor_left.getEncoder()
         self._encoder_right = self._motor_right.getEncoder()
         self._gyro = wpilib.ADXRS450_Gyro()
-        self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d(), initialPose=Pose2d(5,5,0))
+        self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d(), initialPose=Pose2d(5, 5, 0))
         self._field = wpilib.Field2d()
         wpilib.SmartDashboard.putData("Field", self._field)
         self._left_encoder_offset = 0
@@ -55,7 +60,10 @@ class BasePilotable(SubsystemBase):
             self._motor_right_sim = SparkMaxSim(self._motor_right)
             self._gyro_sim = ADXRS450_GyroSim(self._gyro)
             self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
-            self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005])
+            self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08,
+                                                        [
+                0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005
+            ])
             
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
         self._drive.arcadeDrive(forwardSpeed, rotation, False)
@@ -104,4 +112,3 @@ class BasePilotable(SubsystemBase):
     def periodic(self):
         self._odometry.update(self._gyro.getRotation2d(), self.getLeftEncoderPosition(), self.getRightEncoderPosition())
         self._field.setRobotPose(self._odometry.getPose())
-

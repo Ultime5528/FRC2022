@@ -12,6 +12,8 @@ class ViserCargo(CommandBase):
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)
         self.visiontargets = visiontargets
+        self.x_stop = False
+        self.y_stop = False
         self.setName("Viser Cargo")
         self._reset()
 

@@ -23,14 +23,14 @@ class VisionTargets(commands2.SubsystemBase):
             self.basepilotable = basepilotable
 
             x, y = 8, 6
-            self.hub_target = VisionSim.Target(x, y,0,359)
+            self.hub_target = VisionSim.Target(x, y, 0, 359)
             self.hub_sim = VisionSim([self.hub_target], 120, 0, 10)
 
             self.fakehub = basepilotable.getField().getObject("HUB")
             self.fakehub.setPose(Pose2d(x, y, 0))
 
             x, y = 4, 1
-            self.cargo_target = VisionSim.Target(x, y,0,359)
+            self.cargo_target = VisionSim.Target(x, y, 0, 359)
             self.cargo_sim = VisionSim([self.cargo_target], 120, 0, 10)
 
             self.fakecargo = basepilotable.getField().getObject("CARGO")
@@ -102,4 +102,3 @@ class VisionTargets(commands2.SubsystemBase):
                 self.cargoFoundEntry.setBoolean(False)
         else:
             self.cargoFoundEntry.setBoolean(False)
-

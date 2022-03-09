@@ -1,5 +1,3 @@
-from utils.subsystembase import SubsystemBase
-
 import commands2
 import wpilib
 from wpimath.controller import SimpleMotorFeedforwardMeters, BangBangController
@@ -9,7 +7,6 @@ from utils.sparkmaxsim import SparkMaxSim
 from wpilib.simulation import FlywheelSim
 from wpimath.system.plant import DCMotor
 from utils.linearInterpolator import LinearInterpolator
-import properties
 
 import ports
 
@@ -19,6 +16,7 @@ def compute_speed_percentage(speed, setpoint):
         return 0
     else:
         return round(min(100.0, speed / setpoint * 100))
+
 
 class Shooter(commands2.SubsystemBase):
     main_verified_points = [[-1, 100], [0, 1000], [0.5, 2500], [1, 3000]]
@@ -79,10 +77,11 @@ class Shooter(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber("BackspinMotor", self.backspin_encoder.getVelocity())
         wpilib.SmartDashboard.putNumber("MainMotors", self.encoder.getVelocity())
 
-        wpilib.SmartDashboard.putNumber("MainMotorPercentSpeed", compute_speed_percentage(self.encoder.getVelocity(), self.setpoint))
-        wpilib.SmartDashboard.putNumber("BackspinMotorPercentSpeed", compute_speed_percentage(self.backspin_encoder.getVelocity(), self.backspin_setpoint))
-
-
+        wpilib.SmartDashboard.putNumber("MainMotorPercentSpeed",
+                                        compute_speed_percentage(self.encoder.getVelocity(), self.setpoint))
+        wpilib.SmartDashboard.putNumber("BackspinMotorPercentSpeed",
+                                        compute_speed_percentage(self.backspin_encoder.getVelocity(),
+                                                                 self.backspin_setpoint))
 
     def simulationPeriodic(self) -> None:
         motor_value = self._motor_left.get()
@@ -97,4 +96,3 @@ class Shooter(commands2.SubsystemBase):
         #                     + 0.9 * self.feed_forward_controller.calculate(setpoint))
         # self.motor_left_sim.setVelocity(self.bang_bang_controller.calculate(self.encoder.getVelocity(), setpoint)
         #                     + 0.9 * self.feed_forward_controller.calculate(setpoint))
-
