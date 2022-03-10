@@ -7,6 +7,7 @@ class MonterPrimaire(commands2.CommandBase):
         super().__init__()
         self.grimpeur = grimpeur
         self.setName("Monter Primaire")
+        self.addRequirements(self.grimpeur)
 
     def execute(self) -> None:
         self.grimpeur.monter()

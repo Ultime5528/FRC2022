@@ -7,6 +7,7 @@ class DescendrePrimaire(commands2.CommandBase):
         super().__init__()
         self.grimpeur = grimpeur
         self.setName("Descendre Primaire")
+        self.addRequirements(self.grimpeur)
 
     def execute(self) -> None:
         self.grimpeur.descend()
