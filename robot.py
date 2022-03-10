@@ -28,6 +28,9 @@ from commands.avancer import Avancer
 from commands.tourner import Tourner
 from commands.prendreballon import PrendreBallon
 from commands.suivretrajectoire import SuivreTrajectoire
+from commands.ejecterintake import EjecterIntake
+from commands.descendreintake import DescendreIntake
+from commands.arreterintake import ArreterIntake
 from commands.interpolatedShoot import InterpolatedShoot
 from commands.dashboardShoot import DashboardShoot
 from utils.cameraserver import CameraServer
@@ -74,9 +77,12 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Descendre Primaire", DescendrePrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Descendre Secondaire", DescendreSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Monter Intake", MonterIntake(self.grimpeur))
-        # wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets, self.stick))
+        wpilib.SmartDashboard.putData("Descendre Intake", DescendreIntake(self.grimpeur))
+        wpilib.SmartDashboard.putData("Arreter Intake", ArreterIntake(self.intake))
+        wpilib.SmartDashboard.putData("Ejecter Intake", EjecterIntake(self.intake))
+        #wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets, self.stick))
         wpilib.SmartDashboard.putData("Speed Testing Shoot", DashboardShoot(self.shooter))
-        wpilib.SmartDashboard.putData("Eject Ball", EjecterShooter(self.shooter))
+        wpilib.SmartDashboard.putData("Shooter Eject", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
         

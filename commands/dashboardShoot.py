@@ -15,7 +15,7 @@ class DashboardShoot(commands2.CommandBase):
         self.addRequirements(self.shooter)
 
     def execute(self) -> None:
-        self.shooter.shoot(properties.values.shooter_speed, properties.values.backspin_shooter_speed)
+        self.shooter.shoot(properties.values.shooter_speed, properties.values.shooter_backspin_speed)
 
     def end(self, interrupted: bool) -> None:
         self.shooter.disable()

@@ -70,7 +70,9 @@ body /deep/ .vaadin-text-field-container {
     border: 10px solid red !important;
 }
 
+#CommandButtons {
 
+}
 /* frc-robot-command {
     --_lumo-button-background-color: red;
 } */
