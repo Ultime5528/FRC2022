@@ -5,6 +5,7 @@ from commands2.button import JoystickButton
 from commands.alignergrimpeur import AlignerGrimpeur
 from commands.descendresecondaire import DescendreSecondaire
 from commands.monterintake import MonterIntake
+from commands.montersecondaire import MonterSecondaire
 from commands.monterprimaire import MonterPrimaire
 from commands.descendreprimaire import DescendrePrimaire
 from commands.arreterintake import ArreterIntake
@@ -31,7 +32,6 @@ from commands.ejectershooter import EjecterShooter
 
 
 class Robot(commands2.TimedCommandRobot):
-
     def robotInit(self):
         CameraServer.launch("visionhub.py:main")
         CameraServer.launch("visioncargo.py:main")
@@ -75,6 +75,7 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Eject Ball", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
+        wpilib.SmartDashboard.putData("Monter Secondaire", MonterSecondaire(self.grimpeur))
 
 
 if __name__ == "__main__":

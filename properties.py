@@ -1,6 +1,4 @@
 from networktables.util import ntproperty
-import types
-import sys
 
 
 class Properties:

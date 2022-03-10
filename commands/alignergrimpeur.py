@@ -27,8 +27,8 @@ class _AlignerGrimpeur(commands2.CommandBase):
 
 class AlignerGrimpeur(commands2.SequentialCommandGroup):
     def __init__(self, grimpeur: Grimpeur):
-        super().__init__(
+        super().__init__([
             MonterSecondaire(grimpeur),
             _AlignerGrimpeur(grimpeur)
-        )
+        ])
         self.setName("Aligner Grimpeur")

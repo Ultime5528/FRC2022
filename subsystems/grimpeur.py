@@ -64,11 +64,11 @@ class Grimpeur(SubsystemBase):
     def getSwitchBas(self):
         return self._switch_bas.get()
 
-    def getSwitchBasSecondaire(self):
+    def getSwitchBasSecondaire(self) -> bool:
         return self._switch_bas_secondaire.get()
 
     def getSwitchHaut(self):
         return self._switch_haut.get()
 
-    def getSwitchHautSecondaire(self):
-        return self._switch_haut_secondaire
+    def getSwitchHautSecondaire(self) -> bool:
+        return self._switch_haut_secondaire.get()
