@@ -27,7 +27,7 @@ class Target:
 
 
 def main():
-    NetworkTables.initialize(server="127.0.0.1")
+    NetworkTables.initialize(server="10.55.28.2")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
     with isConnected:

@@ -18,7 +18,7 @@ def connectionListener(connected, info):
         isConnected.notify()
 
 def main():
-    NetworkTables.initialize(server="169.254.104.211")
+    NetworkTables.initialize(server="10.55.28.2")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
     with isConnected:

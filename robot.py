@@ -4,6 +4,7 @@ from commands2.button import JoystickButton
 
 from commands.alignergrimpeur import AlignerGrimpeur
 from commands.descendresecondaire import DescendreSecondaire
+from commands.interpolatedshoot import InterpolatedShoot
 from commands.monterintake import MonterIntake
 from commands.montersecondaire import MonterSecondaire
 from commands.monterprimaire import MonterPrimaire
@@ -34,8 +35,8 @@ from commands.ejectershooter import EjecterShooter
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
-        CameraServer.launch("visionhub.py:main")
-        CameraServer.launch("visioncargo.py:main")
+        # CameraServer.launch("visionhub.py:main")
+        # CameraServer.launch("visioncargo.py:main")
         self.stick = wpilib.Joystick(0)
         self.base_pilotable = BasePilotable()
         self.intake = Intake()
@@ -66,14 +67,13 @@ class Robot(commands2.TimedCommandRobot):
                                                             Pose2d(12, 12, Rotation2d.fromDegrees(0)),
                                                             Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
                                                             Pose2d(0, 0, Rotation2d.fromDegrees(180)),
-                                                        ], speed=0.55))
+                                                            ], speed=0.55))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
         wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Descendre Primaire", DescendrePrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Descendre Secondaire", DescendreSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Monter Intake", MonterIntake(self.grimpeur))
-        # wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets,
-        # self.stick))
+        wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets))
         wpilib.SmartDashboard.putData("Speed Testing Shoot", DashboardShoot(self.shooter))
         wpilib.SmartDashboard.putData("Eject Ball", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
