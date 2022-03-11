@@ -1,14 +1,15 @@
 import math
 
+import navx
 import wpilib.drive
 import wpilib
-from wpilib import RobotBase, RobotController
+from wpilib import RobotBase, RobotController, SmartDashboard
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.system import LinearSystemId
 from wpimath.system.plant import DCMotor
 from utils.sparkmaxsim import SparkMaxSim
 from wpimath.kinematics import DifferentialDriveOdometry
-from wpilib.simulation import DifferentialDrivetrainSim, ADXRS450_GyroSim
+from wpilib.simulation import DifferentialDrivetrainSim, SimDeviceSim
 
 from utils.subsystembase import SubsystemBase
 import rev
@@ -19,10 +20,6 @@ import ports
 class BasePilotable(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
-
-        # TODO correct measurements
-        self.x_wheelbase = 0.58 / 2
-        self.y_wheelbase = 0.515 / 2
         # Motors
         self._motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_left.restoreFactoryDefaults()
@@ -44,10 +41,11 @@ class BasePilotable(SubsystemBase):
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
 
         self.addChild("DifferentialDrive", self._drive)
+
         # Odometry
         self._encoder_left = self._motor_left.getEncoder()
         self._encoder_right = self._motor_right.getEncoder()
-        self._gyro = wpilib.ADXRS450_Gyro()
+        self._gyro = navx.AHRS(wpilib.SerialPort.Port.kMXP)
         self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d(), initialPose=Pose2d(5, 5, 0))
         self._field = wpilib.Field2d()
         wpilib.SmartDashboard.putData("Field", self._field)
@@ -58,7 +56,8 @@ class BasePilotable(SubsystemBase):
         if RobotBase.isSimulation():
             self._motor_left_sim = SparkMaxSim(self._motor_left)
             self._motor_right_sim = SparkMaxSim(self._motor_right)
-            self._gyro_sim = ADXRS450_GyroSim(self._gyro)
+            gyro_sim_device = SimDeviceSim("navX-Sensor[1]")
+            self._gyro_sim = gyro_sim_device.getDouble("Yaw")
             self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
             self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08,
                                                         [
@@ -80,7 +79,7 @@ class BasePilotable(SubsystemBase):
         self._motor_left_sim.setVelocity(self._drive_sim.getLeftVelocity())
         self._motor_right_sim.setPosition(self._drive_sim.getRightPosition() + self._right_encoder_offset)
         self._motor_right_sim.setVelocity(self._drive_sim.getRightVelocity())
-        self._gyro_sim.setAngle(-self._drive_sim.getHeading().degrees())
+        self._gyro_sim.set(-self._drive_sim.getHeading().degrees())
 
     def resetOdometry(self) -> None:
         self._left_encoder_offset = self._encoder_left.getPosition()
@@ -112,3 +111,17 @@ class BasePilotable(SubsystemBase):
     def periodic(self):
         self._odometry.update(self._gyro.getRotation2d(), self.getLeftEncoderPosition(), self.getRightEncoderPosition())
         self._field.setRobotPose(self._odometry.getPose())
+
+        # SmartDashboard.putBoolean("IMU_Connected", self._gyro.isConnected())
+        # SmartDashboard.putBoolean("IMU_IsCalibrating", self._gyro.isCalibrating())
+        # SmartDashboard.putNumber("IMU_Yaw", self._gyro.getYaw())
+        # SmartDashboard.putNumber("IMU_Pitch", self._gyro.getPitch())
+        # SmartDashboard.putNumber("IMU_Roll", self._gyro.getRoll())
+        #
+        # SmartDashboard.putNumber("IMU_CompassHeading", self._gyro.getCompassHeading())
+        #
+        # SmartDashboard.putNumber("IMU_FusedHeading", self._gyro.getFusedHeading())
+        # SmartDashboard.putNumber("Wold accel y", self._gyro.getWorldLinearAccelY())
+        # SmartDashboard.putNumber("Wold accel x", self._gyro.getWorldLinearAccelX())
+        # SmartDashboard.putNumber("Wold accel z", self._gyro.getWorldLinearAccelZ())
+        # SmartDashboard.putNumber("rotation", self._gyro.getRotation2d().degrees())
