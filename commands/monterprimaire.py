@@ -1,13 +1,13 @@
+from typing import Callable
 import commands2
-
-import properties
 from subsystems.grimpeur import Grimpeur
 
 
 class MonterPrimaire(commands2.CommandBase):
-    def __init__(self, grimpeur: Grimpeur):
+    def __init__(self, grimpeur: Grimpeur, get_hauteur: Callable[[], float]):
         super().__init__()
         self.grimpeur = grimpeur
+        self.get_hauteur = get_hauteur
         self.setName("Monter Primaire")
 
     def initialize(self) -> None:
@@ -17,8 +17,7 @@ class MonterPrimaire(commands2.CommandBase):
         self.grimpeur.monter()
 
     def isFinished(self) -> bool:
-        if self.grimpeur.getPositionPrincipale() >= properties.values.grimpeur_enconder_monter:
-            return True
+        return self.grimpeur.getPositionPrincipale() >= self.get_hauteur()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()

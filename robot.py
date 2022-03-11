@@ -2,6 +2,7 @@ import wpilib
 import commands2
 from commands2.button import JoystickButton
 
+import properties
 from commands.alignergrimpeur import AlignerGrimpeur
 from commands.visercargo import ViserCargo
 from commands.descendresecondaire import DescendreSecondaire
@@ -47,7 +48,7 @@ class Robot(commands2.TimedCommandRobot):
         self.grimpeur = Grimpeur()
         self.vision_targets = VisionTargets(self.base_pilotable)
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
-        
+
         JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 2).whenPressed(Tourner(self.base_pilotable, 180.0, 0.50))
         JoystickButton(self.stick, 3).whenPressed(Tourner(self.base_pilotable, -90.0, 0.75))
@@ -70,7 +71,8 @@ class Robot(commands2.TimedCommandRobot):
                                                             Pose2d(0, 0, Rotation2d.fromDegrees(180)),
                                                             ], speed=0.55))
         wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, 3000, 3000))
-        wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur))
+
+        wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur, lambda: properties.values.grimpeur_enconder_monter))
         wpilib.SmartDashboard.putData("Descendre Primaire", DescendrePrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Descendre Secondaire", DescendreSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Monter Intake", MonterIntake(self.grimpeur))
@@ -87,6 +89,6 @@ class Robot(commands2.TimedCommandRobot):
         except Exception as e:
             print(e)
             traceback.print_exc()
-            
+
 if __name__ == "__main__":
     wpilib.run(Robot)
