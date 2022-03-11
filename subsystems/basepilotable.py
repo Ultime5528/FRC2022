@@ -30,16 +30,16 @@ class BasePilotable(commands2.SubsystemBase):
 
         self.gyro = wpilib.ADXRS450_Gyro()
    
-        # if RobotBase.isSimulation():
-        #     self.motor_front_left_sim = SparkMaxSim(self.motor_front_left)
-        #     self.motor_front_right_sim = SparkMaxSim(self.motor_front_right)
-        #     self.gyro_sim = ADXRS450_GyroSim(self.gyro)
-        #     self.system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
-        #     self.drive_sim = DifferentialDrivetrainSim(self.system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005])
-        #     self.kinematics = DifferentialDriveKinematics(0.64)
-        #     self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
-        #     self.field = wpilib.Field2d()
-        #     wpilib.SmartDashboard.putData("Field", self.field)
+        if RobotBase.isSimulation():
+            self.motor_front_left_sim = SparkMaxSim(self.motor_front_left)
+            self.motor_front_right_sim = SparkMaxSim(self.motor_front_right)
+            self.gyro_sim = ADXRS450_GyroSim(self.gyro)
+            self.system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
+            self.drive_sim = DifferentialDrivetrainSim(self.system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005])
+            self.kinematics = DifferentialDriveKinematics(0.64)
+            self.odometry = DifferentialDriveOdometry(self.gyro.getRotation2d())
+            self.field = wpilib.Field2d()
+            wpilib.SmartDashboard.putData("Field", self.field)
     
     def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
         self.drive.arcadeDrive(forwardSpeed, rotation)
@@ -50,18 +50,18 @@ class BasePilotable(commands2.SubsystemBase):
     def rightDrive(self, speed: float) -> None:
         self.motor_front_right.set(speed)
 
-    # def simulationPeriodic(self):
-    #
-    #     self.drive_sim.setInputs(self.motor_front_left.get()*RobotController.getInputVoltage(), self.motor_front_right.get()*RobotController.getInputVoltage())
-    #     self.drive_sim.update(0.02)
-    #     self.motor_front_left_sim.setPosition(self.drive_sim.getLeftPosition())
-    #     self.motor_front_left_sim.setVelocity(self.drive_sim.getLeftPosition())
-    #     self.motor_front_right_sim.setPosition(self.drive_sim.getRightPosition())
-    #     self.motor_front_right_sim.setVelocity(self.drive_sim.getRightPosition())
-    #     self.gyro_sim.setAngle(self.drive_sim.getHeading().degrees())
+    def simulationPeriodic(self):
+
+        self.drive_sim.setInputs(self.motor_front_left.get()*RobotController.getInputVoltage(), self.motor_front_right.get()*RobotController.getInputVoltage())
+        self.drive_sim.update(0.02)
+        self.motor_front_left_sim.setPosition(self.drive_sim.getLeftPosition())
+        self.motor_front_left_sim.setVelocity(self.drive_sim.getLeftPosition())
+        self.motor_front_right_sim.setPosition(self.drive_sim.getRightPosition())
+        self.motor_front_right_sim.setVelocity(self.drive_sim.getRightPosition())
+        self.gyro_sim.setAngle(self.drive_sim.getHeading().degrees())
     
-    # def periodic(self):
-    #
-    #     self.odometry.update(self.gyro.getRotation2d(), self.encoder_front_left.getPosition(), self.encoder_front_right.getPosition())
-    #
-    #     self.field.setRobotPose(self.odometry.getPose())
+    def periodic(self):
+
+        self.odometry.update(self.gyro.getRotation2d(), self.encoder_front_left.getPosition(), self.encoder_front_right.getPosition())
+
+        self.field.setRobotPose(self.odometry.getPose())
