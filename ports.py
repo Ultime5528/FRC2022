@@ -15,6 +15,7 @@ grimpeur_moteur_secondaire = 10
 # PWM
 intake_moteur_intake = 0
 intake_moteur_transporter = 1
+led_strip = 2
 
 # DIO
 intake_sensor_bas = 0

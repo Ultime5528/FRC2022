@@ -16,6 +16,7 @@ from subsystems.visiontargets import VisionTargets
 from subsystems.basepilotable import BasePilotable
 from subsystems.shooter import Shooter
 from subsystems.grimpeur import Grimpeur
+from LED import LEDController
 
 from wpimath.geometry import Pose2d, Rotation2d
 
@@ -42,6 +43,8 @@ class Robot(commands2.TimedCommandRobot):
         self.shooter = Shooter()
         self.grimpeur = Grimpeur()
         self.vision_targets = VisionTargets(self.base_pilotable)
+        self.led_controller = LEDController()
+
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
 
         JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
