@@ -2,6 +2,7 @@ import wpilib
 import commands2
 from commands2.button import JoystickButton
 
+import properties
 from commands.alignergrimpeur import AlignerGrimpeur
 from commands.descendresecondaire import DescendreSecondaire
 from commands.interpolatedshoot import InterpolatedShoot
@@ -31,7 +32,7 @@ from commands.suivretrajectoire import SuivreTrajectoire
 from commands.dashboardshoot import DashboardShoot
 from utils.cameraserver import CameraServer
 from commands.ejectershooter import EjecterShooter
-
+import traceback
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
@@ -68,8 +69,9 @@ class Robot(commands2.TimedCommandRobot):
                                                             Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
                                                             Pose2d(0, 0, Rotation2d.fromDegrees(180)),
                                                             ], speed=0.55))
+
+        wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur, lambda: properties.values.grimpeur_enconder_monter))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
-        wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Descendre Primaire", DescendrePrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Descendre Secondaire", DescendreSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Monter Intake", MonterIntake(self.grimpeur))
@@ -78,8 +80,13 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Eject Ball", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
-        wpilib.SmartDashboard.putData("Monter Secondaire", MonterSecondaire(self.grimpeur))
 
+    def robotPeriodic(self) -> None:
+        try:
+            commands2.CommandScheduler.getInstance().run()
+        except Exception as e:
+            print(e)
+            traceback.print_exc()
 
 if __name__ == "__main__":
     wpilib.run(Robot)
