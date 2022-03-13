@@ -14,7 +14,7 @@ class Intake(SubsystemBase):
         self.addChild("Motor Convoyeur", self._motor_convoyeur)
 
         # Sensors
-        self._ultrasonic_bas = wpilib.AnalogPotentiometer(ports.intake_ultrasonic_bas, )
+        self._ultrasonic_bas = wpilib.AnalogPotentiometer(ports.intake_ultrasonic_bas)
         self._ultrasonic_haut = wpilib.AnalogPotentiometer(ports.intake_ultrasonic_haut)
         self.addChild("Ultrason bas", self._ultrasonic_bas)
         self.addChild("Ultrason haut", self._ultrasonic_haut)

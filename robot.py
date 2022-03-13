@@ -52,17 +52,17 @@ class Robot(commands2.TimedCommandRobot):
 
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
 
-        JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
-        JoystickButton(self.stick, 2).whenPressed(Tourner(self.base_pilotable, 180.0, 0.50))
-        JoystickButton(self.stick, 3).whenPressed(Tourner(self.base_pilotable, -90.0, 0.75))
-        JoystickButton(self.stick, 4).whenPressed(Avancer(self.base_pilotable, 0.5, 0.75))
-        JoystickButton(self.stick, 5).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-        JoystickButton(self.stick, 6).whenPressed(EjecterIntake(self.intake))
-        JoystickButton(self.stick, 7).whenPressed(PrendreBallon(self.intake))
-        JoystickButton(self.stick, 12).whenPressed(ArreterIntake(self.intake))
-
-        JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
-        JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
+        # JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
+        # JoystickButton(self.stick, 2).whenPressed(Tourner(self.base_pilotable, 180.0, 0.50))
+        # JoystickButton(self.stick, 3).whenPressed(Tourner(self.base_pilotable, -90.0, 0.75))
+        # JoystickButton(self.stick, 4).whenPressed(Avancer(self.base_pilotable, 0.5, 0.75))
+        # JoystickButton(self.stick, 5).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
+        # JoystickButton(self.stick, 6).whenPressed(EjecterIntake(self.intake))
+        # JoystickButton(self.stick, 7).whenPressed(PrendreBallon(self.intake))
+        # JoystickButton(self.stick, 12).whenPressed(ArreterIntake(self.intake))
+        #
+        # JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
+        # JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
         wpilib.SmartDashboard.putData("Suivre Traj",
                                       SuivreTrajectoire(self.base_pilotable,
@@ -80,7 +80,7 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Descendre Intake", DescendreIntake(self.grimpeur))
         wpilib.SmartDashboard.putData("Arreter Intake", ArreterIntake(self.intake))
         wpilib.SmartDashboard.putData("Ejecter Intake", EjecterIntake(self.intake))
-        wpilib.SmartDashboard.putData("Speed Testing Shoot", DashboardShoot(self.shooter))
+        wpilib.SmartDashboard.putData("Dashboard Shoot", DashboardShoot(self.shooter))
         wpilib.SmartDashboard.putData("Shooter Eject", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
@@ -94,4 +94,8 @@ class Robot(commands2.TimedCommandRobot):
 
 
 if __name__ == "__main__":
-    wpilib.run(Robot)
+    try:
+        wpilib.run(Robot)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
