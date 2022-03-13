@@ -23,21 +23,24 @@ class BasePilotable(SubsystemBase):
         # Motors
         self._motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_left.restoreFactoryDefaults()
+        self._motor_left.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
         self._motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2,
                                                     rev.CANSparkMax.MotorType.kBrushless)
-
         self._motor_left_follower.restoreFactoryDefaults()
+        self._motor_left_follower.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
         self._motor_left_follower.follow(self._motor_left)
+
         self._motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1,
                                             rev.CANSparkMax.MotorType.kBrushless)
-
         self._motor_right.restoreFactoryDefaults()
-        self._motor_right.setInverted(True)
+        self._motor_right.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
+        # self._motor_right.setInverted(True)
         self._motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2,
                                                      rev.CANSparkMax.MotorType.kBrushless)
-
         self._motor_right_follower.restoreFactoryDefaults()
+        self._motor_right_follower.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
         self._motor_right_follower.follow(self._motor_right)
+
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
 
         self.addChild("DifferentialDrive", self._drive)
