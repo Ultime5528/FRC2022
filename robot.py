@@ -21,7 +21,6 @@ from subsystems.grimpeur import Grimpeur
 from LED import LEDController
 
 from wpimath.geometry import Pose2d, Rotation2d
-
 from commands.viserhub import ViserHub
 from commands.manualshoot import ManualShoot
 from commands.piloter import Piloter
@@ -64,15 +63,16 @@ class Robot(commands2.TimedCommandRobot):
 
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-        wpilib.SmartDashboard.putData("Suivre Trajectoire",
+        wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
+        wpilib.SmartDashboard.putData("Suivre Traj",
                                       SuivreTrajectoire(self.base_pilotable,
                                                         [
+
                                                             Pose2d(0, 0, Rotation2d.fromDegrees(0)),
                                                             Pose2d(6, 6, Rotation2d.fromDegrees(90)),
-                                                            Pose2d(12, 12, Rotation2d.fromDegrees(0)),
-                                                            Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
-                                                            Pose2d(0, 0, Rotation2d.fromDegrees(180)),
-                                                            ], speed=0.55))
+                                                            # Pose2d(12, 12, Rotation2d.fromDegrees(0)),
+                                                            # Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
+                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(180)),
 
         wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur, lambda: properties.values.grimpeur_enconder_monter))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
@@ -87,13 +87,14 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Shooter Eject", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
-
+        
     def robotPeriodic(self) -> None:
         try:
             commands2.CommandScheduler.getInstance().run()
         except Exception as e:
             print(e)
             traceback.print_exc()
+
 
 if __name__ == "__main__":
     wpilib.run(Robot)

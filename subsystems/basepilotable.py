@@ -87,6 +87,7 @@ class BasePilotable(SubsystemBase):
         self._gyro.reset()
         self._odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
 
+
         if RobotBase.isSimulation():
             self._drive_sim.setPose(Pose2d())
 
@@ -125,3 +126,5 @@ class BasePilotable(SubsystemBase):
         # SmartDashboard.putNumber("Wold accel x", self._gyro.getWorldLinearAccelX())
         # SmartDashboard.putNumber("Wold accel z", self._gyro.getWorldLinearAccelZ())
         # SmartDashboard.putNumber("rotation", self._gyro.getRotation2d().degrees())
+    
+

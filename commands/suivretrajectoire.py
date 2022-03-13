@@ -1,7 +1,7 @@
 from typing import List
 import commands2
 from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
-from wpimath.geometry import Pose2d
+from wpimath.geometry import Pose2d, Transform2d
 import properties
 from subsystems.basepilotable import BasePilotable
 
@@ -10,26 +10,40 @@ class SuivreTrajectoire(commands2.CommandBase):
     maxVelocity = 10
     maxAcceleration = 10
 
-    def __init__(self, basePilotable: BasePilotable, waypoints: List[Pose2d], speed: float) -> None:
+    def __init__(self, basePilotable: BasePilotable, waypoints: List[Pose2d], speed: float, doitReset: bool = False, addRobotPose: bool = False) -> None:
         super().__init__()
-        self.setName("Suivre Trajectoire")
+        self.waypoints = waypoints
+        self.setName("SuivreTrajectoire")
         self.basePilotable = basePilotable
         self.addRequirements(basePilotable)
-        config = TrajectoryConfig(self.maxAcceleration, self.maxVelocity)
-        self.trajectory = TrajectoryGenerator.generateTrajectory(waypoints, config)
         self.speed = speed
-        self.index = 0
-        self.states = self.trajectory.states()
-        # TODO
+
+        self.reset = doitReset
+        self.addRobotPose = addRobotPose
+
+        if not self.addRobotPose:
+            self.trajectory = TrajectoryGenerator.generateTrajectory(self.waypoints,
+                                                                    TrajectoryConfig(self.maxAcceleration,self.maxVelocity))
+            if self.reset:
+                transformation = Transform2d(self.waypoints[0], Pose2d())
+                self.trajectory = self.trajectory.transformBy(transformation)
+
+            self.states = self.trajectory.states()
         # self.angleInitial = self.trajectory.states()[0].pose.rotation()
 
     def initialize(self) -> None:
-        self.basePilotable.resetOdometry()
+        if self.reset:
+            self.basePilotable.resetOdometry()
+
+        if self.addRobotPose:
+            self.trajectory = TrajectoryGenerator.generateTrajectory([self.basePilotable.getPose2D(), *self.waypoints],
+                                                                    TrajectoryConfig(self.maxAcceleration,self.maxVelocity))
+            self.states = self.trajectory.states()
         self.index = 0
         self.basePilotable.getField().getObject("traj").setTrajectory(self.trajectory)
 
     def execute(self) -> None:
-        currentPose = self.basePilotable.getPose()
+        currentPose = self.basePilotable.getPose2D()
 
         while (self.index < (len(self.states) - 1) and currentPose.translation().distance(
                 self.states[self.index].pose.translation()) <= properties.values.trajectoire_vue_avant):
