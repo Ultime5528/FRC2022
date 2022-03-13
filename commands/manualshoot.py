@@ -3,7 +3,7 @@ from subsystems.shooter import Shooter
 
 
 class ManualShoot(commands2.CommandBase):
-    def __init__(self, shooter: Shooter, setpoint, backspin_setpoint):
+    def __init__(self, shooter: Shooter, setpoint: float, backspin_setpoint: float):
         super().__init__()
         self.setName("Manual Shoot")
         self.shooter = shooter
