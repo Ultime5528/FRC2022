@@ -16,10 +16,10 @@ class EjecterShooter(commands2.CommandBase):
         self.timer.start()
 
     def execute(self) -> None:
-        self.shooter.shoot(values.ejecter_shooter_speed, values.ejecter_backspin_shooter_speed)
+        self.shooter.shoot(values.shooter_ejecter_speed, values.shooter_ejecter_backspin_speed)
 
     def isFinished(self) -> bool:
-        return self.timer.get() >= values.ejecter_shooter_temps
+        return self.timer.get() >= values.shooter_ejecter_temps
 
     def end(self, interrupted: bool) -> None:
         self.timer.stop()
