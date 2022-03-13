@@ -17,6 +17,8 @@ class Properties:
 
     transporter_reverse_speed = ntproperty("/Properties/transporter_reverse_speed", -1, writeDefault=False, persistent=persistent)
     transporter_speed = ntproperty("/Properties/transporter_speed", 1, writeDefault=False, persistent=persistent)
+    intake_ultrason_bas_threshold = ntproperty("/Properties/intake_ultrason_bas_threshold", 0.5, writeDefault=False, persistent=persistent)
+    intake_ultrason_haut_threshold = ntproperty("/Properties/intake_ultrason_haut_threshold", 0.5, writeDefault=False, persistent=persistent)
 
     trajectoire_angle_p = ntproperty("/Properties/trajectoire_angle_p", 0.008, writeDefault=False, persistent=persistent)
     trajectoire_vue_avant = ntproperty("/Properties/trajectoire_vue_avant", 0.25, writeDefault=False, persistent=persistent)

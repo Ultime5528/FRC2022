@@ -18,11 +18,13 @@ intake_moteur_transporter = 1
 led_strip = 2
 
 # DIO
-intake_sensor_bas = 0
-intake_sensor_haut = 1
-grimpeur_switch_principal_bas = 2
-grimpeur_switch_secondaire_bas = 3
-grimpeur_switch_secondaire_haut = 4
+grimpeur_switch_principal_bas = 0
+grimpeur_switch_secondaire_bas = 1
+grimpeur_switch_secondaire_haut = 2
+
+# Analog
+intake_ultrasonic_bas = 0
+intake_ultrasonic_haut = 1
 
 # USB
 camera_hub = 0
