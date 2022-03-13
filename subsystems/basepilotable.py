@@ -3,7 +3,7 @@ import math
 import navx
 import wpilib.drive
 import wpilib
-from wpilib import RobotBase, RobotController, SmartDashboard
+from wpilib import RobotBase, RobotController
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.system import LinearSystemId
 from wpimath.system.plant import DCMotor

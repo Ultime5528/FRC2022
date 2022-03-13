@@ -31,8 +31,8 @@ from commands.suivretrajectoire import SuivreTrajectoire
 from commands.ejecterintake import EjecterIntake
 from commands.descendreintake import DescendreIntake
 from commands.arreterintake import ArreterIntake
-from commands.interpolatedShoot import InterpolatedShoot
-from commands.dashboardShoot import DashboardShoot
+from commands.interpolatedshoot import InterpolatedShoot
+from commands.dashboardshoot import DashboardShoot
 from utils.cameraserver import CameraServer
 from commands.ejectershooter import EjecterShooter
 import traceback
@@ -63,16 +63,13 @@ class Robot(commands2.TimedCommandRobot):
 
         JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-        wpilib.SmartDashboard.putData("Shoot", Shoot(self.shooter, self.stick, 3000, 3000))
+        wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
         wpilib.SmartDashboard.putData("Suivre Traj",
                                       SuivreTrajectoire(self.base_pilotable,
                                                         [
-
                                                             Pose2d(0, 0, Rotation2d.fromDegrees(0)),
                                                             Pose2d(6, 6, Rotation2d.fromDegrees(90)),
-                                                            # Pose2d(12, 12, Rotation2d.fromDegrees(0)),
-                                                            # Pose2d(18, 6, Rotation2d.fromDegrees(-90)),
-                                                            # Pose2d(0, 0, Rotation2d.fromDegrees(180)),
+                                                        ], 0.5))
 
         wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur, lambda: properties.values.grimpeur_enconder_monter))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
