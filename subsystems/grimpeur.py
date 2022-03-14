@@ -1,4 +1,7 @@
 import rev
+import wpilib
+import wpiutil
+
 import ports
 from wpilib import DigitalInput, RobotBase
 from utils.subsystembase import SubsystemBase
@@ -22,19 +25,29 @@ class Grimpeur(SubsystemBase):
         # Motors
         self._motor_primaire = rev.CANSparkMax(ports.grimpeur_moteur_principal_droit,
                                                rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_primaire.restoreFactoryDefaults()
+        self._motor_primaire.setInverted(True)
         self._encoder_primaire = self._motor_primaire.getEncoder()
+
         self._motor_primaire_follower = rev.CANSparkMax(ports.grimpeur_moteur_principal_gauche,
                                                         rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_primaire_follower.follow(self._motor_primaire, invert=False)
+        self._motor_primaire_follower.restoreFactoryDefaults()
+        self._motor_primaire_follower.follow(self._motor_primaire, invert=True)
 
         self._motor_secondaire = rev.CANSparkMax(ports.grimpeur_moteur_secondaire,
                                                  rev.CANSparkMax.MotorType.kBrushless)
+        self._motor_secondaire.restoreFactoryDefaults()
+        self._motor_secondaire.setInverted(True)
         self._encoder_secondaire = self._motor_secondaire.getEncoder()
 
         if RobotBase.isSimulation():
             self._motor_primaire_sim = SparkMaxSim(self._motor_primaire_follower)
             self._motor_primaire_follower_sim = SparkMaxSim(self._motor_primaire)
             self._motor_secondaire_sim = SparkMaxSim(self._motor_secondaire)
+
+    def periodic(self) -> None:
+        wpilib.SmartDashboard.putNumber("Encodeur Primaire", self.getPositionPrincipale())
+        wpilib.SmartDashboard.putNumber("Encodeur Secondaire", self.getPositionSecondaire())
 
     def simulationPeriodic(self):
         self._motor_primaire_sim.setVelocity(self._motor_primaire.get())
@@ -45,13 +58,13 @@ class Grimpeur(SubsystemBase):
         self._motor_primaire.set(properties.values.grimpeur_vitesse_monter)
 
     def descend(self):
-        self._motor_primaire.set(properties.values.vitesse_grimpeur_descend)
+        self._motor_primaire.set(properties.values.grimpeur_vitesse_descend)
 
     def monter_secondaire(self):
         self._motor_secondaire.set(properties.values.grimpeur_vitesse_monter_secondaire)
 
     def descend_secondaire(self):
-        self._motor_secondaire.set(properties.values.vitesse_grimpeur_descend_secondaire)
+        self._motor_secondaire.set(properties.values.grimpeur_vitesse_descend_secondaire)
 
     def stop(self):
         self._motor_primaire.set(0)
@@ -61,7 +74,7 @@ class Grimpeur(SubsystemBase):
         return self._encoder_secondaire.getPosition()
 
     def getSwitchBas(self):
-        return self._switch_bas.get()
+        return not self._switch_bas.get()
 
     def getSwitchBasSecondaire(self) -> bool:
         return self._switch_bas_secondaire.get()
@@ -73,4 +86,8 @@ class Grimpeur(SubsystemBase):
         return self._encoder_primaire.getPosition()
 
     def resetEncoder(self):
-        self._motor_primaire.restoreFactoryDefaults()  # TODO wrong method
+        self._encoder_primaire.setPosition(0)
+
+    # def initSendable(self, builder: wpiutil.SendableBuilder) -> None:
+    #     super(Grimpeur, self).initSendable(builder)
+    #     builder.addDoubleProperty("Encoder Secondaire", self.getPositionSecondaire, None)

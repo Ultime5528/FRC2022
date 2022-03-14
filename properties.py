@@ -25,9 +25,10 @@ class Properties:
     
     grimpeur_vitesse_monter = ntproperty("/Properties/grimpeur_vitesse_monter", 0.5, writeDefault=False, persistent=persistent)
     grimpeur_vitesse_descend = ntproperty("/Properties/grimpeur_vitesse_descend", -0.5, writeDefault=False, persistent=persistent)
-    grimpeur_vitesse_monter_secondaire = ntproperty("/Properties/grimpeur_vitesse_monter_secondaire", 0.5, writeDefault=False, persistent=persistent)
-    grimpeur_vitesse_descend_secondaire = ntproperty("/Properties/grimpeur_vitesse_descend_secondaire", -0.5, writeDefault=False, persistent=persistent)
-    grimpeur_distance_alignement = ntproperty("/Properties/grimpeur_distance_alignement", 1, writeDefault=False, persistent=persistent)
+    grimpeur_vitesse_monter_secondaire = ntproperty("/Properties/grimpeur_vitesse_monter_secondaire", 0.25, writeDefault=False, persistent=persistent)
+    grimpeur_vitesse_descend_secondaire = ntproperty("/Properties/grimpeur_vitesse_descend_secondaire", -0.25, writeDefault=False, persistent=persistent)
+    grimpeur_distance_alignement = ntproperty("/Properties/grimpeur_distance_alignement", 40, writeDefault=False, persistent=persistent)
+    grimpeur_encoder_monter = ntproperty("/Properties/grimpeur_encoder_monter", 10, writeDefault=False)
 
     viser_hub_speed = ntproperty("/Properties/viser_hub_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_hub_threshold = ntproperty("/Properties/viser_hub_threshold", 0.05, writeDefault=False, persistent=persistent)

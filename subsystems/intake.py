@@ -9,6 +9,7 @@ class Intake(SubsystemBase):
         super().__init__()
         # Motors
         self._motor_intake = wpilib.PWMVictorSPX(ports.intake_moteur_intake)
+        self._motor_intake.setInverted(True)
         self._motor_convoyeur = wpilib.PWMVictorSPX(ports.intake_moteur_transporter)
         self.addChild("Motor Intake", self._motor_intake)
         self.addChild("Motor Convoyeur", self._motor_convoyeur)
@@ -28,7 +29,7 @@ class Intake(SubsystemBase):
     def stopIntake(self):
         self._motor_intake.set(0)
 
-    def stopTransporter(self):
+    def stopConvoyeur(self):
         self._motor_convoyeur.set(0)
 
     def hasBallIntake(self) -> bool:

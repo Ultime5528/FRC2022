@@ -22,7 +22,10 @@ class _AlignerGrimpeur(commands2.CommandBase):
 
     def isFinished(self) -> bool:
         return (self.positionInitiale - self.grimpeur.getPositionSecondaire()) >= \
-               properties.values.distance_alignement_grimpeur
+               properties.values.grimpeur_distance_alignement
+
+    def end(self, interrupted: bool) -> None:
+        self.grimpeur.stop()
 
 
 class AlignerGrimpeur(commands2.SequentialCommandGroup):

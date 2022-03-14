@@ -13,7 +13,7 @@ class PrendreBallon(CommandBase):
         self.intake.activerIntake()
 
         if self.intake.hasBallTransporter():
-            self.intake.stopTransporter()
+            self.intake.stopConvoyeur()
         else:
             self.intake.activerTransporter()
 
@@ -22,4 +22,4 @@ class PrendreBallon(CommandBase):
 
     def end(self, interrupted: bool) -> None:
         self.intake.stopIntake()
-        self.intake.stopTransporter()
+        self.intake.stopConvoyeur()

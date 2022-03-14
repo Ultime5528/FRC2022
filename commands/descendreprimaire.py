@@ -17,3 +17,4 @@ class DescendrePrimaire(commands2.CommandBase):
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()
+        self.grimpeur.resetEncoder()
