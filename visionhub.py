@@ -26,8 +26,8 @@ class Target:
         return len(self.positions)
 
 
-def main():
-    NetworkTables.initialize(server="10.55.28.2")
+def hub_loop():
+    NetworkTables.initialize(server="169.254.132.116")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
     with isConnected:
@@ -125,6 +125,14 @@ def main():
 
             cv2.circle(img, position, 3, (255, 0 ,255), 3)
         outputStream.putFrame(img)
+        yield
+
+
+def main():
+    loop = hub_loop()
+    while True:
+        next(loop)
+
 
 if __name__ == '__main__':
     main()

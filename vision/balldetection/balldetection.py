@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import math
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from dataclasses import dataclass
 from ..color import Color
 
@@ -114,7 +114,7 @@ class CandidateCircle:
         return tuple(rect.round().astype(int))
 
 
-def findCirclesInContours(contours: List[np.ndarray], max_iterations: int=10, threshold_distance_percentage:Optional[float] = None, threshold_inlier_count:Optional[int] = None) -> list[tuple[int, int, int, int]]:
+def findCirclesInContours(contours: List[np.ndarray], max_iterations: int=10, threshold_distance_percentage:Optional[float] = None, threshold_inlier_count:Optional[int] = None) -> List[Tuple[int, int, int, int]]:
     """
     :rtype: object
     :param contours: Contours with probable circles
