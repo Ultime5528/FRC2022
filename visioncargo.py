@@ -16,15 +16,15 @@ def connectionListener(connected, info):
         notified[0] = True
         isConnected.notify()
 
-def main():
+def cargo_loop():
     NetworkTables.initialize(server="169.254.132.116")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
-    with isConnected:
-        print("Waiting for connection...")
-        if not notified[0]:
-            isConnected.wait()
-    print("Connected!")
+    # with isConnected:
+    #     print("Waiting for connection...")
+    #     if not notified[0]:
+    #         isConnected.wait()
+    # print("Connected!")
 
     nt_isredalliance = NetworkTables.getEntry("/FMSInfo/IsRedAlliance")
     isRedAlliance = nt_isredalliance.getBoolean(None)
@@ -39,12 +39,13 @@ def main():
     nt_normx = NetworkTables.getEntry("/Vision/Cargo/Norm_X")
     nt_normy = NetworkTables.getEntry("/Vision/Cargo/Norm_Y")
 
+    CameraServer.kBasePort = 1183
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture(dev=1)
-    camera.setResolution(320, 240) # TODO CHANGE
-    camera.setFPS(30) # TODO CHANGE
+    camera = cs.startAutomaticCapture()
+    # camera.setResolution(320, 240) # TODO CHANGE
+    # camera.setFPS(30) # TODO CHANGE
 
     cvSink = cs.getVideo()
 
@@ -74,6 +75,12 @@ def main():
 
             cv2.circle(img, (nearest[2], nearest[3]), 3, (0, 255, 0), 3)
         outputStream.putFrame(img)
+        yield
+
+def main():
+    loop = cargo_loop()
+    while True:
+        next(loop)
 
 if __name__ == '__main__':
     main()

@@ -37,6 +37,8 @@ send_message("systemWritable")
 with SshController("wpilibpi.local", "pi", "raspberry") as controller:
     # controller.exec_cmd("cat runCamera", print_output=True)
     controller.put("visioncargo.py", "/home/pi/visioncargo.py")
+    controller.put("visionhub.py", "/home/pi/visionhub.py")
+    controller.put("visionmaster.py", "/home/pi/visionmaster.py")
     controller.put("runCamera", "/home/pi/runCamera")
     controller.exec_cmd("rm -rf /home/pi/vision")
     controller.sftp("./vision", "/home/pi/")

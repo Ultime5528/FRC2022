@@ -2,4 +2,4 @@
 echo "Waiting 5 seconds..."
 sleep 5
 export PYTHONUNBUFFERED=1
-exec /usr/bin/python3 /home/pi/visioncargo.py
+exec /usr/bin/python3 /home/pi/visionmaster.py

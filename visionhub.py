@@ -4,8 +4,6 @@ import numpy as np
 import cv2
 from networktables import NetworkTables
 from cscore import CameraServer
-import ports
-
 
 isConnected = threading.Condition()
 notified = [False]
@@ -30,16 +28,16 @@ def hub_loop():
     NetworkTables.initialize(server="169.254.132.116")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
-    with isConnected:
-        print("Waiting for connection...")
-        if not notified[0]:
-            isConnected.wait()
-    print("Connected!")
+    # with isConnected:
+    #     print("Waiting for connection...")
+    #     if not notified[0]:
+    #         isConnected.wait()
+    # print("Connected!")
 
-    nt_normx = NetworkTables.getEntry("Vision/Hub/Norm_X")
-    nt_normy = NetworkTables.getEntry("Vision/Hub/Norm_Y")
+    nt_normx = NetworkTables.getEntry("/Vision/Hub/Norm_X")
+    nt_normy = NetworkTables.getEntry("/Vision/Hub/Norm_Y")
 
-    CameraServer.kBasePort = 1183
+    CameraServer.kBasePort = 1181
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
@@ -69,7 +67,7 @@ def hub_loop():
 
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lowerGreen, highGreen)
-        cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        _, cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         # cv2.imshow('mask', mask)
 
         validRects = []
