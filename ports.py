@@ -23,8 +23,8 @@ grimpeur_switch_secondaire_bas = 1
 grimpeur_switch_secondaire_haut = 2
 
 # Analog
-intake_ultrasonic_bas = 0
-intake_ultrasonic_haut = 1
+intake_ultrasonic_haut = 0
+intake_ultrasonic_bas = 1
 
 # USB
 camera_hub = 0

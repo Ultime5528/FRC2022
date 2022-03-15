@@ -22,7 +22,6 @@ class EjecterIntake(CommandBase):
 
     def end(self, interrupted: bool) -> None:
         self.intake.stopIntake()
-        self.intake.stopConvoyeur()
 
     def isFinished(self) -> bool:
         return self.timer.get() >= properties.values.intake_duree_ejection

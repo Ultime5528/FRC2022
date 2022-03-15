@@ -12,13 +12,13 @@ class PrendreBallon(CommandBase):
     def execute(self):
         self.intake.activerIntake()
 
-        if self.intake.hasBallTransporter():
+        if self.intake.hasBallConvoyeur():
             self.intake.stopConvoyeur()
         else:
             self.intake.activerTransporter()
 
     def isFinished(self) -> bool:
-        return self.intake.hasBallIntake() and self.intake.hasBallTransporter()
+        return self.intake.hasBallIntake() and self.intake.hasBallConvoyeur()
 
     def end(self, interrupted: bool) -> None:
         self.intake.stopIntake()

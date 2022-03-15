@@ -7,9 +7,9 @@ class Properties:
     shooter_backspin_speed = ntproperty("/Properties/shooter_backspin_speed", 100, writeDefault=False, persistent=persistent)
     shooter_speed = ntproperty("/Properties/shooter_speed", 100, writeDefault=False, persistent=persistent)
 
-    shooter_ejecter_speed = ntproperty("/Properties/shooter_ejecter_speed", 2000, writeDefault=False, persistent=persistent)
-    shooter_ejecter_backspin_speed = ntproperty("/Properties/shooter_ejecter_backspin_speed", 100, writeDefault=False, persistent=persistent)
-    shooter_ejecter_temps = ntproperty("/Properties/shooter_ejecter_temps", 4, writeDefault=False, persistent=persistent)
+    shooter_ejecter_speed = ntproperty("/Properties/shooter_ejecter_speed", 750, writeDefault=False, persistent=persistent)
+    shooter_ejecter_backspin_speed = ntproperty("/Properties/shooter_ejecter_backspin_speed", 750, writeDefault=False, persistent=persistent)
+    shooter_ejecter_temps = ntproperty("/Properties/shooter_ejecter_temps", 2, writeDefault=False, persistent=persistent)
 
     intake_speed = ntproperty("/Properties/intake_speed", 1, writeDefault=False, persistent=persistent)
     intake_duree_ejection = ntproperty("/Properties/intake_duree_ejection", 1.5, writeDefault=False, persistent=persistent)

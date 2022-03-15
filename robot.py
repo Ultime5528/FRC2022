@@ -86,6 +86,9 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
         wpilib.SmartDashboard.putData("Ejecter Intake", EjecterIntake(self.intake))
+        wpilib.SmartDashboard.putData("Prendre Ballon", PrendreBallon(self.intake))
+        wpilib.SmartDashboard.putData("Avancer", Avancer(self.base_pilotable, -1, 0.15))
+
 
     def robotPeriodic(self) -> None:
         try:

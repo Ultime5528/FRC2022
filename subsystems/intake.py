@@ -11,6 +11,7 @@ class Intake(SubsystemBase):
         self._motor_intake = wpilib.PWMVictorSPX(ports.intake_moteur_intake)
         self._motor_intake.setInverted(True)
         self._motor_convoyeur = wpilib.PWMVictorSPX(ports.intake_moteur_transporter)
+        self._motor_convoyeur.setInverted(True)
         self.addChild("Motor Intake", self._motor_intake)
         self.addChild("Motor Convoyeur", self._motor_convoyeur)
 
@@ -33,17 +34,16 @@ class Intake(SubsystemBase):
         self._motor_convoyeur.set(0)
 
     def hasBallIntake(self) -> bool:
-        return self._ultrasonic_bas.get() > properties.values.intake_ultrason_bas_threshold
+        return self._ultrasonic_bas.get() < properties.values.intake_ultrason_bas_threshold
 
-    def hasBallTransporter(self) -> bool:
-        return self._ultrasonic_bas.get() > properties.values.intake_ultrason_haut_threshold
+    def hasBallConvoyeur(self) -> bool:
+        return self._ultrasonic_haut.get() < properties.values.intake_ultrason_haut_threshold
 
     def ejecter(self):
         self._motor_intake.set(properties.values.intake_reverse_speed)
-        self._motor_convoyeur.set(properties.values.transporter_reverse_speed)
 
     def periodic(self):
         wpilib.SmartDashboard.putBoolean("Sensor intake", self.hasBallIntake())
-        wpilib.SmartDashboard.putBoolean("Sensor transporter", self.hasBallTransporter())
+        wpilib.SmartDashboard.putBoolean("Sensor transporter", self.hasBallConvoyeur())
         wpilib.SmartDashboard.putBoolean("Motor intake", self._motor_intake.get() > 0)
         wpilib.SmartDashboard.putBoolean("Motor transporter", self._motor_convoyeur.get() > 0)

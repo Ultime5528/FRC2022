@@ -1,5 +1,6 @@
 import commands2
 from subsystems.basepilotable import BasePilotable
+import math
 
 
 class Avancer(commands2.CommandBase):
@@ -15,10 +16,10 @@ class Avancer(commands2.CommandBase):
         self.base_pilotable.resetOdometry()
 
     def execute(self) -> None:
-        self.base_pilotable.arcadeDrive(self.speed, 0)
+        self.base_pilotable.arcadeDrive(math.copysign(self.speed, self.distance), 0)
 
     def end(self, interrupted: bool) -> None:
         self.base_pilotable.arcadeDrive(0, 0)
 
     def isFinished(self) -> bool:
-        return self.base_pilotable.getAverageEncoderPosition() >= self.distance
+        return abs(self.base_pilotable.getAverageEncoderPosition()) >= abs(self.distance)
