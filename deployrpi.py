@@ -40,6 +40,7 @@ with SshController("wpilibpi.local", "pi", "raspberry") as controller:
     controller.put("visionhub.py", "/home/pi/visionhub.py")
     controller.put("visionmaster.py", "/home/pi/visionmaster.py")
     controller.put("runCamera", "/home/pi/runCamera")
+    controller.exec_cmd("chmod 777 runCamera")
     controller.exec_cmd("rm -rf /home/pi/vision")
     controller.sftp("./vision", "/home/pi/")
     # controller.exec_cmd("pkill -f python3")

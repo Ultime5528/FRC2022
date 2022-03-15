@@ -36,7 +36,7 @@ def findColorContours(img: np.ndarray, color, rs: Optional[int]=None, rv: Option
     """
     mask = maskColor(img, color, rs, rv, bs, bv)
 
-    cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    _, cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     return cnts
 

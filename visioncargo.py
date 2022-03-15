@@ -43,7 +43,7 @@ def cargo_loop():
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture()
+    camera = cs.startAutomaticCapture(dev=1)
     # camera.setResolution(320, 240) # TODO CHANGE
     # camera.setFPS(30) # TODO CHANGE
 

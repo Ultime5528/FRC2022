@@ -6,3 +6,4 @@ cargo_loop = cargo_loop()
 
 while True:
     next(hub_loop)
+    next(cargo_loop)
