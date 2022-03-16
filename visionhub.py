@@ -25,7 +25,7 @@ class Target:
 
 
 def hub_loop():
-    NetworkTables.initialize(server="169.254.132.116")
+    NetworkTables.initialize(server="10.55.28.2")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
     # with isConnected:
