@@ -32,9 +32,8 @@ def cargo_loop():
     if isRedAlliance is not None:
         color = Color.RED if isRedAlliance else Color.BLUE
     else:
-        color = Color.RED
+        color = Color.BLUE
         print("WARNING: Variable /FMSInfo/IsRedAlliance is not declared")
-        # raise Exception("Variable /FMSInfo/IsRedAlliance is not declared")
 
     nt_normx = NetworkTables.getEntry("/Vision/Cargo/Norm_X")
     nt_normy = NetworkTables.getEntry("/Vision/Cargo/Norm_Y")
@@ -44,8 +43,8 @@ def cargo_loop():
     cs.enableLogging()
 
     cargo_cam = cs.startAutomaticCapture(name="cargo_cam", path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
-    cargo_cam.setResolution(320, 240) # TODO CHANGE
-    cargo_cam.setFPS(30) # TODO CHANGE
+    cargo_cam.setResolution(320, 240)
+    cargo_cam.setFPS(30)
 
     cvSink = cs.getVideo(camera=cargo_cam)
 
@@ -73,9 +72,10 @@ def cargo_loop():
 
 
             for t in targets:
-                cv2.circle(img, (t[2], t[3]), 3, (0, 0, 255), 3)
+                cv2.circle(img, (t[0]+t[2]//2, t[1]+t[3]//2), (t[2]+t[3])//4, (0, 0, 255), 3)
 
-            cv2.circle(img, (nearest[2], nearest[3]), 3, (0, 255, 0), 3)
+            cv2.circle(img, (nearest[0]+nearest[2]//2, nearest[1]+nearest[3]//2), (nearest[2]+nearest[3])//4, (0, 255, 0), 3)
+
         outputStream.putFrame(img)
         yield
 
