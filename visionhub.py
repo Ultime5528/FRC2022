@@ -37,18 +37,18 @@ def hub_loop():
     nt_normx = NetworkTables.getEntry("/Vision/Hub/Norm_X")
     nt_normy = NetworkTables.getEntry("/Vision/Hub/Norm_Y")
 
-    CameraServer.kBasePort = 1181
     cs = CameraServer.getInstance()
+    cs.kBasePort = 1181
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture(dev=0)
-    camera.setResolution(320, 240)
-    camera.setFPS(30)
-    camera.setBrightness(0)
-    camera.setExposureManual(0)
-    camera.setWhiteBalanceManual(6000)
+    hub_cam = cs.startAutomaticCapture(name="hub_cam", path="/dev/v4l/by-id/usb-KYE_Systems_Corp._USB_Camera_200901010001-video-index0")
+    hub_cam.setResolution(320, 240)
+    hub_cam.setFPS(30)
+    hub_cam.setBrightness(0)
+    hub_cam.setExposureManual(0)
+    hub_cam.setWhiteBalanceManual(6000)
 
-    cvSink = cs.getVideo()
+    cvSink = cs.getVideo(camera=hub_cam)
 
     outputStream = cs.putVideo("Hub", 320, 240)
 
@@ -117,9 +117,10 @@ def hub_loop():
             position = np.mean(bestTarget.positions, axis=0).astype("int")
             norm_x = (position[0] / img.shape[1]) * 2 - 1
             norm_y = (position[1] / img.shape[0]) * 2 - 1
+
             nt_normx.setDouble(norm_x)
             nt_normy.setDouble(norm_y)
-
+            NetworkTables.flush()
 
             cv2.circle(img, position, 3, (255, 0 ,255), 3)
         outputStream.putFrame(img)

@@ -39,15 +39,15 @@ def cargo_loop():
     nt_normx = NetworkTables.getEntry("/Vision/Cargo/Norm_X")
     nt_normy = NetworkTables.getEntry("/Vision/Cargo/Norm_Y")
 
-    CameraServer.kBasePort = 1183
     cs = CameraServer.getInstance()
+    cs.kBasePort = 1183
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture(dev=1)
-    # camera.setResolution(320, 240) # TODO CHANGE
-    # camera.setFPS(30) # TODO CHANGE
+    cargo_cam = cs.startAutomaticCapture(name="cargo_cam", path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
+    cargo_cam.setResolution(320, 240) # TODO CHANGE
+    cargo_cam.setFPS(30) # TODO CHANGE
 
-    cvSink = cs.getVideo()
+    cvSink = cs.getVideo(camera=cargo_cam)
 
     outputStream = cs.putVideo("Cargo", 320, 240)
 
@@ -69,6 +69,8 @@ def cargo_loop():
 
             nt_normx.setDouble(norm_x)
             nt_normy.setDouble(norm_y)
+            NetworkTables.flush()
+
 
             for t in targets:
                 cv2.circle(img, (t[2], t[3]), 3, (0, 0, 255), 3)
