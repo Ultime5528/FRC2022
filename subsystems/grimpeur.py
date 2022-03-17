@@ -21,6 +21,7 @@ class Grimpeur(SubsystemBase):
         self.addChild("SwitchHautSecondaire", self._switch_haut_secondaire)
 
         # Motors
+
         self._motor_primaire = rev.CANSparkMax(ports.grimpeur_moteur_principal_droit,
                                                rev.CANSparkMax.MotorType.kBrushless)
         self._encoder_primaire = self._motor_primaire.getEncoder()
