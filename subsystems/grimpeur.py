@@ -1,6 +1,5 @@
 import rev
 import wpilib
-import wpiutil
 
 import ports
 from wpilib import DigitalInput, RobotBase
@@ -69,6 +68,8 @@ class Grimpeur(SubsystemBase):
 
     def stop(self):
         self._motor_primaire.set(0)
+
+    def stop_secondaire(self):
         self._motor_secondaire.set(0)
 
     def getPositionSecondaire(self):
@@ -89,6 +90,5 @@ class Grimpeur(SubsystemBase):
     def resetEncoder(self):
         self._encoder_primaire.setPosition(0)
 
-    # def initSendable(self, builder: wpiutil.SendableBuilder) -> None:
-    #     super(Grimpeur, self).initSendable(builder)
-    #     builder.addDoubleProperty("Encoder Secondaire", self.getPositionSecondaire, None)
+    def reset_encoder_secondaire(self):
+        self._encoder_secondaire.setPosition(0)

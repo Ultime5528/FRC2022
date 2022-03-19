@@ -3,7 +3,7 @@ import commands2
 from subsystems.grimpeur import Grimpeur
 
 
-class DescendreSecondaire(commands2.CommandBase):
+class MonterCompletSecondaire(commands2.CommandBase):
     def __init__(self, grimpeur: Grimpeur):
         super().__init__()
         self.setName("Descendre Secondaire")
@@ -11,10 +11,10 @@ class DescendreSecondaire(commands2.CommandBase):
         self.addRequirements(self.grimpeur)
 
     def execute(self) -> None:
-        self.grimpeur.descend_secondaire()
+        self.grimpeur.monter_secondaire()
 
     def isFinished(self) -> bool:
-        return self.grimpeur.getSwitchBasSecondaire()
+        return self.grimpeur.getSwitchHautSecondaire()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()

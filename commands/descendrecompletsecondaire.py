@@ -1,18 +1,21 @@
 import commands2
+
 from subsystems.grimpeur import Grimpeur
 
 
-class RetourSwitch(commands2.CommandBase):
+class DescendreCompletSecondaire(commands2.CommandBase):
     def __init__(self, grimpeur: Grimpeur):
         super().__init__()
+        self.setName("Descendre Secondaire")
         self.grimpeur = grimpeur
-        self.setName("Descendre Primaire")
+        self.addRequirements(self.grimpeur)
 
     def execute(self) -> None:
-        self.grimpeur.descend()
+        self.grimpeur.descend_secondaire()
 
     def isFinished(self) -> bool:
-        return self.grimpeur._switch_bas.get()
+        return self.grimpeur.getSwitchBasSecondaire()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()
+        self.grimpeur.resetEncoder()

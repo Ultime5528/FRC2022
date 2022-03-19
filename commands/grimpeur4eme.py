@@ -2,8 +2,8 @@ import commands2
 
 from commands.bougersecondaire import BougerSecondaire
 from commands.bougerprimaire import BougerPrimaire
-from commands.descendresecondaire import DescendreSecondaire
-from commands.retourswitch import RetourSwitch
+from commands.descendrecompletsecondaire import DescendreSecondaire
+from commands.descendrecompletprimaire import RetourSwitch
 from subsystems.grimpeur import Grimpeur
 
 

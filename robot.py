@@ -7,11 +7,11 @@ from commands.grimpeur2eme import Grimpeur2eme
 from commands.grimpeur3eme import Grimpeur3eme
 from commands.grimpeur4eme import Grimpeur4eme
 from commands.visercargo import ViserCargo
-from commands.descendresecondaire import DescendreSecondaire
+
 from commands.interpolatedshoot import InterpolatedShoot
 from commands.monterintake import MonterIntake
 from commands.bougerprimaire import BougerPrimaire
-from commands.retourswitch import RetourSwitch
+from commands.descendrecompletprimaire import DescendreCompletPrimaire
 from commands.arreterintake import ArreterIntake
 from commands.ejecterintake import EjecterIntake
 from commands.sequenceprendre import SequencePrendre
@@ -75,10 +75,12 @@ class Robot(commands2.TimedCommandRobot):
                                                             Pose2d(3, 1, Rotation2d.fromDegrees(0)),
                                                         ], 0.2, reset=True))
 
-        wpilib.SmartDashboard.putData("Monter Primaire", BougerPrimaire(self.grimpeur, lambda: properties.values.grimpeur_enconder_monter))
-        wpilib.SmartDashboard.putData("Descendre Primaire", RetourSwitch(self.grimpeur))
-        wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur, lambda: properties.values.grimpeur_encoder_monter))
-        wpilib.SmartDashboard.putData("Monter Secondaire", MonterSecondaire(self.grimpeur))
+        wpilib.SmartDashboard.putData("Bouger Primaire", BougerPrimaire(self.grimpeur, lambda: properties.values.grimpeur_enconder_monter))
+        wpilib.SmartDashboard.putData("Monter Primaire", MonterCompletPrimaire(self.grimpeur))
+        wpilib.SmartDashboard.putData("Descendre Primaire", DescendreCompletPrimaire(self.grimpeur))
+        wpilib.SmartDashboard.putData("Bouger Secondaire", BougerSecondaire(self.grimpeur, lambda: properties.values.grimpeur_encoder_monter))
+        wpilib.SmartDashboard.putData("Monter Secondaire", MonterCompletSecondaire(self.grimpeur))
+        wpilib.SmartDashboard.putData("Descendre Secondaire", DescendreCompletSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
         wpilib.SmartDashboard.putData("Descendre Primaire", DescendrePrimaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Descendre Secondaire", DescendreSecondaire(self.grimpeur))

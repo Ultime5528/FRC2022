@@ -1,7 +1,7 @@
 import commands2
 
-from commands.retourswitch import RetourSwitch
-from commands.descendresecondaire import DescendreSecondaire
+from commands.descendrecompletprimaire import RetourSwitch
+from commands.descendrecompletsecondaire import DescendreSecondaire
 from subsystems.grimpeur import Grimpeur
 
 
