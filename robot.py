@@ -65,13 +65,13 @@ class Robot(commands2.TimedCommandRobot):
         # # JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         # # JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
-        # wpilib.SmartDashboard.putData("Suivre Traj",
-        #                               SuivreTrajectoire(self.base_pilotable,
-        #                                                 [
-        #                                                     Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-        #                                                     Pose2d(6, 6, Rotation2d.fromDegrees(90)),
-        #                                                 ], 0.5))
-        #
+        wpilib.SmartDashboard.putData("Suivre Traj",
+                                      SuivreTrajectoire(self.base_pilotable,
+                                                        [
+                                                            Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                                            Pose2d(3, 1, Rotation2d.fromDegrees(0)),
+                                                        ], 0.2, reset=True))
+
         wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur, lambda: properties.values.grimpeur_encoder_monter))
         wpilib.SmartDashboard.putData("Monter Secondaire", MonterSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
@@ -88,6 +88,7 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Ejecter Intake", EjecterIntake(self.intake))
         wpilib.SmartDashboard.putData("Prendre Ballon", PrendreBallon(self.intake))
         wpilib.SmartDashboard.putData("Avancer", Avancer(self.base_pilotable, -1, 0.15))
+        wpilib.SmartDashboard.putData("Tourner", Tourner(self.base_pilotable, -90, 0.1))
 
 
     def robotPeriodic(self) -> None:
