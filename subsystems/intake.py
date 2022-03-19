@@ -24,11 +24,11 @@ class Intake(SubsystemBase):
     def activerIntake(self):
         self._motor_intake.set(properties.values.intake_speed)
 
-    def activerTransporter(self):
-        self._motor_convoyeur.set(properties.values.transporter_speed)
-
     def stopIntake(self):
         self._motor_intake.set(0)
+
+    def activerConvoyeur(self):
+        self._motor_convoyeur.set(properties.values.transporter_speed)
 
     def stopConvoyeur(self):
         self._motor_convoyeur.set(0)

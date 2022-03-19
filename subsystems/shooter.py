@@ -3,6 +3,9 @@ import wpilib
 from wpimath.controller import SimpleMotorFeedforwardMeters, BangBangController
 import rev
 from wpilib import RobotBase, RobotController
+from subsystems.intake import Intake
+
+import properties
 from utils.sparkmaxsim import SparkMaxSim
 from wpilib.simulation import FlywheelSim
 from wpimath.system.plant import DCMotor
@@ -71,10 +74,13 @@ class Shooter(commands2.SubsystemBase):
         # print("Voltage: ", voltage)
 
         self._backspin_motor.setVoltage(self.bang_bang_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
-            + 0.95 * self.feed_forward_controller.calculate(backspin_setpoint))
+                                        + properties.values.shooter_feedforward_percentage * self.feed_forward_controller.calculate(backspin_setpoint))
 
         self.setpoint = setpoint
         self.backspin_setpoint = backspin_setpoint
+
+    def atSetpoint(self):
+        return self.encoder.getVelocity() >= self.setpoint - properties.values.shooter_tolerance and self.backspin_encoder.getVelocity() >= self.backspin_setpoint - properties.values.shooter_tolerance
 
     def shoot_at_height(self, height):
         self.shoot(self.main_interpolator.interpolate(height), self.backspin_interpolator.interpolate(height))

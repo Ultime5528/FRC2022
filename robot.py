@@ -64,7 +64,7 @@ class Robot(commands2.TimedCommandRobot):
         # #
         # # JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         # # JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-        # wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
+        wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
         # wpilib.SmartDashboard.putData("Suivre Traj",
         #                               SuivreTrajectoire(self.base_pilotable,
         #                                                 [
@@ -81,7 +81,7 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets))
         wpilib.SmartDashboard.putData("Descendre Intake", DescendreIntake(self.grimpeur))
         wpilib.SmartDashboard.putData("Arreter Intake", ArreterIntake(self.intake))
-        wpilib.SmartDashboard.putData("Dashboard Shoot", DashboardShoot(self.shooter))
+        wpilib.SmartDashboard.putData("Dashboard Shoot", DashboardShoot(self.shooter, self.intake))
         wpilib.SmartDashboard.putData("Shooter Eject", EjecterShooter(self.shooter))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
         wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
