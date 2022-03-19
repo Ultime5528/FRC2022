@@ -29,6 +29,7 @@ class Properties:
     grimpeur_vitesse_descend_secondaire = ntproperty("/Properties/grimpeur_vitesse_descend_secondaire", -0.5, writeDefault=False, persistent=persistent)
     grimpeur_distance_alignement = ntproperty("/Properties/grimpeur_distance_alignement", 1, writeDefault=False, persistent=persistent)
 
+    vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
     viser_hub_speed = ntproperty("/Properties/viser_hub_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_hub_threshold = ntproperty("/Properties/viser_hub_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_hub_x_offset = ntproperty("/Properties/viser_hub_x_offset", 0, writeDefault=False, persistent=persistent)

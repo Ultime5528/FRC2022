@@ -1,22 +1,28 @@
 import commands2
+from commands2 import Trigger
 from networktables import NetworkTables
 # from pyfrc.physics.visionsim import VisionSim
 from wpimath.geometry import Pose2d
 from wpilib import RobotBase, Timer
 
+import properties
 from subsystems.basepilotable import BasePilotable
 
 
 class VisionTargets(commands2.SubsystemBase):
     def __init__(self, basepilotable: BasePilotable) -> None:
         super().__init__()
-        self.hubNormxEntry = NetworkTables.getEntry("Vision/Hub/Norm_X")
-        self.hubNormyEntry = NetworkTables.getEntry("Vision/Hub/Norm_Y")
-        self.hubFoundEntry = NetworkTables.getEntry("Vision/Hub/Found")
+        self.hubNormxEntry = NetworkTables.getEntry("/Vision/Hub/Norm_X")
+        self.hubNormyEntry = NetworkTables.getEntry("/Vision/Hub/Norm_Y")
+        self.hubFoundEntry = NetworkTables.getEntry("/Vision/Hub/Found")
 
-        self.cargoNormxEntry = NetworkTables.getEntry("Vision/Cargo/Norm_X")
-        self.cargoNormyEntry = NetworkTables.getEntry("Vision/Cargo/Norm_Y")
-        self.cargoFoundEntry = NetworkTables.getEntry("Vision/Cargo/Found")
+        self.cargoNormxEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_X")
+        self.cargoNormyEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_Y")
+        self.cargoNormwEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_W")
+        self.cargoIsRedEntry = NetworkTables.getEntry("/Vision/Cargo/IsRed")
+        self.cargoFoundEntry = NetworkTables.getEntry("/Vision/Cargo/Found")
+
+        self.isRedAllianceEntry = NetworkTables.getEntry("/FMSInfo/IsRedAlliance")
 
         if RobotBase.isSimulation():
             from pyfrc.physics.visionsim import VisionSim
@@ -57,8 +63,20 @@ class VisionTargets(commands2.SubsystemBase):
         return self.cargoNormyEntry.getDouble(0)
 
     @property
+    def cargoNormW(self):
+        return self.cargoNormwEntry.getDouble(0)
+
+    @property
+    def cargoIsRed(self):
+        return self.cargoIsRedEntry.getBoolean(True)
+
+    @property
     def cargoFound(self):
         return self.cargoFoundEntry.getBoolean(False)
+
+    def wrongCargoNear(self):
+        isRedAlliance = self.isRedAllianceEntry.getBoolean(True)
+        return self.cargoIsRed != isRedAlliance and self.cargoNormW > properties.values.vision_cargo_normw_threshold
 
     def simulationPeriodic(self):
         fakehubpose = self.fakehub.getPose()

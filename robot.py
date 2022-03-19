@@ -33,6 +33,7 @@ from commands.descendreintake import DescendreIntake
 from commands.arreterintake import ArreterIntake
 from commands.interpolatedshoot import InterpolatedShoot
 from commands.dashboardshoot import DashboardShoot
+from triggers.wrongcargotrigger import WrongCargoTrigger
 from utils.cameraserver import CameraServer
 from commands.ejectershooter import EjecterShooter
 import traceback
@@ -51,6 +52,8 @@ class Robot(commands2.TimedCommandRobot):
         self.led_controller = LEDController()
 
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
+
+        WrongCargoTrigger(self.vision_targets).whenActive(EjecterIntake(self.intake))
 
         JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
         JoystickButton(self.stick, 2).whenPressed(Tourner(self.base_pilotable, 180.0, 0.50))
