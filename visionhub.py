@@ -12,6 +12,8 @@ def connectionListener(connected, info):
     with isConnected:
         notified[0] = True
         isConnected.notify()
+    print("NetworkTables connected :", connected)
+    print(info)
 
 class Target:
     def __init__(self, y):
@@ -27,7 +29,6 @@ class Target:
 def hub_loop():
     NetworkTables.initialize(server="10.55.28.2")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
-
     # with isConnected:
     #     print("Waiting for connection...")
     #     if not notified[0]:
@@ -36,12 +37,14 @@ def hub_loop():
 
     nt_normx = NetworkTables.getEntry("/Vision/Hub/Norm_X")
     nt_normy = NetworkTables.getEntry("/Vision/Hub/Norm_Y")
+    nt_found = NetworkTables.getEntry("/Vision/Hub/Found")
+    nt_found.setBoolean(False)
 
     cs = CameraServer.getInstance()
     cs.kBasePort = 1181
     cs.enableLogging()
 
-    hub_cam = cs.startAutomaticCapture(name="hub_cam", path="/dev/v4l/by-id/usb-KYE_Systems_Corp._USB_Camera_200901010001-video-index0")
+    hub_cam = cs.startAutomaticCapture(name="hub_cam", path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
     hub_cam.setResolution(320, 240)
     hub_cam.setFPS(30)
     hub_cam.setBrightness(0)
@@ -51,12 +54,13 @@ def hub_loop():
     cvSink = cs.getVideo(camera=hub_cam)
 
     outputStream = cs.putVideo("Hub", 320, 240)
+    binStream = cs.putVideo("Hub bin", 320, 240)
 
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
 
     lowerGreen = (50, 0, 160)
-    highGreen = (100, 255, 255)
+    highGreen = (100, 255, 200)
 
 
     while True:
@@ -69,21 +73,41 @@ def hub_loop():
         mask = cv2.inRange(hsv, lowerGreen, highGreen)
         _, cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         # cv2.imshow('mask', mask)
+        img_cnts = cv2.drawContours(img.copy(), cnts, -1, (0, 0, 255), -1)
 
         validRects = []
         if cnts is not None:
+            print("==========")
+            print("nb cnts :", len(cnts))
             for cnt in cnts:
+                print("---")
                 area = cv2.contourArea(cnt)
+                print("area", area)
+                perimeter = cv2.arcLength(cnt, True)
+                print("perimeter :", perimeter)
                 minRect = cv2.minAreaRect(cnt)
-                (_, _), (minW, minH), angle = minRect
+                (_, _), (minW, minH), _ = minRect
+                print("minW :", minW)
+                print("minH :", minH)
 
                 minRect = np.int0(cv2.boxPoints(minRect))
                 minArea = cv2.contourArea(minRect)
+                print("minArea :", minArea)
+
                 rectangularity = area / minArea if minArea else 0
-                if rectangularity >= 0.75:
+                print("rectangularity :", rectangularity)
+
+                if rectangularity >= 0.5 and perimeter >= 7:
                     x, y, w, h = cv2.boundingRect(cnt)
-                    if 1.25 <= minW / minH <= 3.5 and minH >= 10 and minW >= 10:
+                    ratio = max(w, h) / min(w, h)
+                    print("rapport :", ratio)
+                    if 1.25 <= ratio <= 3.5 and w > h:
                         validRects.append((x, y, w, h))
+
+        for (x, y, w, h) in validRects:
+            cv2.rectangle(img_cnts, (x, y), (x + w, y + h), (0, 255, 255), 1)
+
+        binStream.putFrame(img_cnts)
         validPositions = []
 
         for x, y, w, h in validRects:
@@ -120,9 +144,14 @@ def hub_loop():
 
             nt_normx.setDouble(norm_x)
             nt_normy.setDouble(norm_y)
+            nt_found.setBoolean(True)
+
             NetworkTables.flush()
 
-            cv2.circle(img, position, 3, (255, 0 ,255), 3)
+            cv2.circle(img, tuple(position), 3, (255, 0 ,255), 3)
+        else:
+            nt_found.setBoolean(False)
+
         outputStream.putFrame(img)
         yield
 
