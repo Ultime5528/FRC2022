@@ -4,8 +4,6 @@ import numpy as np
 import cv2
 from networktables import NetworkTables
 from cscore import CameraServer
-import ports
-
 
 isConnected = threading.Condition()
 notified = [False]
@@ -26,31 +24,31 @@ class Target:
         return len(self.positions)
 
 
-def main():
+def hub_loop():
     NetworkTables.initialize(server="10.55.28.2")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
-    with isConnected:
-        print("Waiting for connection...")
-        if not notified[0]:
-            isConnected.wait()
-    print("Connected!")
+    # with isConnected:
+    #     print("Waiting for connection...")
+    #     if not notified[0]:
+    #         isConnected.wait()
+    # print("Connected!")
 
-    nt_normx = NetworkTables.getEntry("Vision/Hub/Norm_X")
-    nt_normy = NetworkTables.getEntry("Vision/Hub/Norm_Y")
+    nt_normx = NetworkTables.getEntry("/Vision/Hub/Norm_X")
+    nt_normy = NetworkTables.getEntry("/Vision/Hub/Norm_Y")
 
-    CameraServer.kBasePort = 1183
     cs = CameraServer.getInstance()
+    cs.kBasePort = 1181
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture(dev=0)
-    camera.setResolution(320, 240)
-    camera.setFPS(30)
-    camera.setBrightness(0)
-    camera.setExposureManual(0)
-    camera.setWhiteBalanceManual(6000)
+    hub_cam = cs.startAutomaticCapture(name="hub_cam", path="/dev/v4l/by-id/usb-KYE_Systems_Corp._USB_Camera_200901010001-video-index0")
+    hub_cam.setResolution(320, 240)
+    hub_cam.setFPS(30)
+    hub_cam.setBrightness(0)
+    hub_cam.setExposureManual(0)
+    hub_cam.setWhiteBalanceManual(6000)
 
-    cvSink = cs.getVideo()
+    cvSink = cs.getVideo(camera=hub_cam)
 
     outputStream = cs.putVideo("Hub", 320, 240)
 
@@ -69,7 +67,7 @@ def main():
 
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lowerGreen, highGreen)
-        cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        _, cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         # cv2.imshow('mask', mask)
 
         validRects = []
@@ -119,12 +117,21 @@ def main():
             position = np.mean(bestTarget.positions, axis=0).astype("int")
             norm_x = (position[0] / img.shape[1]) * 2 - 1
             norm_y = (position[1] / img.shape[0]) * 2 - 1
+
             nt_normx.setDouble(norm_x)
             nt_normy.setDouble(norm_y)
-
+            NetworkTables.flush()
 
             cv2.circle(img, position, 3, (255, 0 ,255), 3)
         outputStream.putFrame(img)
+        yield
+
+
+def main():
+    loop = hub_loop()
+    while True:
+        next(loop)
+
 
 if __name__ == '__main__':
     main()
