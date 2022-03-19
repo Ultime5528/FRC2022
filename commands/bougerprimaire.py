@@ -3,7 +3,7 @@ import commands2
 from subsystems.grimpeur import Grimpeur
 
 
-class MonterPrimaire(commands2.CommandBase):
+class BougerPrimaire(commands2.CommandBase):
     def __init__(self, grimpeur: Grimpeur, get_hauteur: Callable[[], float]):
         super().__init__()
         self.grimpeur = grimpeur
@@ -11,14 +11,15 @@ class MonterPrimaire(commands2.CommandBase):
         self.setName("Monter Primaire")
         self.addRequirements(self.grimpeur)
 
-    def initialize(self) -> None:
-        self.grimpeur.resetEncoder()
-
     def execute(self) -> None:
+        self.grimpeur.getPositionPrincipale()
         self.grimpeur.monter()
 
     def isFinished(self) -> bool:
-        return self.grimpeur.getPositionPrincipale() >= self.get_hauteur()
+        if self.grimpeur.getPositionPrincipale() > self.position and self.up == True:
+            return True
+        elif self.grimpeur.getPositionPrincipale() < self.position and self.up == False:
+            return True
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()
