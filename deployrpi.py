@@ -1,10 +1,10 @@
-import time
-
 import robotpy_installer.sshcontroller
 import websockets
 import json
 import asyncio
 
+
+ip_address = "10.55.28.6"
 
 class SshController(robotpy_installer.sshcontroller.SshController):
     def put(self, src, dest):
@@ -16,7 +16,7 @@ class SshController(robotpy_installer.sshcontroller.SshController):
 
 
 async def async_send_message(msg):
-    async with websockets.connect("ws://wpilibpi.local/", subprotocols=["frcvision"]) as websocket:
+    async with websockets.connect(f"ws://{ip_address}/", subprotocols=["frcvision"]) as websocket:
         while True:
             try:
                 print(f"Sending {msg}...")
@@ -34,7 +34,7 @@ def send_message(msg):
 
 send_message("systemWritable")
 
-with SshController("wpilibpi.local", "pi", "raspberry") as controller:
+with SshController(ip_address, "pi", "raspberry") as controller:
     # controller.exec_cmd("cat runCamera", print_output=True)
     controller.put("visioncargo.py", "/home/pi/visioncargo.py")
     controller.put("visionhub.py", "/home/pi/visionhub.py")
