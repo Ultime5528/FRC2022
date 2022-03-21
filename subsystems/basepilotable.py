@@ -3,7 +3,7 @@ import math
 import navx
 import wpilib.drive
 import wpilib
-from wpilib import RobotBase, RobotController, SmartDashboard
+from wpilib import RobotBase, RobotController
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.system import LinearSystemId
 from wpimath.system.plant import DCMotor
@@ -23,21 +23,25 @@ class BasePilotable(SubsystemBase):
         # Motors
         self._motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_left.restoreFactoryDefaults()
+        self._motor_left.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         self._motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2,
                                                     rev.CANSparkMax.MotorType.kBrushless)
-
         self._motor_left_follower.restoreFactoryDefaults()
+        self._motor_left_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         self._motor_left_follower.follow(self._motor_left)
+
         self._motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1,
                                             rev.CANSparkMax.MotorType.kBrushless)
-
         self._motor_right.restoreFactoryDefaults()
-        self._motor_right.setInverted(True)
+        self._motor_right.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
+        # self._motor_right.setInverted(True)
         self._motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2,
                                                      rev.CANSparkMax.MotorType.kBrushless)
-
         self._motor_right_follower.restoreFactoryDefaults()
+        self._motor_right_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         self._motor_right_follower.follow(self._motor_right)
+
+
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
 
         self.addChild("DifferentialDrive", self._drive)
@@ -45,6 +49,9 @@ class BasePilotable(SubsystemBase):
         # Odometry
         self._encoder_left = self._motor_left.getEncoder()
         self._encoder_right = self._motor_right.getEncoder()
+        self._encoder_left.setPositionConversionFactor(0.0463)
+        self._encoder_right.setPositionConversionFactor(0.0463)
+
         self._gyro = navx.AHRS(wpilib.SerialPort.Port.kMXP)
         self._odometry = DifferentialDriveOdometry(self._gyro.getRotation2d(), initialPose=Pose2d(5, 5, 0))
         self._field = wpilib.Field2d()
@@ -59,8 +66,7 @@ class BasePilotable(SubsystemBase):
             gyro_sim_device = SimDeviceSim("navX-Sensor[1]")
             self._gyro_sim = gyro_sim_device.getDouble("Yaw")
             self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
-            self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08,
-                                                        [
+            self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [
                 0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005
             ])
             
@@ -98,7 +104,7 @@ class BasePilotable(SubsystemBase):
         return self._encoder_left.getPosition() - self._left_encoder_offset
 
     def getRightEncoderPosition(self):
-        return self._encoder_right.getPosition() - self._right_encoder_offset
+        return -(self._encoder_right.getPosition() - self._right_encoder_offset)
 
     def getAverageEncoderPosition(self):
         return (self.getLeftEncoderPosition() + self.getRightEncoderPosition()) / 2
@@ -112,6 +118,10 @@ class BasePilotable(SubsystemBase):
     def periodic(self):
         self._odometry.update(self._gyro.getRotation2d(), self.getLeftEncoderPosition(), self.getRightEncoderPosition())
         self._field.setRobotPose(self._odometry.getPose())
+        wpilib.SmartDashboard.putNumber("Left Encoder Position", self.getLeftEncoderPosition())
+        wpilib.SmartDashboard.putNumber("Right Encoder Position", self.getRightEncoderPosition())
+        wpilib.SmartDashboard.putNumber("Left Motor", self._motor_left.get())
+        wpilib.SmartDashboard.putNumber("Right Motor", self._motor_right.get())
 
         # SmartDashboard.putBoolean("IMU_Connected", self._gyro.isConnected())
         # SmartDashboard.putBoolean("IMU_IsCalibrating", self._gyro.isCalibrating())

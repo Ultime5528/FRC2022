@@ -7,7 +7,6 @@ from networktables import NetworkTables
 from cscore import CameraServer
 from vision.color import Color
 from vision.balldetection.algorithms import circularityMoments
-import ports
 
 isConnected = threading.Condition()
 notified = [False]
@@ -17,15 +16,15 @@ def connectionListener(connected, info):
         notified[0] = True
         isConnected.notify()
 
-def main():
+def cargo_loop():
     NetworkTables.initialize(server="10.55.28.2")
     NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
 
-    with isConnected:
-        print("Waiting for connection...")
-        if not notified[0]:
-            isConnected.wait()
-    print("Connected!")
+    # with isConnected:
+    #     print("Waiting for connection...")
+    #     if not notified[0]:
+    #         isConnected.wait()
+    # print("Connected!")
 
     nt_isredalliance = NetworkTables.getEntry("/FMSInfo/IsRedAlliance")
     isRedAlliance = nt_isredalliance.getBoolean(None)
@@ -33,19 +32,21 @@ def main():
     if isRedAlliance is not None:
         color = Color.RED if isRedAlliance else Color.BLUE
     else:
-        raise Exception("Variable /FMSInfo/IsRedAlliance is not declared")
+        color = Color.BLUE
+        print("WARNING: Variable /FMSInfo/IsRedAlliance is not declared")
 
-    nt_normx = NetworkTables.getEntry("Vision/Cargo/Norm_X")
-    nt_normy = NetworkTables.getEntry("Vision/Cargo/Norm_Y")
+    nt_normx = NetworkTables.getEntry("/Vision/Cargo/Norm_X")
+    nt_normy = NetworkTables.getEntry("/Vision/Cargo/Norm_Y")
 
     cs = CameraServer.getInstance()
+    cs.kBasePort = 1183
     cs.enableLogging()
 
-    camera = cs.startAutomaticCapture(dev=1)
-    camera.setResolution(320, 240) # TODO CHANGE
-    camera.setFPS(30) # TODO CHANGE
+    cargo_cam = cs.startAutomaticCapture(name="cargo_cam", path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
+    cargo_cam.setResolution(320, 240)
+    cargo_cam.setFPS(30)
 
-    cvSink = cs.getVideo()
+    cvSink = cs.getVideo(camera=cargo_cam)
 
     outputStream = cs.putVideo("Cargo", 320, 240)
 
@@ -67,12 +68,21 @@ def main():
 
             nt_normx.setDouble(norm_x)
             nt_normy.setDouble(norm_y)
+            NetworkTables.flush()
+
 
             for t in targets:
-                cv2.circle(img, (t[2], t[3]), 3, (0, 0, 255), 3)
+                cv2.circle(img, (t[0]+t[2]//2, t[1]+t[3]//2), (t[2]+t[3])//4, (0, 0, 255), 3)
 
-            cv2.circle(img, (nearest[2], nearest[3]), 3, (0, 255, 0), 3)
+            cv2.circle(img, (nearest[0]+nearest[2]//2, nearest[1]+nearest[3]//2), (nearest[2]+nearest[3])//4, (0, 255, 0), 3)
+
         outputStream.putFrame(img)
+        yield
+
+def main():
+    loop = cargo_loop()
+    while True:
+        next(loop)
 
 if __name__ == '__main__':
     main()

@@ -10,7 +10,7 @@ class SuivreTrajectoire(commands2.CommandBase):
     maxVelocity = 10
     maxAcceleration = 10
 
-    def __init__(self, basePilotable: BasePilotable, waypoints: List[Pose2d], speed: float, doitReset: bool = False, addRobotPose: bool = False) -> None:
+    def __init__(self, basePilotable: BasePilotable, waypoints: List[Pose2d], speed: float, reset: bool = False, addRobotPose: bool = False) -> None:
         super().__init__()
         self.waypoints = waypoints
         self.setName("SuivreTrajectoire")
@@ -18,7 +18,7 @@ class SuivreTrajectoire(commands2.CommandBase):
         self.addRequirements(basePilotable)
         self.speed = speed
 
-        self.reset = doitReset
+        self.reset = reset
         self.addRobotPose = addRobotPose
 
         if not self.addRobotPose:
@@ -29,7 +29,6 @@ class SuivreTrajectoire(commands2.CommandBase):
                 self.trajectory = self.trajectory.transformBy(transformation)
 
             self.states = self.trajectory.states()
-        # self.angleInitial = self.trajectory.states()[0].pose.rotation()
 
     def initialize(self) -> None:
         if self.reset:
@@ -37,13 +36,13 @@ class SuivreTrajectoire(commands2.CommandBase):
 
         if self.addRobotPose:
             self.trajectory = TrajectoryGenerator.generateTrajectory([self.basePilotable.getPose2D(), *self.waypoints],
-                                                                    TrajectoryConfig(self.maxAcceleration,self.maxVelocity))
+                                                                    TrajectoryConfig(self.maxAcceleration, self.maxVelocity))
             self.states = self.trajectory.states()
         self.index = 0
         self.basePilotable.getField().getObject("traj").setTrajectory(self.trajectory)
 
     def execute(self) -> None:
-        currentPose = self.basePilotable.getPose2D()
+        currentPose = self.basePilotable.getPose()
 
         while (self.index < (len(self.states) - 1) and currentPose.translation().distance(
                 self.states[self.index].pose.translation()) <= properties.values.trajectoire_vue_avant):
