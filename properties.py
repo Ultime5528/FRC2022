@@ -36,13 +36,15 @@ class Properties:
     viser_hub_speed = ntproperty("/Properties/viser_hub_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_hub_threshold = ntproperty("/Properties/viser_hub_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_hub_x_offset = ntproperty("/Properties/viser_hub_x_offset", 0, writeDefault=False, persistent=persistent)
+    vision_hub_rectangularity_threshold = ntproperty("/Properties/vision_hub_rectangularity_threshold", 0.5, writeDefault=False,persistent=persistent)
+    vision_hub_maxErrorX_multiplier = ntproperty("/Properties/vision_hub_maxErrorX_multiplier", 0.4, writeDefault=False,persistent=persistent)
+    vision_hub_maxErrorY_multiplier = ntproperty("/Properties/vision_hub_maxErrorY_multiplier", 0.2, writeDefault=False,persistent=persistent)
     viser_cargo_forward_speed = ntproperty("/Properties/viser_cargo_forward_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_cargo_turn_speed = ntproperty("/Properties/viser_cargo_turn_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_cargo_x_threshold = ntproperty("/Properties/viser_cargo_x_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_cargo_y_threshold = ntproperty("/Properties/viser_cargo_y_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_cargo_x_offset = ntproperty("/Properties/viser_cargo_x_offset", 0.05, writeDefault=False, persistent=persistent)
     viser_cargo_y_offset = ntproperty("/Properties/viser_cargo_y_offset", 0.05, writeDefault=False, persistent=persistent)
-
 
 values = Properties()
 

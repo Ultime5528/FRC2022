@@ -39,6 +39,7 @@ with SshController(ip_address, "pi", "raspberry") as controller:
     controller.put("visioncargo.py", "/home/pi/visioncargo.py")
     controller.put("visionhub.py", "/home/pi/visionhub.py")
     controller.put("visionmaster.py", "/home/pi/visionmaster.py")
+    controller.put("properties.py", "/home/pi/properties.py")
     controller.put("runCamera", "/home/pi/runCamera")
     controller.exec_cmd("chmod 777 runCamera")
     controller.exec_cmd("rm -rf /home/pi/vision")

@@ -5,8 +5,12 @@ import cv2
 from networktables import NetworkTables
 from cscore import CameraServer
 
+import properties
+
 isConnected = threading.Condition()
 notified = [False]
+
+debug = False
 
 def connectionListener(connected, info):
     with isConnected:
@@ -77,32 +81,33 @@ def hub_loop():
 
         validRects = []
         if cnts is not None:
-            print("==========")
-            print("nb cnts :", len(cnts))
             for cnt in cnts:
-                print("---")
                 area = cv2.contourArea(cnt)
-                print("area", area)
                 perimeter = cv2.arcLength(cnt, True)
-                print("perimeter :", perimeter)
                 minRect = cv2.minAreaRect(cnt)
                 (_, _), (minW, minH), _ = minRect
-                print("minW :", minW)
-                print("minH :", minH)
 
                 minRect = np.int0(cv2.boxPoints(minRect))
                 minArea = cv2.contourArea(minRect)
-                print("minArea :", minArea)
 
                 rectangularity = area / minArea if minArea else 0
-                print("rectangularity :", rectangularity)
 
-                if rectangularity >= 0.5 and perimeter >= 7:
+                if rectangularity >= properties.values.vision_hub_rectangularity_threshold and perimeter >= 7:
                     x, y, w, h = cv2.boundingRect(cnt)
                     ratio = max(w, h) / min(w, h)
-                    print("rapport :", ratio)
                     if 1.25 <= ratio <= 3.5 and w > h:
                         validRects.append((x, y, w, h))
+                if debug:
+                    print("==========")
+                    print("nb cnts :", len(cnts))
+                    print("---")
+                    print("area", area)
+                    print("perimeter :", perimeter)
+                    print("minW :", minW)
+                    print("minH :", minH)
+                    print("minArea :", minArea)
+                    print("rectangularity :", rectangularity)
+                    print("rapport :", ratio)
 
         for (x, y, w, h) in validRects:
             cv2.rectangle(img_cnts, (x, y), (x + w, y + h), (0, 255, 255), 1)
@@ -115,8 +120,8 @@ def hub_loop():
             yCenter = y + (h / 2)
             validPositions.append((xCenter, yCenter))
 
-        maxErrorX = int(img.shape[1] * 0.4)
-        maxErrorY = int(img.shape[0] * 0.20)
+        maxErrorX = int(img.shape[1] * properties.values.vision_hub_maxErrorX_multiplier)
+        maxErrorY = int(img.shape[0] * properties.values.vision_hub_maxErrorY_multiplier)
         targets = []
 
         for targetX, targetY in validPositions:
