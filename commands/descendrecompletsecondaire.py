@@ -6,7 +6,7 @@ from subsystems.grimpeur import Grimpeur
 class DescendreCompletSecondaire(commands2.CommandBase):
     def __init__(self, grimpeur: Grimpeur):
         super().__init__()
-        self.setName("Descendre Secondaire")
+        self.setName("DescendreCompletSecondaire")
         self.grimpeur = grimpeur
         self.addRequirements(self.grimpeur)
 
@@ -17,5 +17,5 @@ class DescendreCompletSecondaire(commands2.CommandBase):
         return self.grimpeur.getSwitchBasSecondaire()
 
     def end(self, interrupted: bool) -> None:
-        self.grimpeur.stop()
-        self.grimpeur.resetEncoder()
+        self.grimpeur.stop_secondaire()
+        self.grimpeur.reset_encoder_secondaire()

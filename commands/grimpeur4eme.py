@@ -2,8 +2,8 @@ import commands2
 
 from commands.bougersecondaire import BougerSecondaire
 from commands.bougerprimaire import BougerPrimaire
-from commands.descendrecompletsecondaire import DescendreSecondaire
-from commands.descendrecompletprimaire import RetourSwitch
+from commands.descendrecompletprimaire import DescendreCompletPrimaire
+from commands.descendrecompletsecondaire import DescendreCompletSecondaire
 from subsystems.grimpeur import Grimpeur
 
 
@@ -12,8 +12,8 @@ class Grimpeur4eme(commands2.SequentialCommandGroup):
         super().__init__(
             commands2.SequentialCommandGroup(
                 BougerPrimaire(grimpeur, 5),
-                DescendreSecondaire(grimpeur),
-                RetourSwitch(grimpeur),
+                DescendreCompletSecondaire(grimpeur),
+                DescendreCompletPrimaire(grimpeur),
                 BougerSecondaire(grimpeur, 4),
                 BougerPrimaire(grimpeur, 10)
             ))

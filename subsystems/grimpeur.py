@@ -66,7 +66,7 @@ class Grimpeur(SubsystemBase):
     def descend_secondaire(self):
         self._motor_secondaire.set(properties.values.grimpeur_vitesse_descend_secondaire)
 
-    def stop(self):
+    def stop_primaire(self):
         self._motor_primaire.set(0)
 
     def stop_secondaire(self):
@@ -87,7 +87,7 @@ class Grimpeur(SubsystemBase):
     def getPositionPrincipale(self):
         return self._encoder_primaire.getPosition()
 
-    def resetEncoder(self):
+    def reset_encoder_primaire(self):
         self._encoder_primaire.setPosition(0)
 
     def reset_encoder_secondaire(self):
