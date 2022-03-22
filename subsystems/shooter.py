@@ -47,7 +47,7 @@ class Shooter(commands2.SubsystemBase):
         self.backspin_encoder = self._backspin_motor.getEncoder()
         self.encoder = self._motor_left.getEncoder()
 
-        self.pid_controller = PIDController(0, 0, 0)
+        self.pid_controller = PIDController(0.05, 0, 0)
         self.addChild("PID Controller", self.pid_controller)
         self.bang_bang_controller = BangBangController()
         self.feed_forward_controller = SimpleMotorFeedforwardMeters(0.124, 0.002105)
@@ -63,20 +63,26 @@ class Shooter(commands2.SubsystemBase):
             self.backspin_flywheel_sim = FlywheelSim(DCMotor.NEO(1), 1, 0.0025)
 
     def shoot(self, setpoint: float, backspin_setpoint):
+        self.setpoint = setpoint
+        self.backspin_setpoint = backspin_setpoint
+
         # Main motor control
         velocity = self.encoder.getVelocity()
         pid_value = self.pid_controller.calculate(velocity, setpoint)
         feedforward_value = self.feed_forward_controller.calculate(setpoint)
-        voltage = pid_value + properties.values.shooter_feedforward_percentage * feedforward_value
+        voltage = pid_value + feedforward_value
         self._motor_left.setVoltage(voltage)
+
+        print("\n---------------------")
+        print("Setpoint:", setpoint)
+        print("Velocity: ", velocity)
+        print("Bang Bang Value: ", pid_value)
+        print("Feedforward Value: ", feedforward_value)
+        print("Voltage: ", voltage)
 
         # Backspin motor control
         self._backspin_motor.setVoltage(self.pid_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
-                                        + properties.values.shooter_feedforward_percentage * self.feed_forward_controller.calculate(backspin_setpoint))
-
-        self.setpoint = setpoint
-        self.backspin_setpoint = backspin_setpoint
-
+                                        + self.feed_forward_controller.calculate(backspin_setpoint))
 
     def shoot_bangbang(self, setpoint: float, backspin_setpoint):
         velocity = self.encoder.getVelocity()
