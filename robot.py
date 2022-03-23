@@ -77,11 +77,11 @@ class Robot(commands2.TimedCommandRobot):
 
         wpilib.SmartDashboard.putData("Monter Primaire", BougerPrimaire(self.grimpeur, lambda: properties.values.grimpeur_enconder_monter))
         wpilib.SmartDashboard.putData("Descendre Primaire", RetourSwitch(self.grimpeur))
-        wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur, lambda: properties.values.grimpeur_encoder_monter))
-        wpilib.SmartDashboard.putData("Monter Secondaire", MonterSecondaire(self.grimpeur))
+        # wpilib.SmartDashboard.putData("Monter Primaire", MonterPrimaire(self.grimpeur, lambda: properties.values.grimpeur_encoder_monter))
+        # wpilib.SmartDashboard.putData("Monter Secondaire", MonterSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
-        wpilib.SmartDashboard.putData("Descendre Primaire", DescendrePrimaire(self.grimpeur))
-        wpilib.SmartDashboard.putData("Descendre Secondaire", DescendreSecondaire(self.grimpeur))
+        # wpilib.SmartDashboard.putData("Descendre Primaire", DescendrePrimaire(self.grimpeur))
+        # wpilib.SmartDashboard.putData("Descendre Secondaire", DescendreSecondaire(self.grimpeur))
         wpilib.SmartDashboard.putData("Monter Intake", MonterIntake(self.grimpeur))
         wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets))
         wpilib.SmartDashboard.putData("Descendre Intake", DescendreIntake(self.grimpeur))
@@ -89,7 +89,7 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Dashboard Shoot", DashboardShoot(self.shooter, self.intake))
         wpilib.SmartDashboard.putData("Shooter Eject", EjecterShooter(self.shooter, self.intake))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur, self.intake))
-        wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
+        # wpilib.SmartDashboard.putData("Aligner Grimpeur", AlignerGrimpeur(self.grimpeur))
         wpilib.SmartDashboard.putData("Ejecter Intake", EjecterIntake(self.intake))
         wpilib.SmartDashboard.putData("Prendre Ballon", PrendreBallon(self.intake))
         wpilib.SmartDashboard.putData("Avancer", Avancer(self.base_pilotable, -1, 0.15))
@@ -106,7 +106,6 @@ class Robot(commands2.TimedCommandRobot):
         except Exception as e:
             print(e)
             traceback.print_exc()
-
 
 if __name__ == "__main__":
     try:
