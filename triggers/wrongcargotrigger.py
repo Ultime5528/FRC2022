@@ -9,4 +9,4 @@ class WrongCargoTrigger(commands2.Trigger):
         self.visiontargets = visiontargets
 
     def _get(self):
-        return self.visiontargets.wrongCargoNear()
+        return self.visiontargets.hasWrongCargoNear()

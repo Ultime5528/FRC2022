@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 import commands2
 from commands2 import Trigger
 from networktables import NetworkTables
@@ -7,6 +9,13 @@ from wpilib import RobotBase, Timer
 
 import properties
 from subsystems.basepilotable import BasePilotable
+
+
+@dataclass
+class Cargo:
+    nx: float
+    ny: float
+    nw: float
 
 
 class VisionTargets(commands2.SubsystemBase):
@@ -20,7 +29,6 @@ class VisionTargets(commands2.SubsystemBase):
         self.cargoNormyEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_Y")
         self.cargoNormwEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_W")
         self.cargoIsRedEntry = NetworkTables.getEntry("/Vision/Cargo/IsRed")
-        self.cargoFoundEntry = NetworkTables.getEntry("/Vision/Cargo/Found")
 
         self.isRedAllianceEntry = NetworkTables.getEntry("/FMSInfo/IsRedAlliance")
 
@@ -54,29 +62,61 @@ class VisionTargets(commands2.SubsystemBase):
     def hubFound(self):
         return self.hubFoundEntry.getBoolean(False)
 
-    @property
-    def cargoNormX(self):
-        return self.cargoNormxEntry.getDouble(0)
+    # @property
+    # def cargoNormX(self):
+    #     return self.cargoNormxEntry.getDouble(0)
+    #
+    # @property
+    # def cargoNormY(self):
+    #     return self.cargoNormyEntry.getDouble(0)
+    #
+    # @property
+    # def cargoNormW(self):
+    #     return self.cargoNormwEntry.getDouble(0)
+    #
+    # @property
+    # def cargoIsRed(self):
+    #     return self.cargoIsRedEntry.getBoolean(True)
+    #
+    # @property
+    # def cargoFound(self):
+    #     return self.cargoFoundEntry.getBoolean(False)
 
     @property
-    def cargoNormY(self):
-        return self.cargoNormyEntry.getDouble(0)
+    def isRedAlliance(self):
+        return self.isRedAllianceEntry.getBoolean(True)
 
     @property
-    def cargoNormW(self):
-        return self.cargoNormwEntry.getDouble(0)
+    def cargos(self):
+        nxs = self.cargoFoundEntry.getDoubleArray([])
+        nys = self.cargoFoundEntry.getDoubleArray([])
+        nws = self.cargoFoundEntry.getDoubleArray([])
+        isreds = self.cargoFoundEntry.getBooleanArray([])
 
-    @property
-    def cargoIsRed(self):
-        return self.cargoIsRedEntry.getBoolean(True)
+        return [Cargo(nx, ny, nw, isreds) for nx, ny, nw, isreds in zip(nxs, nys, nws, isreds)]
 
     @property
     def cargoFound(self):
-        return self.cargoFoundEntry.getBoolean(False)
+        if not self.cargos:
+            return False
+        elif not [cargo for cargo in self.cargos if cargo.isred == self.isRedAlliance]:
+            return False
 
-    def wrongCargoNear(self):
-        isRedAlliance = self.isRedAllianceEntry.getBoolean(True)
-        return self.cargoIsRed != isRedAlliance and self.cargoNormW > properties.values.vision_cargo_normw_threshold
+        return True
+
+    @property
+    def nearestCargo(self):
+        if self.cargoFound:
+            return max([cargo for cargo in self.cargos if cargo.isred == self.isRedAlliance], key=lambda x: x.nw)
+        else:
+            return None
+
+    def hasWrongCargoNear(self):
+        for cargo in self.cargos:
+            if cargo.isred != self.isRedAlliance and cargo.nw > properties.values.vision_cargo_normw_threshold:
+                return True
+
+        return False
 
     def simulationPeriodic(self):
         fakehubpose = self.fakehub.getPose()

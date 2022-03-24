@@ -24,9 +24,9 @@ class Cargo:
         self.cy = self.y+self.h//2
 
         self.nx = (t[0] / W) * 2 - 1
-        self.ny = (t[1] / H) * 2 - 1
+        self.ny = 1 - (t[1] / H)
 
-        self.distsq = self.nx**2+self.ny**2
+        # self.distsq = self.nx**2+self.ny**2
 
         self.isred = isred
 
@@ -61,23 +61,17 @@ def cargo_loop():
 
         targets = red_targets + blue_targets
 
-        if targets:
-            nearest = min(targets, key=lambda t: t.distsq)
+        nt_normx.setDoubleArray([t.nx for t in targets])
+        nt_normy.setDoubleArray([t.ny for t in targets])
+        nt_normw.setDoubleArray([t.nw for t in targets])
+        nt_isred.setBooleanArray([t.isred for t in targets])
+        NetworkTables.flush()
 
-            nt_normx.setDouble(nearest.nx)
-            nt_normy.setDouble(nearest.ny)
-            nt_normw.setDouble(nearest.nw)
-            nt_isred.setBoolean(nearest.isred)
-            NetworkTables.flush()
-
-
-            for t in targets:
-                color = (255, 0, 0)
-                if t.isred:
-                    color = (0, 0, 255)
-                cv2.rectangle(img, (t.x, t.y), (t.x+t.w, t.y+t.h), color, 3)
-
-            cv2.rectangle(img, (nearest.x, nearest.y), (nearest.x+nearest.w, nearest.y+nearest.h), (0, 255, 0), 3)
+        for t in targets:
+            color = (255, 0, 0)
+            if t.isred:
+                color = (0, 0, 255)
+            cv2.rectangle(img, (t.x, t.y), (t.x+t.w, t.y+t.h), color, 3)
 
         outputStream.putFrame(img)
         yield
