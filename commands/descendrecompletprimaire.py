@@ -1,19 +1,20 @@
 import commands2
-from subsystems.grimpeur import Grimpeur
+from subsystems.grimpeurprincipal import GrimpeurPrincipal
 
 
 class DescendreCompletPrimaire(commands2.CommandBase):
-    def __init__(self, grimpeur: Grimpeur):
+    def __init__(self, grimpeur: GrimpeurPrincipal):
         super().__init__()
         self.grimpeur = grimpeur
+        self.addRequirements(grimpeur)
         self.setName("DescendreCompletPrimaire")
 
     def execute(self) -> None:
-        self.grimpeur.descend()
+        self.grimpeur.descendre()
 
     def isFinished(self) -> bool:
         return self.grimpeur.getSwitchBas()
 
     def end(self, interrupted: bool) -> None:
-        self.grimpeur.stop_primaire()
-        self.grimpeur.reset_encoder_primaire()
+        self.grimpeur.stop()
+        self.grimpeur.reset_encoder()

@@ -30,7 +30,7 @@ class Properties:
     grimpeur_vitesse_descend = ntproperty("/Properties/grimpeur_vitesse_descend", -0.5, writeDefault=False, persistent=persistent)
     grimpeur_vitesse_monter_secondaire = ntproperty("/Properties/grimpeur_vitesse_monter_secondaire", 0.25, writeDefault=False, persistent=persistent)
     grimpeur_vitesse_descend_secondaire = ntproperty("/Properties/grimpeur_vitesse_descend_secondaire", -0.25, writeDefault=False, persistent=persistent)
-    grimpeur_distance_alignement = ntproperty("/Properties/grimpeur_distance_alignement", 40, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_hauteur_alignement = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement", 40, writeDefault=False, persistent=persistent)
     grimpeur_primaire_hauteur_max = ntproperty("/Properties/grimpeur_primaire_hauteur_max", 10, writeDefault=False)
     grimpeur_primaire_hauteur_clip = ntproperty("/Properties/grimpeur_primaire_hauteur_clip", 10, writeDefault=False)
 
