@@ -19,11 +19,11 @@ class PreparerGrimper(commands2.SequentialCommandGroup):
                     BougerSecondaire(grimpeur_secondaire, lambda: properties.values.grimpeur_secondaire_hauteur_alignement)
                 )
             ),
-            BougerPrimaire(grimpeur_primaire, lambda: properties.values.grimpeur_primaire_hauteur_clip),
+            BougerPrimaire(grimpeur_primaire, lambda: properties.values.grimpeur_principal_hauteur_clip),
             BougerSecondaire(grimpeur_secondaire, lambda: properties.values.grimpeur_secondaire_hauteur_alignement - 20),
             commands2.ParallelCommandGroup(
                 DescendreCompletSecondaire(grimpeur_secondaire),
-                BougerPrimaire(grimpeur_primaire, lambda: properties.values.grimpeur_primaire_hauteur_max)
+                BougerPrimaire(grimpeur_primaire, lambda: properties.values.grimpeur_principal_hauteur_max)
             )
         )
         self.setName("PreparerGrimper")

@@ -107,16 +107,16 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("4", Grimpeur4eme(self.grimpeur_primaire, self.grimpeur_secondaire))
 
     def robotPeriodic(self) -> None:
-        try:
-            commands2.CommandScheduler.getInstance().run()
-        except Exception as e:
-            print(e)
-            traceback.print_exc()
+        # try:
+        commands2.CommandScheduler.getInstance().run()
+        # except Exception as e:
+        #     print(e)
+        #     traceback.print_exc()
 
 
 if __name__ == "__main__":
-    try:
-        wpilib.run(Robot)
-    except Exception as e:
-        print(e)
-        traceback.print_exc()
+    # try:
+    wpilib.run(Robot)
+    # except Exception as e:
+    #     print(e)
+    #     traceback.print_exc()

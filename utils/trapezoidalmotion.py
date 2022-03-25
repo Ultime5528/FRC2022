@@ -35,6 +35,7 @@ class TrapezoidalMotion:
         )
         self._real_config: Optional[MotionConfig] = None
         self._position = None
+        self._inverted = False
 
         if start_position is not None:
             self._compute()

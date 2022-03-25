@@ -23,13 +23,14 @@ class GrimpeurPrincipal(SubsystemBase):
                                                rev.CANSparkMax.MotorType.kBrushless)
         self._motor_primaire.restoreFactoryDefaults()
         self._motor_primaire.setInverted(True)
+        self._motor_primaire.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         self._encoder_primaire = self._motor_primaire.getEncoder()
 
         self._motor_primaire_follower = rev.CANSparkMax(ports.grimpeur_moteur_principal_gauche,
                                                         rev.CANSparkMax.MotorType.kBrushless)
         self._motor_primaire_follower.restoreFactoryDefaults()
         self._motor_primaire_follower.follow(self._motor_primaire, invert=True)
-
+        self._motor_primaire_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         if RobotBase.isSimulation():
             self._motor_primaire_sim = SparkMaxSim(self._motor_primaire)
             self._switch_bas_sim = DIOSim(self._switch_bas)

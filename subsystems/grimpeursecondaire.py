@@ -24,6 +24,7 @@ class GrimpeurSecondaire(SubsystemBase):
                                                  rev.CANSparkMax.MotorType.kBrushless)
         self._motor_secondaire.restoreFactoryDefaults()
         self._motor_secondaire.setInverted(True)
+        self._motor_secondaire.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         self._encoder_secondaire = self._motor_secondaire.getEncoder()
 
         if RobotBase.isSimulation():

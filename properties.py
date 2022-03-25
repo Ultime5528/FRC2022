@@ -36,6 +36,7 @@ class Properties:
     grimpeur_secondaire_end_speed = ntproperty("/Properties/grimpeur_secondaire_end_speed", 1.0, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_accel = ntproperty("/Properties/grimpeur_secondaire_accel", 0.03, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_hauteur_alignement = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement", 90.0, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_hauteur_max = ntproperty("/Properties/grimpeur_secondaire_hauteur_max", 100.0, writeDefault=False, persistent=persistent)
 
     viser_hub_speed = ntproperty("/Properties/viser_hub_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_hub_threshold = ntproperty("/Properties/viser_hub_threshold", 0.05, writeDefault=False, persistent=persistent)
