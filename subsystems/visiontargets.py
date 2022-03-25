@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import commands2
+import wpilib
 from commands2 import Trigger
 from networktables import NetworkTables
 # from pyfrc.physics.visionsim import VisionSim
@@ -11,11 +12,16 @@ import properties
 from subsystems.basepilotable import BasePilotable
 
 
+def is_red_alliance():
+    return wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed
+
+
 @dataclass
 class Cargo:
     nx: float
     ny: float
     nw: float
+    is_red: bool
 
 
 class VisionTargets(commands2.SubsystemBase):
@@ -29,8 +35,6 @@ class VisionTargets(commands2.SubsystemBase):
         self.cargoNormyEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_Y")
         self.cargoNormwEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_W")
         self.cargoIsRedEntry = NetworkTables.getEntry("/Vision/Cargo/IsRed")
-
-        self.isRedAllianceEntry = NetworkTables.getEntry("/FMSInfo/IsRedAlliance")
 
         if RobotBase.isSimulation():
             from pyfrc.physics.visionsim import VisionSim
@@ -62,58 +66,28 @@ class VisionTargets(commands2.SubsystemBase):
     def hubFound(self):
         return self.hubFoundEntry.getBoolean(False)
 
-    # @property
-    # def cargoNormX(self):
-    #     return self.cargoNormxEntry.getDouble(0)
-    #
-    # @property
-    # def cargoNormY(self):
-    #     return self.cargoNormyEntry.getDouble(0)
-    #
-    # @property
-    # def cargoNormW(self):
-    #     return self.cargoNormwEntry.getDouble(0)
-    #
-    # @property
-    # def cargoIsRed(self):
-    #     return self.cargoIsRedEntry.getBoolean(True)
-    #
-    # @property
-    # def cargoFound(self):
-    #     return self.cargoFoundEntry.getBoolean(False)
-
-    @property
-    def isRedAlliance(self):
-        return self.isRedAllianceEntry.getBoolean(True)
-
     @property
     def cargos(self):
-        nxs = self.cargoFoundEntry.getDoubleArray([])
-        nys = self.cargoFoundEntry.getDoubleArray([])
-        nws = self.cargoFoundEntry.getDoubleArray([])
-        isreds = self.cargoFoundEntry.getBooleanArray([])
+        nxs = self.cargoNormxEntry.getDoubleArray([])
+        nys = self.cargoNormyEntry.getDoubleArray([])
+        nws = self.cargoNormwEntry.getDoubleArray([])
+        is_reds = self.cargoIsRedEntry.getBooleanArray([])
 
-        return [Cargo(nx, ny, nw, isreds) for nx, ny, nw, isreds in zip(nxs, nys, nws, isreds)]
-
-    @property
-    def cargoFound(self):
-        if not self.cargos:
-            return False
-        elif not [cargo for cargo in self.cargos if cargo.isred == self.isRedAlliance]:
-            return False
-
-        return True
+        return [Cargo(nx, ny, nw, is_red) for nx, ny, nw, is_red in zip(nxs, nys, nws, is_reds)]
 
     @property
     def nearestCargo(self):
-        if self.cargoFound:
-            return max([cargo for cargo in self.cargos if cargo.isred == self.isRedAlliance], key=lambda x: x.nw)
+        cargos = self.cargos
+        is_red = is_red_alliance()
+
+        if cargos:
+            return max([cargo for cargo in cargos if cargo.is_red == is_red], key=lambda x: x.nw)
         else:
             return None
 
     def hasWrongCargoNear(self):
         for cargo in self.cargos:
-            if cargo.isred != self.isRedAlliance and cargo.nw > properties.values.vision_cargo_normw_threshold:
+            if cargo.is_red != is_red_alliance() and cargo.nw > properties.values.vision_cargo_normw_threshold:
                 return True
 
         return False

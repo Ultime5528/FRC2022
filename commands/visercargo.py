@@ -25,11 +25,11 @@ class ViserCargo(CommandBase):
         self._reset()
 
     def execute(self) -> None:
-        nearest = self.nearestCargo
+        nearest = self.visiontargets.nearestCargo
 
         if nearest:
-            x_error = self.visiontargets.nearest.nx - properties.values.viser_cargo_x_offset
-            y_error = self.visiontargets.nearest.ny - properties.values.viser_cargo_y_offset
+            x_error = nearest.nx - properties.values.viser_cargo_x_offset
+            y_error = nearest.ny - properties.values.viser_cargo_y_offset
 
             self.x_stop = abs(x_error) <= properties.values.viser_cargo_x_threshold
             self.y_stop = abs(y_error) <= properties.values.viser_cargo_y_threshold
