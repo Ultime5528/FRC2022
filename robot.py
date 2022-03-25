@@ -42,6 +42,7 @@ from commands.arreterintake import ArreterIntake
 from commands.interpolatedshoot import InterpolatedShoot
 from commands.dashboardshoot import DashboardShoot
 from commands.ejecterintake import EjecterIntake
+from triggers.wrongcargotrigger import WrongCargoTrigger
 from utils.cameraserver import CameraServer
 from commands.ejectershooter import EjecterShooter
 import traceback
@@ -108,6 +109,7 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("2", Grimper2e(self.grimpeur_primaire))
         wpilib.SmartDashboard.putData("3", Grimpeur3eme(self.grimpeur_primaire, self.grimpeur_secondaire))
         wpilib.SmartDashboard.putData("4", Grimpeur4eme(self.grimpeur_primaire, self.grimpeur_secondaire))
+        wpilib.SmartDashboard.putData("Viser Cargo", ViserCargo(self.base_pilotable, self.vision_targets))
 
     def robotPeriodic(self) -> None:
         try:

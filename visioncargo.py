@@ -37,10 +37,10 @@ def cargo_loop():
     nt_isred = NetworkTables.getEntry("/Vision/Cargo/IsRed")
 
     cs = CameraServer.getInstance()
-    cs.kBasePort = 1183
     cs.enableLogging()
 
-    cargo_cam = cs.startAutomaticCapture(name="cargo_cam", path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
+    # cargo_cam = cs.startAutomaticCapture(name="cargo_cam", path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
+    cargo_cam = cs.startAutomaticCapture(dev=0)
     cargo_cam.setResolution(W, H)
     cargo_cam.setFPS(30)
 
