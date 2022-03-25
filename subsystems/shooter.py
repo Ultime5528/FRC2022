@@ -22,8 +22,8 @@ def compute_speed_percentage(speed, setpoint):
 
 
 class Shooter(commands2.SubsystemBase):
-    main_verified_points = [[-1, 100], [0, 1000], [0.5, 2500], [1, 3000]]
-    backspin_verified_points = [[-1, 100], [0, 1000], [0.5, 2500], [1, 3000]]
+    main_verified_points = [[0.05, 2400], [0, 1000], [0.5, 2500], [1, 3000]]
+    backspin_verified_points = [[0.05, 2400], [0, 1000], [0.5, 2500], [1, 3000]]
     main_interpolator = LinearInterpolator(main_verified_points)
     backspin_interpolator = LinearInterpolator(backspin_verified_points)
 
@@ -47,7 +47,7 @@ class Shooter(commands2.SubsystemBase):
         self.backspin_encoder = self._backspin_motor.getEncoder()
         self.encoder = self._motor_left.getEncoder()
 
-        self.pid_controller = PIDController(0.05, 0, 0)
+        self.pid_controller = PIDController(0.001, 0, 0)
         self.addChild("PID Controller", self.pid_controller)
         self.bang_bang_controller = BangBangController()
         self.feed_forward_controller = SimpleMotorFeedforwardMeters(0.124, 0.002105)
@@ -76,7 +76,7 @@ class Shooter(commands2.SubsystemBase):
         print("\n---------------------")
         print("Setpoint:", setpoint)
         print("Velocity: ", velocity)
-        print("Bang Bang Value: ", pid_value)
+        print("PID Value: ", pid_value)
         print("Feedforward Value: ", feedforward_value)
         print("Voltage: ", voltage)
 
