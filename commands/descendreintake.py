@@ -1,9 +1,9 @@
-from commands.montersecondaire import MonterSecondaire
-from subsystems.grimpeur import Grimpeur
+from commands.montercompletsecondaire import MonterCompletSecondaire
+from subsystems.grimpeursecondaire import GrimpeurSecondaire
 
 
-class DescendreIntake(MonterSecondaire):
-    def __init__(self, grimpeur: Grimpeur):
+class DescendreIntake(MonterCompletSecondaire):
+    def __init__(self, grimpeur: GrimpeurSecondaire):
         super(DescendreIntake, self).__init__(grimpeur)
         self.setName("Descendre Intake")
         self.grimpeur = grimpeur
