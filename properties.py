@@ -43,8 +43,8 @@ class Properties:
     viser_cargo_turn_speed = ntproperty("/Properties/viser_cargo_turn_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_cargo_x_threshold = ntproperty("/Properties/viser_cargo_x_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_cargo_y_threshold = ntproperty("/Properties/viser_cargo_y_threshold", 0.05, writeDefault=False, persistent=persistent)
-    viser_cargo_x_offset = ntproperty("/Properties/viser_cargo_x_offset", 0.05, writeDefault=False, persistent=persistent)
-    viser_cargo_y_offset = ntproperty("/Properties/viser_cargo_y_offset", 0.05, writeDefault=False, persistent=persistent)
+    viser_cargo_x_offset = ntproperty("/Properties/viser_cargo_x_offset", 0, writeDefault=False, persistent=persistent)
+    viser_cargo_y_offset = ntproperty("/Properties/viser_cargo_y_offset", 0, writeDefault=False, persistent=persistent)
 
 
 values = Properties()

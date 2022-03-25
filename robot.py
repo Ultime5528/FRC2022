@@ -76,7 +76,7 @@ class Robot(commands2.TimedCommandRobot):
         # # JoystickButton(self.stick, 3).whenHeld(PrendreBallon(self.intake))
         # # JoystickButton(self.stick, 4).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
 
-        WrongCargoTrigger(self.vision_targets).whenActive(EjecterIntake(self.intake))
+        # WrongCargoTrigger(self.vision_targets).whenActive(EjecterIntake(self.intake))
         
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
         wpilib.SmartDashboard.putData("Suivre Traj",
