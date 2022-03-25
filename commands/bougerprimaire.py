@@ -1,32 +1,33 @@
 from typing import Callable
 import commands2
 from subsystems.grimpeurprincipal import GrimpeurPrincipal
-
+from utils.trapezoidalmotion import TrapezoidalMotion
+import properties
 
 class BougerPrimaire(commands2.CommandBase):
     def __init__(self, grimpeur: GrimpeurPrincipal, get_hauteur: Callable[[], float]):
         super().__init__()
-        self.grimpeur = grimpeur
-        self.get_hauteur = get_hauteur
-        self.up = None
         self.setName("BougerPrimaire")
+        self.grimpeur = grimpeur
         self.addRequirements(self.grimpeur)
+        self.get_hauteur = get_hauteur
+        self.motion = TrapezoidalMotion()
+
+    def initialize(self) -> None:
+        self.motion.update(
+            start_position=self.grimpeur.getPosition(),
+            end_position=self.get_hauteur(),
+            start_speed=properties.values.grimpeur_principal_start_speed,
+            end_speed=properties.values.grimpeur_principal_end_speed,
+            accel=properties.values.grimpeur_principal_accel
+        )
 
     def execute(self) -> None:
-        if self.grimpeur.getPosition() >= self.get_hauteur() and self.up is not True:
-            self.grimpeur.descendre()
-            self.up = False
-        elif self.up is not False:
-            self.grimpeur.monter()
-            self.up = True
+        self.motion.set_position(self.grimpeur.getPosition())
+        self.grimpeur.set_moteur(self.motion.get_speed())
 
     def isFinished(self) -> bool:
-        if self.grimpeur.getPosition() > self.get_hauteur() and self.up:
-            return True
-        elif self.grimpeur.getPosition() < self.get_hauteur() and not self.up:
-            return True
-        else:
-            return False
+        return self.motion.is_finished()
 
     def end(self, interrupted: bool) -> None:
         self.grimpeur.stop()

@@ -1,5 +1,6 @@
 import rev
 import wpilib
+from wpilib.simulation import DIOSim
 
 import ports
 from wpilib import DigitalInput, RobotBase
@@ -30,15 +31,22 @@ class GrimpeurPrincipal(SubsystemBase):
         self._motor_primaire_follower.follow(self._motor_primaire, invert=True)
 
         if RobotBase.isSimulation():
-            self._motor_primaire_sim = SparkMaxSim(self._motor_primaire_follower)
-            self._motor_primaire_follower_sim = SparkMaxSim(self._motor_primaire)
+            self._motor_primaire_sim = SparkMaxSim(self._motor_primaire)
+            self._switch_bas_sim = DIOSim(self._switch_bas)
 
     def periodic(self) -> None:
         wpilib.SmartDashboard.putNumber("Encodeur Primaire", self.getPosition())
 
     def simulationPeriodic(self):
         self._motor_primaire_sim.setVelocity(self._motor_primaire.get())
-        self._motor_primaire_follower_sim.setVelocity(self._motor_primaire_follower.get())
+        self._motor_primaire_sim.setPosition(self._motor_primaire_sim.getPosition() + self._motor_primaire.get())
+        if self._motor_primaire_sim.getPosition() <= 0:
+            self._switch_bas_sim.setValue(False)
+        else:
+            self._switch_bas_sim.setValue(True)
+
+    def set_moteur(self, speed: float):
+        self._motor_primaire.set(speed)
 
     def monter(self):
         self._motor_primaire.set(properties.values.grimpeur_vitesse_monter)

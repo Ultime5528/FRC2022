@@ -35,6 +35,9 @@ class GrimpeurSecondaire(SubsystemBase):
     def simulationPeriodic(self):
         self._motor_secondaire_sim.setVelocity(self._motor_secondaire.get())
 
+    def set_moteur(self, speed: float):
+        self._motor_secondaire.set(speed)
+
     def monter(self):
         self._motor_secondaire.set(properties.values.grimpeur_vitesse_monter_secondaire)
 
