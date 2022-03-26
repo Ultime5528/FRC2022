@@ -120,9 +120,9 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 3).whenPressed(ViserCargo(self.base_pilotable, self.vision_targets))
 
         # CONSOLE
-        JoystickButton(self.console_1, 5).whenPressed(Grimper2e(self.grimpeur_primaire))
-        JoystickButton(self.console_1, 8).whenPressed(Grimpeur3eme(self.grimpeur_primaire, self.grimpeur_secondaire))
-        JoystickButton(self.console_2, 3).whenPressed(Grimpeur4eme(self.grimpeur_primaire, self.grimpeur_secondaire))
+        JoystickButton(self.console_1, 5).whenPressed(GrimperNiveau2(self.grimpeur_primaire))
+        JoystickButton(self.console_1, 8).whenPressed(GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire))
+        JoystickButton(self.console_2, 3).whenPressed(GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 4).whenPressed(PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 7).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
         JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.vision_targets))
@@ -133,8 +133,8 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.console_1, 1).whenPressed(EjecterIntake(self.intake))
         AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
         AxisTrigger(self.console_1, 0, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 1, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 1, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 1, inverted=True).whenActive(DescendreIntake(self.grimpeur_secondaire))
 
 
     def robotPeriodic(self) -> None:
