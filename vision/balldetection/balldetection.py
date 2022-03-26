@@ -7,7 +7,13 @@ from dataclasses import dataclass
 from ..color import Color
 
 
-def maskColor(img: np.ndarray, color: Color, rs: Optional[int]=None, rv: Optional[int]=None, bs: Optional[int]=None, bv: Optional[int]=None) -> np.ndarray:
+class ResultHolder:
+    def __init__(self, result=None):
+        self.result = result
+
+
+def maskColor(img: np.ndarray, color: Color, red_hsv_low: Optional[Tuple[int, int, int]]=None, red_hsv_high: Optional[Tuple[int, int, int]]=None,
+                       blue_hsv_low: Optional[Tuple[int, int, int]]=None, blue_hsv_high: Optional[Tuple[int, int, int]]=None,) -> np.ndarray:
     """
     :param img: Source image, BGR
     :param color: Color to mask
@@ -16,25 +22,38 @@ def maskColor(img: np.ndarray, color: Color, rs: Optional[int]=None, rv: Optiona
     # blurred = cv2.medianBlur(img, 15)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
+    red_hsv_low = red_hsv_low or (163, 120, 70)
+    red_hsv_high = red_hsv_high or (7, 255, 255)
+    blue_hsv_low = blue_hsv_low or (87, 100, 60)
+    blue_hsv_high = blue_hsv_high or (112, 255, 255)
+
     if color == Color.RED:
-        mask1 = cv2.inRange(hsv, (0, rs or 120, rv or 70), (7, 255, 255)) #cv2.inRange(hsv, (0, 100, 100), (10, 255, 255))
-        mask2 = cv2.inRange(hsv, (163, rs or 120, rv or 70), (180, 255, 255)) #cv2.inRange(hsv, (170, 100, 100), (180, 255, 255))
+        mask2 = cv2.inRange(hsv, red_hsv_low, (180, *red_hsv_high[1:])) #cv2.inRange(hsv, (170, 100, 100), (180, 255, 255))
+        mask1 = cv2.inRange(hsv, (0, *red_hsv_low[1:]), red_hsv_high) #cv2.inRange(hsv, (0, 100, 100), (10, 255, 255))
         mask = cv2.bitwise_or(mask1, mask2)
     elif color == Color.BLUE:
-        mask = cv2.inRange(hsv, (87, bs or 100, bv or 60), (112, 255, 255)) #cv2.inRange(hsv, (90, 86, 50), (130, 255, 255))
+        mask = cv2.inRange(hsv, blue_hsv_low, blue_hsv_high) #cv2.inRange(hsv, (90, 86, 50), (130, 255, 255))
     else:
         raise Exception("No valid color was passed!")
 
     return mask
 
 
-def findColorContours(img: np.ndarray, color, rs: Optional[int]=None, rv: Optional[int]=None, bs: Optional[int]=None, bv: Optional[int]=None) -> np.ndarray:
+def findColorContours(img: np.ndarray, color,
+                      red_hsv_low: Optional[Tuple[int, int, int]] = None,
+                      red_hsv_high: Optional[Tuple[int, int, int]] = None,
+                      blue_hsv_low: Optional[Tuple[int, int, int]] = None,
+                      blue_hsv_high: Optional[Tuple[int, int, int]] = None,
+                      mask_result: ResultHolder=None) -> np.ndarray:
     """
     :param img: Source image, BGR
     :param color: Color of the contours to find
     :return: The detected contours of the corresponding color
     """
-    mask = maskColor(img, color, rs, rv, bs, bv)
+    mask = maskColor(img, color, red_hsv_low, red_hsv_high, blue_hsv_low, blue_hsv_high)
+
+    if mask_result:
+        mask_result.result = mask
 
     _, cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
