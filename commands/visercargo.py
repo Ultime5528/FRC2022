@@ -34,10 +34,8 @@ class ViserCargo(CommandBase):
             self.x_stop = abs(x_error) <= properties.values.viser_cargo_x_threshold
             self.y_stop = abs(y_error) <= properties.values.viser_cargo_y_threshold
 
-            if self.x_stop:
-                x_speed = 0
-            else:
-                x_speed = math.copysign(properties.values.viser_cargo_turn_speed, x_error)
+            x_speed = min(properties.values.viser_cargo_turn_speed * abs(x_error), 0.3)
+            x_speed = math.copysign(x_speed, x_error)
 
             if self.y_stop:
                 y_speed = 0

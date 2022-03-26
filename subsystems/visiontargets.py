@@ -77,11 +77,11 @@ class VisionTargets(commands2.SubsystemBase):
 
     @property
     def nearestCargo(self):
-        cargos = self.cargos
         is_red = is_red_alliance()
+        good_cargos = [cargo for cargo in self.cargos if cargo.is_red == is_red]
 
-        if cargos:
-            return max([cargo for cargo in cargos if cargo.is_red == is_red], key=lambda x: x.nw)
+        if good_cargos:
+            return max(good_cargos, key=lambda x: x.nw)
         else:
             return None
 
@@ -107,7 +107,7 @@ class VisionTargets(commands2.SubsystemBase):
 
         if hubs:
             found, time, angle, distance = hubs[0]
-            if hubs[0][0]:
+            if found:
                 norm_x = angle / 60
                 norm_y = distance / 10
 
@@ -117,20 +117,26 @@ class VisionTargets(commands2.SubsystemBase):
             else:
                 self.hubFoundEntry.setBoolean(False)
         else:
-            self.cargoFoundEntry.setBoolean(False)
+            self.hubFoundEntry.setBoolean(False)
 
         cargos = self.cargo_sim.compute(Timer.getFPGATimestamp(), pose.X(), pose.Y(), pose.rotation().radians())
 
+        reset_cargos = True
+
         if cargos:
             found, time, angle, distance = cargos[0]
-            if cargos[0][0]:
+            if found:
                 norm_x = angle / 60
                 norm_y = distance / 10
 
-                self.cargoNormxEntry.setDouble(norm_x)
-                self.cargoNormyEntry.setDouble(norm_y)
-                self.cargoFoundEntry.setBoolean(True)
-            else:
-                self.cargoFoundEntry.setBoolean(False)
-        else:
-            self.cargoFoundEntry.setBoolean(False)
+                self.cargoNormxEntry.setDoubleArray([norm_x])
+                self.cargoNormyEntry.setDoubleArray([norm_y])
+                self.cargoNormwEntry.setDoubleArray([norm_y / 2])
+                self.cargoIsRedEntry.setBooleanArray([is_red_alliance()])
+                reset_cargos = False
+
+        if reset_cargos:
+            self.cargoNormxEntry.setDoubleArray([])
+            self.cargoNormyEntry.setDoubleArray([])
+            self.cargoNormwEntry.setDoubleArray([])
+            self.cargoIsRedEntry.setBooleanArray([])
