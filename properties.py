@@ -57,8 +57,10 @@ class Properties:
     viser_hub_speed = ntproperty("/Properties/viser_hub_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_hub_threshold = ntproperty("/Properties/viser_hub_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_hub_x_offset = ntproperty("/Properties/viser_hub_x_offset", 0, writeDefault=False, persistent=persistent)
+
     viser_cargo_forward_speed = ntproperty("/Properties/viser_cargo_forward_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_cargo_turn_speed = ntproperty("/Properties/viser_cargo_turn_speed", 0.3, writeDefault=False, persistent=persistent)
+    viser_cargo_distance_supp = ntproperty("/Properties/viser_cargo_distance_supp", 0.5, writeDefault=False, persistent=persistent)
     viser_cargo_x_threshold = ntproperty("/Properties/viser_cargo_x_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_cargo_y_threshold = ntproperty("/Properties/viser_cargo_y_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_cargo_x_offset = ntproperty("/Properties/viser_cargo_x_offset", 0, writeDefault=False, persistent=persistent)

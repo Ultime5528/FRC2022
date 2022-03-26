@@ -1,17 +1,20 @@
 import math
 
+import commands2
 from commands2 import CommandBase
+
+from commands.avancer import Avancer
 from subsystems.basepilotable import BasePilotable
 from subsystems.visiontargets import VisionTargets
 import properties
 
 
 class ViserCargo(CommandBase):
-    def __init__(self, base_pilotable: BasePilotable, visiontargets: VisionTargets):
+    def __init__(self, base_pilotable: BasePilotable, vision_targets: VisionTargets):
         super().__init__()
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)
-        self.visiontargets = visiontargets
+        self.vision_targets = vision_targets
         self.x_stop = False
         self.y_stop = False
         self.setName("Viser Cargo")
@@ -25,7 +28,7 @@ class ViserCargo(CommandBase):
         self._reset()
 
     def execute(self) -> None:
-        nearest = self.visiontargets.nearestCargo
+        nearest = self.vision_targets.nearestCargo
 
         if nearest:
             x_error = nearest.nx - properties.values.viser_cargo_x_offset
@@ -40,7 +43,9 @@ class ViserCargo(CommandBase):
             if self.y_stop:
                 y_speed = 0
             else:
-                y_speed = math.copysign(properties.values.viser_cargo_forward_speed, y_error)
+                y_speed = math.copysign(
+                    properties.values.viser_cargo_forward_speed, y_error
+                )
 
             self.base_pilotable.arcadeDrive(y_speed, x_speed)
         else:
@@ -51,3 +56,15 @@ class ViserCargo(CommandBase):
 
     def isFinished(self) -> bool:
         return self.x_stop and self.y_stop
+
+
+class ViserCargoAvancer(commands2.SequentialCommandGroup):
+    def __init__(self, base_pilotable: BasePilotable, vision_targets: VisionTargets):
+        super().__init__(
+            ViserCargo(base_pilotable, vision_targets),
+            Avancer(
+                base_pilotable,
+                lambda: properties.values.viser_cargo_distance_supp,
+                lambda: properties.values.viser_cargo_forward_speed,
+            )
+        )
