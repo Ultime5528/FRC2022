@@ -122,6 +122,12 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("4", GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
         wpilib.SmartDashboard.putData("Viser Cargo", ViserCargo(self.base_pilotable, self.vision_targets))
 
+        self.autoCommand: commands2.CommandBase = None
+        self.autoChooser = wpilib.SendableChooser()
+        self.autoChooser.setDefaultOption("Rien", None)
+        # self.autoChooser.addOption("Auto xxxx", None)
+        wpilib.SmartDashboard.putData("ModeAutonome", self.autoChooser)
+
     def setup_buttons(self):
         # JOYSTICK
         JoystickButton(self.stick, 7).whenPressed(Piloter(self.base_pilotable, self.stick))
@@ -153,6 +159,15 @@ class Robot(commands2.TimedCommandRobot):
         #     print(e)
         #     traceback.print_exc()
 
+    def autonomousInit(self) -> None:
+        self.autoCommand = self.autoChooser.getSelected()
+
+        if self.autoCommand:
+           self.autoCommand.schedule()
+
+    def teleopInit(self) -> None:
+        if self.autoCommand:
+           self.autoCommand.cancel()
 
 if __name__ == "__main__":
     # try:
