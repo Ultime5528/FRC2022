@@ -19,6 +19,8 @@ from commands.monterintake import MonterIntake
 from commands.arreterintake import ArreterIntake
 from commands.ejecterintake import EjecterIntake
 from commands.sequenceprendre import SequencePrendre
+from commands.viserprendre import ViserPrendre
+from commands.visertirer import ViserTirer
 from subsystems.intake import Intake
 from subsystems.visiontargets import VisionTargets
 from subsystems.basepilotable import BasePilotable
@@ -125,18 +127,18 @@ class Robot(commands2.TimedCommandRobot):
     def setup_joystick(self):
         # JOYSTICK
         JoystickButton(self.stick, 7).whenPressed(Piloter(self.base_pilotable, self.stick))
-        JoystickButton(self.stick, 2).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-        JoystickButton(self.stick, 3).whenPressed(ViserCargo(self.base_pilotable, self.vision_targets))
+        JoystickButton(self.stick, 2).whenPressed(ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
+        JoystickButton(self.stick, 3).whenPressed(ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
 
         # CONSOLE
         JoystickButton(self.console_1, 5).whenPressed(GrimperNiveau2(self.grimpeur_primaire))
         JoystickButton(self.console_1, 8).whenPressed(GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_2, 3).whenPressed(GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 4).whenPressed(PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
-        JoystickButton(self.console_1, 7).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
+        JoystickButton(self.console_1, 7).whenPressed(ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.vision_targets))
         #JoystickButton(self.console_1, 3).whenPressed(Exploser(self.led_controller))
-        JoystickButton(self.console_1, 6).whenPressed(ViserCargo(self.base_pilotable, self.vision_targets))
+        JoystickButton(self.console_1, 6).whenPressed(ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
         #JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
         JoystickButton(self.console_1, 1).whenPressed(EjecterIntake(self.intake))

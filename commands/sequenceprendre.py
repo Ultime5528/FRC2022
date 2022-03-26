@@ -10,8 +10,10 @@ from subsystems.intake import Intake
 class SequencePrendre(commands2.SequentialCommandGroup):
     def __init__(self, grimpeur_secondaire: GrimpeurSecondaire, intake: Intake):
         super().__init__(
-            DescendreIntake(grimpeur_secondaire),
-            PrendreBallon(intake),
+            commands2.ParallelCommandGroup(
+                DescendreIntake(grimpeur_secondaire),
+                PrendreBallon(intake),
+            ),
             MonterIntake(grimpeur_secondaire),
         )
         self.setName("Sequence Prendre")
