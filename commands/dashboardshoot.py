@@ -20,6 +20,7 @@ class DashboardShoot(commands2.CommandBase):
 
     def execute(self) -> None:
         self.shooter.shoot(properties.values.shooter_speed, properties.values.shooter_backspin_speed)
+
         if self.shooter.atSetpoint():
             self.intake.activerConvoyeur()
         else:
@@ -27,6 +28,9 @@ class DashboardShoot(commands2.CommandBase):
 
         if not self.intake.hasBallIntake() and not self.intake.hasBallConvoyeur():
             self.timer.start()
+        else:
+            self.timer.stop()
+            self.timer.reset()
 
     def isFinished(self) -> bool:
         return self.timer.get() >= properties.values.shooter_end_time
