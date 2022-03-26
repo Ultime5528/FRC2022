@@ -4,15 +4,16 @@ import wpilib
 import properties
 
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
+from utils.properties import FloatProperty, to_callable
 from utils.trapezoidalmotion import TrapezoidalMotion
 
 
 class BougerSecondaire(commands2.CommandBase):
-    def __init__(self, grimpeur: GrimpeurSecondaire, get_position: Callable[[], float]):
+    def __init__(self, grimpeur: GrimpeurSecondaire, position: FloatProperty):
         super().__init__()
         self.setName("BougerSecondaire")
         self.grimpeur = grimpeur
-        self.get_position = get_position
+        self.get_position = to_callable(position)
         self.addRequirements(self.grimpeur)
         self.motion = TrapezoidalMotion()
 
