@@ -65,10 +65,10 @@ class TrapezoidalMotion:
         self._compute()
 
     def _compute(self):
-        assert self._initial_config.start_position, "'start_position' is not set."
-        assert self._initial_config.start_speed, "'start_speed' is not set."
-        assert self._initial_config.end_speed, "'end_speed' is not set."
-        assert self._initial_config.accel, "'accel' is not set."
+        assert self._initial_config.start_position is not None, "'start_position' is not set."
+        assert self._initial_config.start_speed is not None, "'start_speed' is not set."
+        assert self._initial_config.end_speed is not None, "'end_speed' is not set."
+        assert self._initial_config.accel is not None, "'accel' is not set."
 
         self._initial_config.check_final_state()
 

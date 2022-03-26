@@ -3,19 +3,19 @@ import commands2
 from commands2.button import JoystickButton
 
 import properties
-from commands.bougersecondaire import BougerSecondaire
-from commands.descendrecompletsecondaire import DescendreCompletSecondaire
-from commands.grimper2e import Grimper2e
-from commands.grimpeur3eme import Grimpeur3eme
-from commands.grimpeur4eme import Grimpeur4eme
-from commands.montercompletsecondaire import MonterCompletSecondaire
-from commands.preparergrimper import PreparerGrimper
+from commands.grimpeur.bougerprimaire import BougerPrimaire
+from commands.grimpeur.bougersecondaire import BougerSecondaire
+from commands.grimpeur.descendrecompletprimaire import DescendreCompletPrimaire
+from commands.grimpeur.descendrecompletsecondaire import DescendreCompletSecondaire
+from commands.grimpeur.grimperniveau2 import GrimperNiveau2
+from commands.grimpeur.grimperniveau3 import GrimperNiveau3
+from commands.grimpeur.grimperniveau4 import GrimperNiveau4
+from commands.grimpeur.montercompletsecondaire import MonterCompletSecondaire
+from commands.grimpeur.preparergrimper import PreparerGrimper
 from commands.visercargo import ViserCargo
 
 from commands.interpolatedshoot import InterpolatedShoot
 from commands.monterintake import MonterIntake
-from commands.bougerprimaire import BougerPrimaire
-from commands.descendrecompletprimaire import DescendreCompletPrimaire
 from commands.arreterintake import ArreterIntake
 from commands.ejecterintake import EjecterIntake
 from commands.sequenceprendre import SequencePrendre
@@ -24,7 +24,7 @@ from subsystems.visiontargets import VisionTargets
 from subsystems.basepilotable import BasePilotable
 
 from subsystems.shooter import Shooter
-from subsystems.grimpeurprincipal import GrimpeurPrincipal
+from subsystems.grimpeurprimaire import GrimpeurPrimaire
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
 from LED import LEDController
 
@@ -56,7 +56,7 @@ class Robot(commands2.TimedCommandRobot):
         self.vision_targets = VisionTargets(self.base_pilotable)
         self.shooter = Shooter()
 
-        self.grimpeur_primaire = GrimpeurPrincipal()
+        self.grimpeur_primaire = GrimpeurPrimaire()
         self.grimpeur_secondaire = GrimpeurSecondaire()
         self.vision_targets = VisionTargets(self.base_pilotable)
         self.led_controller = LEDController()
@@ -82,7 +82,7 @@ class Robot(commands2.TimedCommandRobot):
                                                             Pose2d(3, 1, Rotation2d.fromDegrees(0)),
                                                         ], 0.2, reset=True))
 
-        wpilib.SmartDashboard.putData("BougerPrimaire max", BougerPrimaire(self.grimpeur_primaire, lambda: properties.values.grimpeur_principal_hauteur_max))
+        wpilib.SmartDashboard.putData("BougerPrimaire max", BougerPrimaire(self.grimpeur_primaire, lambda: properties.values.grimpeur_primaire_hauteur_max))
         wpilib.SmartDashboard.putData("DescendreCompletPrimaire", DescendreCompletPrimaire(self.grimpeur_primaire))
         wpilib.SmartDashboard.putData("PreparerGrimper", PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
 
@@ -102,9 +102,9 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Avancer", Avancer(self.base_pilotable, -1, 0.15))
         wpilib.SmartDashboard.putData("Tourner", Tourner(self.base_pilotable, -90, 0.1))
         wpilib.SmartDashboard.putData("Viser Hub", ViserHub(self.base_pilotable, self.vision_targets))
-        wpilib.SmartDashboard.putData("2", Grimper2e(self.grimpeur_primaire))
-        wpilib.SmartDashboard.putData("3", Grimpeur3eme(self.grimpeur_primaire, self.grimpeur_secondaire))
-        wpilib.SmartDashboard.putData("4", Grimpeur4eme(self.grimpeur_primaire, self.grimpeur_secondaire))
+        wpilib.SmartDashboard.putData("2", GrimperNiveau2(self.grimpeur_primaire))
+        wpilib.SmartDashboard.putData("3", GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire))
+        wpilib.SmartDashboard.putData("4", GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
 
     def robotPeriodic(self) -> None:
         # try:

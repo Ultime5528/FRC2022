@@ -1,4 +1,4 @@
-from commands.descendrecompletsecondaire import DescendreCompletSecondaire
+from commands.grimpeur.descendrecompletsecondaire import DescendreCompletSecondaire
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
 
 
