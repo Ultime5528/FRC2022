@@ -8,8 +8,8 @@ shooter_motor_gauche = 5
 shooter_motor_droit = 6
 shooter_backspin_motor = 7
 
-grimpeur_moteur_principal_gauche = 8
-grimpeur_moteur_principal_droit = 9
+grimpeur_moteur_primaire_gauche = 8
+grimpeur_moteur_primaire_droit = 9
 grimpeur_moteur_secondaire = 10
 
 # PWM
@@ -18,9 +18,9 @@ intake_moteur_transporter = 1
 led_strip = 2
 
 # DIO
-grimpeur_switch_principal_bas = 0
-grimpeur_switch_secondaire_bas = 1
-grimpeur_switch_secondaire_haut = 2
+grimpeur_primaire_switch_bas = 0
+grimpeur_secondaire_switch_bas = 1
+grimpeur_secondaire_switch_haut = 2
 
 # Analog
 intake_ultrasonic_haut = 0

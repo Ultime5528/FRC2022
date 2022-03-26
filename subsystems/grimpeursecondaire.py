@@ -12,8 +12,8 @@ class GrimpeurSecondaire(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
-        self._switch_bas_secondaire = DigitalInput(ports.grimpeur_switch_secondaire_bas)
-        self._switch_haut_secondaire = DigitalInput(ports.grimpeur_switch_secondaire_haut)
+        self._switch_bas_secondaire = DigitalInput(ports.grimpeur_secondaire_switch_bas)
+        self._switch_haut_secondaire = DigitalInput(ports.grimpeur_secondaire_switch_haut)
 
         self.addChild("SwitchBasSecondaire", self._switch_bas_secondaire)
         self.addChild("SwitchHautSecondaire", self._switch_haut_secondaire)
@@ -24,6 +24,7 @@ class GrimpeurSecondaire(SubsystemBase):
                                                  rev.CANSparkMax.MotorType.kBrushless)
         self._motor_secondaire.restoreFactoryDefaults()
         self._motor_secondaire.setInverted(True)
+        self._motor_secondaire.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         self._encoder_secondaire = self._motor_secondaire.getEncoder()
 
         if RobotBase.isSimulation():
@@ -35,11 +36,14 @@ class GrimpeurSecondaire(SubsystemBase):
     def simulationPeriodic(self):
         self._motor_secondaire_sim.setVelocity(self._motor_secondaire.get())
 
+    def set_moteur(self, speed: float):
+        self._motor_secondaire.set(speed)
+
     def monter(self):
-        self._motor_secondaire.set(properties.values.grimpeur_vitesse_monter_secondaire)
+        self._motor_secondaire.set(properties.values.grimpeur_secondaire_vitesse_monter)
 
     def descendre(self):
-        self._motor_secondaire.set(properties.values.grimpeur_vitesse_descend_secondaire)
+        self._motor_secondaire.set(properties.values.grimpeur_secondaire_vitesse_descendre)
 
     def stop(self):
         self._motor_secondaire.set(0)

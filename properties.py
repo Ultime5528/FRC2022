@@ -25,14 +25,22 @@ class Properties:
 
     trajectoire_angle_p = ntproperty("/Properties/trajectoire_angle_p", 0.008, writeDefault=False, persistent=persistent)
     trajectoire_vue_avant = ntproperty("/Properties/trajectoire_vue_avant", 0.25, writeDefault=False, persistent=persistent)
-    
-    grimpeur_vitesse_monter = ntproperty("/Properties/grimpeur_vitesse_monter", 0.5, writeDefault=False, persistent=persistent)
-    grimpeur_vitesse_descend = ntproperty("/Properties/grimpeur_vitesse_descend", -0.5, writeDefault=False, persistent=persistent)
-    grimpeur_vitesse_monter_secondaire = ntproperty("/Properties/grimpeur_vitesse_monter_secondaire", 0.25, writeDefault=False, persistent=persistent)
-    grimpeur_vitesse_descend_secondaire = ntproperty("/Properties/grimpeur_vitesse_descend_secondaire", -0.25, writeDefault=False, persistent=persistent)
-    grimpeur_secondaire_hauteur_alignement = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement", 40, writeDefault=False, persistent=persistent)
-    grimpeur_primaire_hauteur_max = ntproperty("/Properties/grimpeur_primaire_hauteur_max", 10, writeDefault=False)
-    grimpeur_primaire_hauteur_clip = ntproperty("/Properties/grimpeur_primaire_hauteur_clip", 10, writeDefault=False)
+
+    grimpeur_primaire_vitesse_descendre = ntproperty("/Properties/grimpeur_primaire_vitesse_descendre", -0.5, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_vitesse_monter = ntproperty("/Properties/grimpeur_primaire_vitesse_monter", 0.5, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_start_speed = ntproperty("/Properties/grimpeur_primaire_start_speed", 0.2, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_end_speed = ntproperty("/Properties/grimpeur_primaire_end_speed", 1.0, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_accel = ntproperty("/Properties/grimpeur_primaire_accel", 0.03, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_hauteur_clip = ntproperty("/Properties/grimpeur_primaire_hauteur_clip", 90.0, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_hauteur_max = ntproperty("/Properties/grimpeur_primaire_hauteur_max", 110.0, writeDefault=False, persistent=persistent)
+
+    grimpeur_secondaire_vitesse_descendre = ntproperty("/Properties/grimpeur_secondaire_vitesse_descendre", -0.5, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_vitesse_monter = ntproperty("/Properties/grimpeur_secondaire_vitesse_monter", 0.5, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_start_speed = ntproperty("/Properties/grimpeur_secondaire_start_speed", 0.2, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_end_speed = ntproperty("/Properties/grimpeur_secondaire_end_speed", 1.0, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_accel = ntproperty("/Properties/grimpeur_secondaire_accel", 0.03, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_hauteur_alignement = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement", 90.0, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_hauteur_max = ntproperty("/Properties/grimpeur_secondaire_hauteur_max", 100.0, writeDefault=False, persistent=persistent)
 
     vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
     vision_cargo_crop_x_min = ntproperty("/Properties/vision_cargo_crop_x_min", 0.05, writeDefault=False, persistent=persistent)
