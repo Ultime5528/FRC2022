@@ -7,9 +7,9 @@ from subsystems.grimpeursecondaire import GrimpeurSecondaire
 
 
 class ResetGrimpeurs(commands2.ParallelCommandGroup):
-    def __init__(self, grimpeur_principal: GrimpeurPrimaire, grimpeur_secondaire: GrimpeurSecondaire):
+    def __init__(self, grimpeur_primaire: GrimpeurPrimaire, grimpeur_secondaire: GrimpeurSecondaire):
         super().__init__(
-            DescendreCompletPrimaire(grimpeur_principal),
+            DescendreCompletPrimaire(grimpeur_primaire),
             DescendreCompletSecondaire(grimpeur_secondaire)
         )
         self.setName(self.__class__.__name__)

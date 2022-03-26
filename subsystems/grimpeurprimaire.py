@@ -13,18 +13,18 @@ class GrimpeurPrimaire(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
-        self._switch_bas = DigitalInput(ports.grimpeur_switch_principal_bas)
+        self._switch_bas = DigitalInput(ports.grimpeur_primaire_switch_bas)
         self.addChild("SwitchBas", self._switch_bas)
 
         # Motors
-        self._motor_primaire = rev.CANSparkMax(ports.grimpeur_moteur_principal_droit,
+        self._motor_primaire = rev.CANSparkMax(ports.grimpeur_moteur_primaire_droit,
                                                rev.CANSparkMax.MotorType.kBrushless)
         self._motor_primaire.restoreFactoryDefaults()
         self._motor_primaire.setInverted(True)
         self._motor_primaire.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         self._encoder_primaire = self._motor_primaire.getEncoder()
 
-        self._motor_primaire_follower = rev.CANSparkMax(ports.grimpeur_moteur_principal_gauche,
+        self._motor_primaire_follower = rev.CANSparkMax(ports.grimpeur_moteur_primaire_gauche,
                                                         rev.CANSparkMax.MotorType.kBrushless)
         self._motor_primaire_follower.restoreFactoryDefaults()
         self._motor_primaire_follower.follow(self._motor_primaire, invert=True)
