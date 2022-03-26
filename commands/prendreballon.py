@@ -15,7 +15,7 @@ class PrendreBallon(CommandBase):
         if self.intake.hasBallConvoyeur():
             self.intake.stopConvoyeur()
         else:
-            self.intake.activerConvoyeur()
+            self.intake.activerConvoyeurLent()
 
     def isFinished(self) -> bool:
         return self.intake.hasBallIntake() and self.intake.hasBallConvoyeur()

@@ -14,10 +14,7 @@ from commands.grimpeur.montercompletsecondaire import MonterCompletSecondaire
 from commands.grimpeur.preparergrimper import PreparerGrimper
 from commands.visercargo import ViserCargo, ViserCargoAvancer
 
-from commands.interpolatedshoot import InterpolatedShoot
 from commands.monterintake import MonterIntake
-from commands.arreterintake import ArreterIntake
-from commands.ejecterintake import EjecterIntake
 from commands.sequenceprendre import SequencePrendre
 from commands.viserprendre import ViserPrendre
 from commands.visertirer import ViserTirer
@@ -32,23 +29,21 @@ from LED import LEDController
 
 from wpimath.geometry import Pose2d, Rotation2d
 from commands.viserhub import ViserHub
-from commands.manualshoot import ManualShoot
+from commands.shooter.manualshoot import ManualShoot
 from commands.piloter import Piloter
 from commands.avancer import Avancer
 from commands.tourner import Tourner
 from commands.prendreballon import PrendreBallon
 from commands.suivretrajectoire import SuivreTrajectoire
-from commands.ejecterintake import EjecterIntake
 from commands.descendreintake import DescendreIntake
 from commands.arreterintake import ArreterIntake
-from commands.interpolatedshoot import InterpolatedShoot
-from commands.dashboardshoot import DashboardShoot
+from commands.shooter.interpolatedshoot import InterpolatedShoot
+from commands.shooter.dashboardshoot import DashboardShoot
 from commands.ejecterintake import EjecterIntake
 from triggers.wrongcargotrigger import WrongCargoTrigger
 from triggers.axistrigger import AxisTrigger
-from utils.cameraserver import CameraServer
-from commands.ejectershooter import EjecterShooter
-import traceback
+from commands.shooter.ejectershooter import EjecterShooter
+
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
@@ -90,7 +85,7 @@ class Robot(commands2.TimedCommandRobot):
         self.trigger.whenActive(EjecterIntake(self.intake))
         # WrongCargoTrigger(self.vision_targets).whenActive(EjecterIntake(self.intake))
 
-        wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
+        wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, self.intake, 3000, 3000))
         wpilib.SmartDashboard.putData("Suivre Traj",
                                       SuivreTrajectoire(self.base_pilotable,
                                                         [
@@ -105,9 +100,9 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("BougerSecondaire Alignement", BougerSecondaire(self.grimpeur_secondaire, lambda: properties.values.grimpeur_secondaire_hauteur_alignement))
         wpilib.SmartDashboard.putData("MonterCompletSecondaire", MonterCompletSecondaire(self.grimpeur_secondaire))
         wpilib.SmartDashboard.putData("DescendreCompletSecondaire", DescendreCompletSecondaire(self.grimpeur_secondaire))
-        wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
+        wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, self.intake, 3000, 3000))
         wpilib.SmartDashboard.putData("Monter Intake", MonterIntake(self.grimpeur_secondaire))
-        wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.vision_targets))
+        wpilib.SmartDashboard.putData("Interpolated Shoot", InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
         wpilib.SmartDashboard.putData("Descendre Intake", DescendreIntake(self.grimpeur_secondaire))
         wpilib.SmartDashboard.putData("Arreter Intake", ArreterIntake(self.intake))
         wpilib.SmartDashboard.putData("Dashboard Shoot", DashboardShoot(self.shooter, self.intake))
@@ -136,7 +131,7 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.console_2, 3).whenPressed(GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 4).whenPressed(PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 7).whenPressed(ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
-        JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.vision_targets))
+        JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
         #JoystickButton(self.console_1, 3).whenPressed(Exploser(self.led_controller))
         JoystickButton(self.console_1, 6).whenPressed(ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
         #JoystickButton(self.console_2, 1).whenPressed(ManualShoot())

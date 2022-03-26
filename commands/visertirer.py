@@ -1,8 +1,8 @@
 import commands2
 from wpilib import Joystick
 
-from commands.dashboardshoot import DashboardShoot
 from commands.piloter import Piloter
+from commands.shooter.dashboardshoot import DashboardShoot
 from commands.viserhub import ViserHub
 from subsystems.basepilotable import BasePilotable
 from subsystems.intake import Intake
