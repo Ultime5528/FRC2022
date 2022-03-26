@@ -73,12 +73,12 @@ class Shooter(commands2.SubsystemBase):
         voltage = pid_value + feedforward_value
         self._motor_left.setVoltage(voltage)
 
-        print("\n---------------------")
-        print("Setpoint:", setpoint)
-        print("Velocity: ", velocity)
-        print("PID Value: ", pid_value)
-        print("Feedforward Value: ", feedforward_value)
-        print("Voltage: ", voltage)
+        # print("\n---------------------")
+        # print("Setpoint:", setpoint)
+        # print("Velocity: ", velocity)
+        # print("PID Value: ", pid_value)
+        # print("Feedforward Value: ", feedforward_value)
+        # print("Voltage: ", voltage)
 
         # Backspin motor control
         self._backspin_motor.setVoltage(self.pid_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
