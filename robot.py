@@ -12,12 +12,12 @@ from commands.grimpeur.grimperniveau3 import GrimperNiveau3
 from commands.grimpeur.grimperniveau4 import GrimperNiveau4
 from commands.grimpeur.montercompletsecondaire import MonterCompletSecondaire
 from commands.grimpeur.preparergrimper import PreparerGrimper
-from commands.visercargo import ViserCargo, ViserCargoAvancer
+from commands.vision.visercargo import ViserCargo
 
-from commands.monterintake import MonterIntake
-from commands.sequenceprendre import SequencePrendre
-from commands.viserprendre import ViserPrendre
-from commands.visertirer import ViserTirer
+from commands.intake.monterintake import MonterIntake
+from commands.intake.sequenceprendre import SequencePrendre
+from commands.vision.viserprendre import ViserPrendre
+from commands.vision.visertirer import ViserTirer
 from subsystems.intake import Intake
 from subsystems.visiontargets import VisionTargets
 from subsystems.basepilotable import BasePilotable
@@ -28,18 +28,18 @@ from subsystems.grimpeursecondaire import GrimpeurSecondaire
 from LED import LEDController
 
 from wpimath.geometry import Pose2d, Rotation2d
-from commands.viserhub import ViserHub
+from commands.vision.viserhub import ViserHub
 from commands.shooter.manualshoot import ManualShoot
-from commands.piloter import Piloter
-from commands.avancer import Avancer
-from commands.tourner import Tourner
-from commands.prendreballon import PrendreBallon
-from commands.suivretrajectoire import SuivreTrajectoire
-from commands.descendreintake import DescendreIntake
-from commands.arreterintake import ArreterIntake
+from commands.basepilotable.piloter import Piloter
+from commands.basepilotable.avancer import Avancer
+from commands.basepilotable.tourner import Tourner
+from commands.intake.prendreballon import PrendreBallon
+from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
+from commands.intake.descendreintake import DescendreIntake
+from commands.intake.arreterintake import ArreterIntake
 from commands.shooter.interpolatedshoot import InterpolatedShoot
 from commands.shooter.dashboardshoot import DashboardShoot
-from commands.ejecterintake import EjecterIntake
+from commands.intake.ejecterintake import EjecterIntake
 from triggers.wrongcargotrigger import WrongCargoTrigger
 from triggers.axistrigger import AxisTrigger
 from commands.shooter.ejectershooter import EjecterShooter

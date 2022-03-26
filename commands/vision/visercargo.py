@@ -3,7 +3,7 @@ import math
 import commands2
 from commands2 import CommandBase
 
-from commands.avancer import Avancer
+from commands.basepilotable.avancer import Avancer
 from subsystems.basepilotable import BasePilotable
 from subsystems.visiontargets import VisionTargets
 import properties

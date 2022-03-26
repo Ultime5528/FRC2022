@@ -7,7 +7,6 @@ from wpimath.controller import (
 )
 import rev
 from wpilib import RobotBase, RobotController
-from subsystems.intake import Intake
 
 import properties
 from utils.sparkmaxsim import SparkMaxSim
@@ -33,23 +32,17 @@ class Shooter(commands2.SubsystemBase):
 
     def __init__(self) -> None:
         super().__init__()
-        self._motor_left = rev.CANSparkMax(
-            ports.shooter_motor_gauche, rev.CANSparkMax.MotorType.kBrushless
-        )
+        self._motor_left = rev.CANSparkMax(ports.shooter_motor_gauche, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_left.restoreFactoryDefaults()
         self._motor_left.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
         self._motor_left.setInverted(True)
 
-        self._motor_right = rev.CANSparkMax(
-            ports.shooter_motor_droit, rev.CANSparkMax.MotorType.kBrushless
-        )
+        self._motor_right = rev.CANSparkMax(ports.shooter_motor_droit, rev.CANSparkMax.MotorType.kBrushless)
         self._motor_right.restoreFactoryDefaults()
         self._motor_right.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
         self._motor_right.follow(self._motor_left, invert=True)
 
-        self._backspin_motor = rev.CANSparkMax(
-            ports.shooter_backspin_motor, rev.CANSparkMax.MotorType.kBrushless
-        )
+        self._backspin_motor = rev.CANSparkMax(ports.shooter_backspin_motor, rev.CANSparkMax.MotorType.kBrushless)
         self._backspin_motor.restoreFactoryDefaults()
         self._backspin_motor.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
         self._backspin_motor.setInverted(True)
@@ -92,9 +85,7 @@ class Shooter(commands2.SubsystemBase):
 
         # Backspin motor control
         self._backspin_motor.setVoltage(
-            self.pid_controller.calculate(
-                self.backspin_encoder.getVelocity(), backspin_setpoint
-            )
+            self.pid_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
             + self.feed_forward_controller.calculate(backspin_setpoint)
         )
 
@@ -112,9 +103,7 @@ class Shooter(commands2.SubsystemBase):
         # print("Voltage: ", voltage)
 
         self._backspin_motor.setVoltage(
-            self.bang_bang_controller.calculate(
-                self.backspin_encoder.getVelocity(), backspin_setpoint
-            )
+            self.bang_bang_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
             + properties.values.shooter_feedforward_percentage
             * self.feed_forward_controller.calculate(backspin_setpoint)
         )
@@ -125,10 +114,8 @@ class Shooter(commands2.SubsystemBase):
     def atSetpoint(self):
         if self.setpoint:
             return (
-                self.encoder.getVelocity()
-                >= self.setpoint - properties.values.shooter_tolerance
-                and self.backspin_encoder.getVelocity()
-                >= self.backspin_setpoint - properties.values.shooter_tolerance
+                self.encoder.getVelocity() >= self.setpoint - properties.values.shooter_tolerance
+                and self.backspin_encoder.getVelocity() >= self.backspin_setpoint - properties.values.shooter_tolerance
             )
         else:
             return False
@@ -146,9 +133,7 @@ class Shooter(commands2.SubsystemBase):
         self.backspin_setpoint = 0
 
     def periodic(self) -> None:
-        wpilib.SmartDashboard.putNumber(
-            "BackspinMotor", self.backspin_encoder.getVelocity()
-        )
+        wpilib.SmartDashboard.putNumber("BackspinMotor", self.backspin_encoder.getVelocity())
         wpilib.SmartDashboard.putNumber("MainMotors", self.encoder.getVelocity())
 
         wpilib.SmartDashboard.putNumber(
@@ -157,25 +142,15 @@ class Shooter(commands2.SubsystemBase):
         )
         wpilib.SmartDashboard.putNumber(
             "BackspinMotorPercentSpeed",
-            compute_speed_percentage(
-                self.backspin_encoder.getVelocity(), self.backspin_setpoint
-            ),
+            compute_speed_percentage(self.backspin_encoder.getVelocity(), self.backspin_setpoint),
         )
 
     def simulationPeriodic(self) -> None:
         motor_value = self._motor_left.get()
-        self.flywheel_sim.setInputVoltage(
-            motor_value * RobotController.getInputVoltage()
-        )
+        self.flywheel_sim.setInputVoltage(motor_value * RobotController.getInputVoltage())
         self.flywheel_sim.update(0.02)
-        self.motor_left_sim.setVelocity(
-            self.flywheel_sim.getAngularVelocity() / 6.28 * 60
-        )
+        self.motor_left_sim.setVelocity(self.flywheel_sim.getAngularVelocity() / 6.28 * 60)
         backspin_motor_value = self._backspin_motor.get()
-        self.backspin_flywheel_sim.setInputVoltage(
-            backspin_motor_value * RobotController.getInputVoltage()
-        )
+        self.backspin_flywheel_sim.setInputVoltage(backspin_motor_value * RobotController.getInputVoltage())
         self.backspin_flywheel_sim.update(0.02)
-        self.backspin_motor_sim.setVelocity(
-            self.backspin_flywheel_sim.getAngularVelocity() / 6.28 * 60
-        )
+        self.backspin_motor_sim.setVelocity(self.backspin_flywheel_sim.getAngularVelocity() / 6.28 * 60)

@@ -1,9 +1,7 @@
 import commands2
-from wpilib import Joystick
 
-from commands.piloter import Piloter
-from commands.prendreballon import PrendreBallon
-from commands.visercargo import ViserCargo
+from commands.intake.prendreballon import PrendreBallon
+from commands.vision.visercargo import ViserCargo
 from subsystems.basepilotable import BasePilotable
 from subsystems.intake import Intake
 from subsystems.visiontargets import VisionTargets
