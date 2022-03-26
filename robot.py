@@ -12,12 +12,13 @@ from commands.grimpeur.grimperniveau3 import GrimperNiveau3
 from commands.grimpeur.grimperniveau4 import GrimperNiveau4
 from commands.grimpeur.montercompletsecondaire import MonterCompletSecondaire
 from commands.grimpeur.preparergrimper import PreparerGrimper
+from commands.sequencebalayer import SequenceBalayer
 from commands.visercargo import ViserCargo, ViserCargoAvancer
 
 from commands.interpolatedshoot import InterpolatedShoot
 from commands.monterintake import MonterIntake
 from commands.arreterintake import ArreterIntake
-from commands.ejecterintake import EjecterIntake
+from commands.balayerballon import BalayerBallon
 from commands.sequenceprendre import SequencePrendre
 from subsystems.intake import Intake
 from subsystems.visiontargets import VisionTargets
@@ -36,12 +37,12 @@ from commands.avancer import Avancer
 from commands.tourner import Tourner
 from commands.prendreballon import PrendreBallon
 from commands.suivretrajectoire import SuivreTrajectoire
-from commands.ejecterintake import EjecterIntake
+from commands.balayerballon import BalayerBallon
 from commands.descendreintake import DescendreIntake
 from commands.arreterintake import ArreterIntake
 from commands.interpolatedshoot import InterpolatedShoot
 from commands.dashboardshoot import DashboardShoot
-from commands.ejecterintake import EjecterIntake
+from commands.balayerballon import BalayerBallon
 from triggers.wrongcargotrigger import WrongCargoTrigger
 from triggers.axistrigger import AxisTrigger
 from utils.cameraserver import CameraServer
@@ -85,7 +86,7 @@ class Robot(commands2.TimedCommandRobot):
 
         # Pour une raison inconnue, le trigger doit être gardé comme attribut pour que les test fonctionnent.
         self.trigger = WrongCargoTrigger(self.vision_targets)
-        self.trigger.whenActive(EjecterIntake(self.intake))
+        self.trigger.whenActive(BalayerBallon(self.intake))
         # WrongCargoTrigger(self.vision_targets).whenActive(EjecterIntake(self.intake))
 
         wpilib.SmartDashboard.putData("Shoot", ManualShoot(self.shooter, 3000, 3000))
@@ -111,7 +112,7 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("Dashboard Shoot", DashboardShoot(self.shooter, self.intake))
         wpilib.SmartDashboard.putData("Shooter Eject", EjecterShooter(self.shooter, self.intake))
         wpilib.SmartDashboard.putData("Sequence Prendre", SequencePrendre(self.grimpeur_secondaire, self.intake))
-        wpilib.SmartDashboard.putData("Ejecter Intake", EjecterIntake(self.intake))
+        wpilib.SmartDashboard.putData("Balayer Ballon", BalayerBallon(self.intake))
         wpilib.SmartDashboard.putData("Prendre Ballon", PrendreBallon(self.intake))
         wpilib.SmartDashboard.putData("Avancer", Avancer(self.base_pilotable, -1, 0.15))
         wpilib.SmartDashboard.putData("Tourner", Tourner(self.base_pilotable, -90, 0.1))
@@ -139,7 +140,7 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.console_1, 6).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
         # JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
-        JoystickButton(self.console_1, 1).whenPressed(EjecterIntake(self.intake))
+        JoystickButton(self.console_1, 1).whenPressed(SequenceBalayer(self.intake))
         AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
         AxisTrigger(self.console_1, 0, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
         AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))

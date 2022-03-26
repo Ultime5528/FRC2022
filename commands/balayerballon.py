@@ -5,7 +5,7 @@ import properties
 from subsystems.intake import Intake
 
 
-class EjecterIntake(CommandBase):
+class BalayerBallon(CommandBase):
     def __init__(self, intake: Intake):
         super().__init__()
         self.addRequirements(intake)
