@@ -51,6 +51,8 @@ class Properties:
     vision_cargo_red_hsv_high = ntproperty("/Properties/vision_cargo_red_hsv_high", [7, 255, 255], writeDefault=False, persistent=persistent)
     vision_cargo_blue_hsv_low = ntproperty("/Properties/vision_cargo_blue_hsv_low", [87, 100, 60], writeDefault=False, persistent=persistent)
     vision_cargo_blue_hsv_high = ntproperty("/Properties/vision_cargo_blue_hsv_high", [112, 255, 255], writeDefault=False, persistent=persistent)
+    vision_cargo_min_radius = ntproperty("/Properties/vision_cargo_min_radius", 0.03, writeDefault=False, persistent=persistent)
+    vision_cargo_circularity_error = ntproperty("/Properties/vision_cargo_circularity_error", 0.2, writeDefault=False, persistent=persistent)
 
     viser_hub_speed = ntproperty("/Properties/viser_hub_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_hub_threshold = ntproperty("/Properties/viser_hub_threshold", 0.05, writeDefault=False, persistent=persistent)

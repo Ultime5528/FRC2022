@@ -72,6 +72,9 @@ def cargo_loop():
     blue_hsv_low = NetworkTables.getEntry("/Properties/vision_cargo_blue_hsv_low")
     blue_hsv_high = NetworkTables.getEntry("/Properties/vision_cargo_blue_hsv_high")
 
+    min_radius = NetworkTables.getEntry("/Properties/vision_cargo_min_radius",)
+    circularity_error = NetworkTables.getEntry("/Properties/vision_cargo_circularity_error")
+
     cs = CameraServer.getInstance()
     cs.enableLogging()
 
@@ -127,6 +130,8 @@ def cargo_loop():
                 img_crop,
                 Color.RED,
                 **hsv_thresholds,
+                error=circularity_error.getDouble(0.2),
+                minRadiusPerc=min_radius.getDouble(0.03),
                 mask_result=red_mask,
             )
         ]
@@ -136,6 +141,8 @@ def cargo_loop():
                 img_crop,
                 Color.BLUE,
                 **hsv_thresholds,
+                error=circularity_error.getDouble(0.2),
+                minRadiusPerc=min_radius.getDouble(0.03),
                 mask_result=blue_mask,
             )
         ]
