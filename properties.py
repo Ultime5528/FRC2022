@@ -26,11 +26,13 @@ class Properties:
     trajectoire_angle_p = ntproperty("/Properties/trajectoire_angle_p", 0.008, writeDefault=False, persistent=persistent)
     trajectoire_vue_avant = ntproperty("/Properties/trajectoire_vue_avant", 0.25, writeDefault=False, persistent=persistent)
 
-    grimpeur_principal_start_speed = ntproperty("/Properties/grimpeur_principal_start_speed", 0.2, writeDefault=False, persistent=persistent)
-    grimpeur_principal_end_speed = ntproperty("/Properties/grimpeur_principal_end_speed", 1.0, writeDefault=False, persistent=persistent)
-    grimpeur_principal_accel = ntproperty("/Properties/grimpeur_principal_accel", 0.03, writeDefault=False, persistent=persistent)
-    grimpeur_principal_hauteur_clip = ntproperty("/Properties/grimpeur_principal_hauteur_clip", 90.0, writeDefault=False, persistent=persistent)
-    grimpeur_principal_hauteur_max = ntproperty("/Properties/grimpeur_principal_hauteur_max", 110.0, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_vitesse_descendre = ntproperty("/Properties/grimpeur_primaire_vitesse_descendre", -0.5, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_vitesse_monter = ntproperty("/Properties/grimpeur_primaire_vitesse_monter", 0.5, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_start_speed = ntproperty("/Properties/grimpeur_primaire_start_speed", 0.2, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_end_speed = ntproperty("/Properties/grimpeur_primaire_end_speed", 1.0, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_accel = ntproperty("/Properties/grimpeur_primaire_accel", 0.03, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_hauteur_clip = ntproperty("/Properties/grimpeur_primaire_hauteur_clip", 90.0, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_hauteur_max = ntproperty("/Properties/grimpeur_primaire_hauteur_max", 110.0, writeDefault=False, persistent=persistent)
 
     grimpeur_secondaire_start_speed = ntproperty("/Properties/grimpeur_secondaire_start_speed", 0.2, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_end_speed = ntproperty("/Properties/grimpeur_secondaire_end_speed", 1.0, writeDefault=False, persistent=persistent)

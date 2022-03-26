@@ -9,16 +9,14 @@ import properties
 from utils.sparkmaxsim import SparkMaxSim
 
 
-class GrimpeurPrincipal(SubsystemBase):
+class GrimpeurPrimaire(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
         self._switch_bas = DigitalInput(ports.grimpeur_switch_principal_bas)
-
         self.addChild("SwitchBas", self._switch_bas)
 
         # Motors
-
         self._motor_primaire = rev.CANSparkMax(ports.grimpeur_moteur_principal_droit,
                                                rev.CANSparkMax.MotorType.kBrushless)
         self._motor_primaire.restoreFactoryDefaults()
@@ -31,6 +29,7 @@ class GrimpeurPrincipal(SubsystemBase):
         self._motor_primaire_follower.restoreFactoryDefaults()
         self._motor_primaire_follower.follow(self._motor_primaire, invert=True)
         self._motor_primaire_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
+
         if RobotBase.isSimulation():
             self._motor_primaire_sim = SparkMaxSim(self._motor_primaire)
             self._switch_bas_sim = DIOSim(self._switch_bas)
@@ -50,10 +49,10 @@ class GrimpeurPrincipal(SubsystemBase):
         self._motor_primaire.set(speed)
 
     def monter(self):
-        self._motor_primaire.set(properties.values.grimpeur_vitesse_monter)
+        self._motor_primaire.set(properties.values.grimpeur_primaire_vitesse_monter)
 
     def descendre(self):
-        self._motor_primaire.set(properties.values.grimpeur_vitesse_descend)
+        self._motor_primaire.set(properties.values.grimpeur_primaire_vitesse_descendre)
 
     def stop(self):
         self._motor_primaire.set(0)

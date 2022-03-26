@@ -1,13 +1,13 @@
 from typing import Callable
-import commands2
-from subsystems.grimpeurprincipal import GrimpeurPrincipal
+from subsystems.grimpeurprimaire import GrimpeurPrimaire
+from utils.safecommandbase import SafeCommandBase
 from utils.trapezoidalmotion import TrapezoidalMotion
 import properties
 
-class BougerPrimaire(commands2.CommandBase):
-    def __init__(self, grimpeur: GrimpeurPrincipal, get_hauteur: Callable[[], float]):
+
+class BougerPrimaire(SafeCommandBase):
+    def __init__(self, grimpeur: GrimpeurPrimaire, get_hauteur: Callable[[], float]):
         super().__init__()
-        self.setName("BougerPrimaire")
         self.grimpeur = grimpeur
         self.addRequirements(self.grimpeur)
         self.get_hauteur = get_hauteur
@@ -17,9 +17,9 @@ class BougerPrimaire(commands2.CommandBase):
         self.motion.update(
             start_position=self.grimpeur.getPosition(),
             end_position=self.get_hauteur(),
-            start_speed=properties.values.grimpeur_principal_start_speed,
-            end_speed=properties.values.grimpeur_principal_end_speed,
-            accel=properties.values.grimpeur_principal_accel
+            start_speed=properties.values.grimpeur_primaire_start_speed,
+            end_speed=properties.values.grimpeur_primaire_end_speed,
+            accel=properties.values.grimpeur_primaire_accel
         )
 
     def execute(self) -> None:
