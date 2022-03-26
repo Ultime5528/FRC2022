@@ -43,6 +43,7 @@ from commands.interpolatedshoot import InterpolatedShoot
 from commands.dashboardshoot import DashboardShoot
 from commands.ejecterintake import EjecterIntake
 from triggers.wrongcargotrigger import WrongCargoTrigger
+from triggers.axistrigger import AxisTrigger
 from utils.cameraserver import CameraServer
 from commands.ejectershooter import EjecterShooter
 import traceback
@@ -52,6 +53,9 @@ class Robot(commands2.TimedCommandRobot):
         # CameraServer.launch("visionhub.py:main")
         # CameraServer.launch("visioncargo.py:main")
         self.stick = wpilib.Joystick(0)
+        self.console_1 = wpilib.Joystick(1)
+        self.console_2 = wpilib.Joystick(2)
+
         self.base_pilotable = BasePilotable()
         self.intake = Intake()
         self.vision_targets = VisionTargets(self.base_pilotable)
@@ -63,6 +67,9 @@ class Robot(commands2.TimedCommandRobot):
         self.led_controller = LEDController()
         #
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
+
+        self.setup_joystick()
+
         #
         # # JoystickButton(self.stick, 1).whenHeld(PrendreBallon(self.intake))
         # # JoystickButton(self.stick, 2).whenPressed(Tourner(self.base_pilotable, 180.0, 0.50))
@@ -114,6 +121,30 @@ class Robot(commands2.TimedCommandRobot):
         wpilib.SmartDashboard.putData("3", GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire))
         wpilib.SmartDashboard.putData("4", GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
         wpilib.SmartDashboard.putData("Viser Cargo", ViserCargo(self.base_pilotable, self.vision_targets))
+
+    def setup_joystick(self):
+        # JOYSTICK
+        JoystickButton(self.stick, 7).whenPressed(Piloter(self.base_pilotable, self.stick))
+        JoystickButton(self.stick, 2).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
+        JoystickButton(self.stick, 3).whenPressed(ViserCargo(self.base_pilotable, self.vision_targets))
+
+        # CONSOLE
+        JoystickButton(self.console_1, 5).whenPressed(GrimperNiveau2(self.grimpeur_primaire))
+        JoystickButton(self.console_1, 8).whenPressed(GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire))
+        JoystickButton(self.console_2, 3).whenPressed(GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
+        JoystickButton(self.console_1, 4).whenPressed(PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
+        JoystickButton(self.console_1, 7).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
+        JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.vision_targets))
+        #JoystickButton(self.console_1, 3).whenPressed(Exploser(self.led_controller))
+        JoystickButton(self.console_1, 6).whenPressed(ViserCargo(self.base_pilotable, self.vision_targets))
+        #JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
+        JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
+        JoystickButton(self.console_1, 1).whenPressed(EjecterIntake(self.intake))
+        AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 0, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 1, inverted=True).whenActive(DescendreIntake(self.grimpeur_secondaire))
+
 
     def robotPeriodic(self) -> None:
         # try:
