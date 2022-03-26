@@ -1,5 +1,4 @@
 from commands2 import CommandBase
-import wpilib
 from subsystems.intake import Intake
 
 
@@ -8,19 +7,19 @@ class PrendreBallon(CommandBase):
         super().__init__()
         self.intake = intake
         self.addRequirements(self.intake)
-        self.setName("PrendreBallon")
+        self.setName("Prendre Ballon")
 
     def execute(self):
         self.intake.activerIntake()
 
-        if self.intake.hasBallTransporter():
-            self.intake.stopTransporter()
+        if self.intake.hasBallConvoyeur():
+            self.intake.stopConvoyeur()
         else:
-            self.intake.activerTransporter()
+            self.intake.activerConvoyeur()
 
     def isFinished(self) -> bool:
-        return self.intake.hasBallIntake() and self.intake.hasBallTransporter()
+        return self.intake.hasBallIntake() and self.intake.hasBallConvoyeur()
 
     def end(self, interrupted: bool) -> None:
         self.intake.stopIntake()
-        self.intake.stopTransporter()
+        self.intake.stopConvoyeur()

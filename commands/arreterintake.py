@@ -1,4 +1,3 @@
-import wpilib
 from commands2 import CommandBase
 from subsystems.intake import Intake
 
@@ -12,7 +11,7 @@ class ArreterIntake(CommandBase):
 
     def execute(self) -> None:
         self.intake.stopIntake()
-        self.intake.stopTransporter()
+        self.intake.stopConvoyeur()
 
     def isFinished(self) -> bool:
         return True
