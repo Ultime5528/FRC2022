@@ -34,6 +34,15 @@ class Properties:
     grimpeur_primaire_hauteur_max = ntproperty("/Properties/grimpeur_primaire_hauteur_max", 10, writeDefault=False)
     grimpeur_primaire_hauteur_clip = ntproperty("/Properties/grimpeur_primaire_hauteur_clip", 10, writeDefault=False)
 
+    vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
+    vision_cargo_crop_x_min = ntproperty("/Properties/vision_cargo_crop_x_min", 0.05, writeDefault=False, persistent=persistent)
+    vision_cargo_crop_x_max = ntproperty("/Properties/vision_cargo_crop_x_max", 0.95, writeDefault=False, persistent=persistent)
+    vision_cargo_crop_y_min = ntproperty("/Properties/vision_cargo_crop_y_min", 0.10, writeDefault=False, persistent=persistent)
+    vision_cargo_crop_y_max = ntproperty("/Properties/vision_cargo_crop_y_max", 0.90, writeDefault=False, persistent=persistent)
+    vision_cargo_red_hsv_low = ntproperty("/Properties/vision_cargo_red_hsv_low", [163, 120, 70], writeDefault=False, persistent=persistent)
+    vision_cargo_red_hsv_high = ntproperty("/Properties/vision_cargo_red_hsv_high", [7, 255, 255], writeDefault=False, persistent=persistent)
+    vision_cargo_blue_hsv_low = ntproperty("/Properties/vision_cargo_blue_hsv_low", [87, 100, 60], writeDefault=False, persistent=persistent)
+    vision_cargo_blue_hsv_high = ntproperty("/Properties/vision_cargo_blue_hsv_high", [112, 255, 255], writeDefault=False, persistent=persistent)
 
     viser_hub_speed = ntproperty("/Properties/viser_hub_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_hub_threshold = ntproperty("/Properties/viser_hub_threshold", 0.05, writeDefault=False, persistent=persistent)
@@ -42,8 +51,8 @@ class Properties:
     viser_cargo_turn_speed = ntproperty("/Properties/viser_cargo_turn_speed", 0.3, writeDefault=False, persistent=persistent)
     viser_cargo_x_threshold = ntproperty("/Properties/viser_cargo_x_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_cargo_y_threshold = ntproperty("/Properties/viser_cargo_y_threshold", 0.05, writeDefault=False, persistent=persistent)
-    viser_cargo_x_offset = ntproperty("/Properties/viser_cargo_x_offset", 0.05, writeDefault=False, persistent=persistent)
-    viser_cargo_y_offset = ntproperty("/Properties/viser_cargo_y_offset", 0.05, writeDefault=False, persistent=persistent)
+    viser_cargo_x_offset = ntproperty("/Properties/viser_cargo_x_offset", 0, writeDefault=False, persistent=persistent)
+    viser_cargo_y_offset = ntproperty("/Properties/viser_cargo_y_offset", 0, writeDefault=False, persistent=persistent)
 
 
 values = Properties()
