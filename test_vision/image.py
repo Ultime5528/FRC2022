@@ -1,5 +1,5 @@
 import cv2
-from balles import Balles
+
 from balles2 import Balles2
 
 img = cv2.imread('C:/Users/filal/Desktop/marchandises/Balls/DSC01695.jpg')

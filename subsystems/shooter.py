@@ -1,20 +1,15 @@
 import commands2
-import wpilib
-from wpimath.controller import (
-    SimpleMotorFeedforwardMeters,
-    BangBangController,
-    PIDController,
-)
 import rev
+import wpilib
 from wpilib import RobotBase, RobotController
-
-import properties
-from utils.sparkmaxsim import SparkMaxSim
 from wpilib.simulation import FlywheelSim
+from wpimath.controller import SimpleMotorFeedforwardMeters, BangBangController, PIDController
 from wpimath.system.plant import DCMotor
-from utils.linearInterpolator import LinearInterpolator
 
 import ports
+import properties
+from utils.linearinterpolator import LinearInterpolator
+from utils.sparkmaxsim import SparkMaxSim
 
 
 def compute_speed_percentage(speed, setpoint):
@@ -114,8 +109,8 @@ class Shooter(commands2.SubsystemBase):
     def atSetpoint(self):
         if self.setpoint:
             return (
-                self.encoder.getVelocity() >= self.setpoint - properties.values.shooter_tolerance
-                and self.backspin_encoder.getVelocity() >= self.backspin_setpoint - properties.values.shooter_tolerance
+                    self.encoder.getVelocity() >= self.setpoint - properties.values.shooter_tolerance
+                    and self.backspin_encoder.getVelocity() >= self.backspin_setpoint - properties.values.shooter_tolerance
             )
         else:
             return False

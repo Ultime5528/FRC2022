@@ -12,7 +12,7 @@ from subsystems.visiontargets import VisionTargets
 
 class ViserTirer(commands2.SequentialCommandGroup):
     def __init__(
-        self, basepilotable: BasePilotable, stick: Joystick, shooter: Shooter, intake: Intake, vision: VisionTargets
+            self, basepilotable: BasePilotable, stick: Joystick, shooter: Shooter, intake: Intake, vision: VisionTargets
     ):
         super().__init__(
             ViserHub(basepilotable, vision),

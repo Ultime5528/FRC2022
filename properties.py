@@ -67,4 +67,3 @@ class Properties:
 
 
 values = Properties()
-

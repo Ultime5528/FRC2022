@@ -1,7 +1,7 @@
-from commands.shooter.abstractshoot import AbstractShoot
-from subsystems.shooter import Shooter
 import properties
+from commands.shooter.abstractshoot import AbstractShoot
 from subsystems.intake import Intake
+from subsystems.shooter import Shooter
 
 
 class DashboardShoot(AbstractShoot):

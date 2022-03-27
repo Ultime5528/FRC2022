@@ -1,11 +1,11 @@
 import rev
 import wpilib
+from wpilib import DigitalInput, RobotBase
 
 import ports
-from wpilib import DigitalInput, RobotBase
-from utils.subsystembase import SubsystemBase
 import properties
 from utils.sparkmaxsim import SparkMaxSim
+from utils.subsystembase import SubsystemBase
 
 
 class GrimpeurSecondaire(SubsystemBase):

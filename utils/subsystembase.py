@@ -1,5 +1,4 @@
 import commands2
-import wpilib
 
 
 class SubsystemBase(commands2.SubsystemBase):

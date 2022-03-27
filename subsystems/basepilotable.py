@@ -1,20 +1,19 @@
 import math
 
 import navx
-import wpilib.drive
+import rev
 import wpilib
+import wpilib.drive
 from wpilib import RobotBase, RobotController
+from wpilib.simulation import DifferentialDrivetrainSim, SimDeviceSim
 from wpimath.geometry import Pose2d, Rotation2d
+from wpimath.kinematics import DifferentialDriveOdometry
 from wpimath.system import LinearSystemId
 from wpimath.system.plant import DCMotor
-from utils.sparkmaxsim import SparkMaxSim
-from wpimath.kinematics import DifferentialDriveOdometry
-from wpilib.simulation import DifferentialDrivetrainSim, SimDeviceSim
-
-from utils.subsystembase import SubsystemBase
-import rev
 
 import ports
+from utils.sparkmaxsim import SparkMaxSim
+from utils.subsystembase import SubsystemBase
 
 
 class BasePilotable(SubsystemBase):

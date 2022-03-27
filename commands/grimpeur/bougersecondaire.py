@@ -1,17 +1,13 @@
-from typing import Callable
-import commands2
-import wpilib
 import properties
-
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
 from utils.properties import FloatProperty, to_callable
+from utils.safecommandbase import SafeCommandBase
 from utils.trapezoidalmotion import TrapezoidalMotion
 
 
-class BougerSecondaire(commands2.CommandBase):
+class BougerSecondaire(SafeCommandBase):
     def __init__(self, grimpeur: GrimpeurSecondaire, position: FloatProperty):
         super().__init__()
-        self.setName("BougerSecondaire")
         self.grimpeur = grimpeur
         self.get_position = to_callable(position)
         self.addRequirements(self.grimpeur)

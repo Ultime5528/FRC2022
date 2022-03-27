@@ -1,5 +1,3 @@
-import commands2
-
 from commands.shooter.abstractshoot import AbstractShoot
 from subsystems.intake import Intake
 from subsystems.shooter import Shooter

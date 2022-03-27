@@ -1,8 +1,8 @@
-import commands2
-from subsystems.shooter import Shooter
 import wpilib
+
 from properties import values
 from subsystems.intake import Intake
+from subsystems.shooter import Shooter
 from utils.safecommandbase import SafeCommandBase
 
 

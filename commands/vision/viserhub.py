@@ -1,9 +1,10 @@
 import math
 
 from commands2 import CommandBase
+
+import properties
 from subsystems.basepilotable import BasePilotable
 from subsystems.visiontargets import VisionTargets
-import properties
 
 
 class ViserHub(CommandBase):

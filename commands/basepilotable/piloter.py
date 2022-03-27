@@ -1,5 +1,6 @@
-from commands2 import CommandBase
 import wpilib
+from commands2 import CommandBase
+
 from subsystems.basepilotable import BasePilotable
 
 

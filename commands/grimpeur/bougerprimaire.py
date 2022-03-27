@@ -1,8 +1,9 @@
 from typing import Callable
+
+import properties
 from subsystems.grimpeurprimaire import GrimpeurPrimaire
 from utils.safecommandbase import SafeCommandBase
 from utils.trapezoidalmotion import TrapezoidalMotion
-import properties
 
 
 class BougerPrimaire(SafeCommandBase):

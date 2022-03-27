@@ -11,9 +11,9 @@ from subsystems.grimpeursecondaire import GrimpeurSecondaire
 
 class PreparerGrimper(commands2.SequentialCommandGroup):
     def __init__(
-        self,
-        grimpeur_primaire: GrimpeurPrimaire,
-        grimpeur_secondaire: GrimpeurSecondaire,
+            self,
+            grimpeur_primaire: GrimpeurPrimaire,
+            grimpeur_secondaire: GrimpeurSecondaire,
     ):
         super().__init__(
             commands2.ParallelCommandGroup(

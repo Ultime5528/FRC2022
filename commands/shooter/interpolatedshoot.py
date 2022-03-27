@@ -1,7 +1,7 @@
 from commands.shooter.abstractshoot import AbstractShoot
 from subsystems.intake import Intake
-from subsystems.visiontargets import VisionTargets
 from subsystems.shooter import Shooter
+from subsystems.visiontargets import VisionTargets
 
 
 class InterpolatedShoot(AbstractShoot):

@@ -1,6 +1,5 @@
 from typing import Union, Callable
 
-
 FloatProperty = Union[float, Callable[[], float]]
 
 

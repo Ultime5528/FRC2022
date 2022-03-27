@@ -1,7 +1,9 @@
 from typing import List
+
 import commands2
-from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
 from wpimath.geometry import Pose2d, Transform2d
+from wpimath.trajectory import TrajectoryConfig, TrajectoryGenerator
+
 import properties
 from subsystems.basepilotable import BasePilotable
 
@@ -10,7 +12,14 @@ class SuivreTrajectoire(commands2.CommandBase):
     maxVelocity = 10
     maxAcceleration = 10
 
-    def __init__(self, basePilotable: BasePilotable, waypoints: List[Pose2d], speed: float, reset: bool = False, addRobotPose: bool = False) -> None:
+    def __init__(
+        self,
+        basePilotable: BasePilotable,
+        waypoints: List[Pose2d],
+        speed: float,
+        reset: bool = False,
+        addRobotPose: bool = False,
+    ) -> None:
         super().__init__()
         self.waypoints = waypoints
         self.setName("SuivreTrajectoire")
@@ -22,8 +31,9 @@ class SuivreTrajectoire(commands2.CommandBase):
         self.addRobotPose = addRobotPose
 
         if not self.addRobotPose:
-            self.trajectory = TrajectoryGenerator.generateTrajectory(self.waypoints,
-                                                                    TrajectoryConfig(self.maxAcceleration,self.maxVelocity))
+            self.trajectory = TrajectoryGenerator.generateTrajectory(
+                self.waypoints, TrajectoryConfig(self.maxAcceleration, self.maxVelocity)
+            )
             if self.reset:
                 transformation = Transform2d(self.waypoints[0], Pose2d())
                 self.trajectory = self.trajectory.transformBy(transformation)
@@ -35,8 +45,10 @@ class SuivreTrajectoire(commands2.CommandBase):
             self.basePilotable.resetOdometry()
 
         if self.addRobotPose:
-            self.trajectory = TrajectoryGenerator.generateTrajectory([self.basePilotable.getPose2D(), *self.waypoints],
-                                                                    TrajectoryConfig(self.maxAcceleration, self.maxVelocity))
+            self.trajectory = TrajectoryGenerator.generateTrajectory(
+                [self.basePilotable.getPose2D(), *self.waypoints],
+                TrajectoryConfig(self.maxAcceleration, self.maxVelocity),
+            )
             self.states = self.trajectory.states()
         self.index = 0
         self.basePilotable.getField().getObject("traj").setTrajectory(self.trajectory)
@@ -44,8 +56,11 @@ class SuivreTrajectoire(commands2.CommandBase):
     def execute(self) -> None:
         currentPose = self.basePilotable.getPose()
 
-        while (self.index < (len(self.states) - 1) and currentPose.translation().distance(
-                self.states[self.index].pose.translation()) <= properties.values.trajectoire_vue_avant):
+        while (
+            self.index < (len(self.states) - 1)
+            and currentPose.translation().distance(self.states[self.index].pose.translation())
+            <= properties.values.trajectoire_vue_avant
+        ):
             self.index += 1
 
         poseDest = self.states[self.index].pose

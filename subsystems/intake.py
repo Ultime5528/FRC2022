@@ -1,7 +1,8 @@
 import wpilib
-from utils.subsystembase import SubsystemBase
+
 import ports
 import properties
+from utils.subsystembase import SubsystemBase
 
 
 class Intake(SubsystemBase):
