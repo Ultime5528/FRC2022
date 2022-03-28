@@ -12,7 +12,6 @@ from utils.subsystembase import SubsystemBase
 class GrimpeurPrimaire(SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
-
         self._switch_bas = DigitalInput(ports.grimpeur_primaire_switch_bas)
         self.addChild("SwitchBas", self._switch_bas)
 
