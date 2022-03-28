@@ -7,6 +7,7 @@ import properties
 
 debug = False
 
+
 class Target:
     def __init__(self, y):
         self.y = y
@@ -70,8 +71,9 @@ def hub_loop():
                 minArea = cv2.contourArea(minRect)
 
                 rectangularity = area / minArea if minArea else 0
+                ratio = None
 
-                if rectangularity >= properties.values.vision_hub_rectangularity_threshold and perimeter >= 7:
+                if rectangularity >= properties.values.vision_hub_rectangularity_threshold and perimeter >= properties.values.vision_hub_perimeter_threshold:
                     x, y, w, h = cv2.boundingRect(cnt)
                     ratio = max(w, h) / min(w, h)
                     if 1.25 <= ratio <= 3.5 and w > h:
@@ -128,7 +130,6 @@ def hub_loop():
             nt_normx.setDouble(norm_x)
             nt_normy.setDouble(norm_y)
             nt_found.setBoolean(True)
-
 
             cv2.circle(img, tuple(position), 3, (255, 0, 255), 3)
         else:
