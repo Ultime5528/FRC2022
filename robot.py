@@ -90,8 +90,7 @@ class Robot(commands2.TimedCommandRobot):
                                                             Pose2d(3, 1, Rotation2d.fromDegrees(0)),
                                                         ], 0.2, reset=True))
 
-        wpilib.SmartDashboard.putData("BougerPrimaire max", BougerPrimaire(self.grimpeur_primaire,
-                                                                           lambda: properties.values.grimpeur_primaire_hauteur_max))
+        wpilib.SmartDashboard.putData("BougerPrimaire max", BougerPrimaire.to_max(self.grimpeur_primaire))
         wpilib.SmartDashboard.putData("DescendreCompletPrimaire", DescendreCompletPrimaire(self.grimpeur_primaire))
         wpilib.SmartDashboard.putData("PreparerGrimper",
                                       PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
