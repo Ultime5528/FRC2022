@@ -59,7 +59,7 @@ class LEDController(commands2.SubsystemBase):
 
     def ripples(self, color):
         if self.time % 10 == 0:
-            def get_color(i: int):
+            def get_color():
                 if random.random() <= (1 - (wpilib.DriverStation.getMatchTime() / 15)):
                     return color
                 else:
@@ -87,7 +87,6 @@ class LEDController(commands2.SubsystemBase):
             self.ripples(color)
         elif wpilib.DriverStation.isTeleop():
             self.waves(color)
-        elif
         else:  # game hasn't started
             if alliance == wpilib.DriverStation.Alliance.kInvalid:
                 self.select_team()
