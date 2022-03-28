@@ -42,6 +42,7 @@ with SshController(ip_address, "pi", "raspberry") as controller:
     controller.put("visioncargo.py", "/home/pi/visioncargo.py")
     controller.put("visionhub.py", "/home/pi/visionhub.py")
     controller.put("visionmaster.py", "/home/pi/visionmaster.py")
+    controller.put("properties.py", "/home/pi/properties.py")
 
     convert_line_endings("runCamera")
     controller.put("runCamera", "/home/pi/runCamera")

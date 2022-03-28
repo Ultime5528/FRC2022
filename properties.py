@@ -41,6 +41,11 @@ class Properties:
     grimpeur_secondaire_hauteur_alignement = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement", 90.0, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_hauteur_max = ntproperty("/Properties/grimpeur_secondaire_hauteur_max", 100.0, writeDefault=False, persistent=persistent)
 
+    vision_hub_rectangularity_threshold = ntproperty("/Properties/vision_hub_rectangularity_threshold", 0.5, writeDefault=False,persistent=persistent)
+    vision_hub_perimeter_threshold = ntproperty("/Properties/vision_hub_perimeter_threshold", 7, writeDefault=False,persistent=persistent)
+    vision_hub_maxErrorX_multiplier = ntproperty("/Properties/vision_hub_maxErrorX_multiplier", 0.4, writeDefault=False,persistent=persistent)
+    vision_hub_maxErrorY_multiplier = ntproperty("/Properties/vision_hub_maxErrorY_multiplier", 0.2, writeDefault=False,persistent=persistent)
+
     vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
     vision_cargo_crop_x_min = ntproperty("/Properties/vision_cargo_crop_x_min", 0.05, writeDefault=False, persistent=persistent)
     vision_cargo_crop_x_max = ntproperty("/Properties/vision_cargo_crop_x_max", 0.95, writeDefault=False, persistent=persistent)
@@ -64,6 +69,5 @@ class Properties:
     viser_cargo_y_threshold = ntproperty("/Properties/viser_cargo_y_threshold", 0.05, writeDefault=False, persistent=persistent)
     viser_cargo_x_offset = ntproperty("/Properties/viser_cargo_x_offset", 0, writeDefault=False, persistent=persistent)
     viser_cargo_y_offset = ntproperty("/Properties/viser_cargo_y_offset", 0, writeDefault=False, persistent=persistent)
-
 
 values = Properties()
