@@ -1,6 +1,5 @@
-import numpy as np
 import cv2
-
+import numpy as np
 
 
 def Balles(img, color, error, param2, minRad, maxRad):
@@ -24,7 +23,8 @@ def Balles(img, color, error, param2, minRad, maxRad):
     blur = cv2.medianBlur(gray, 5)
     # blur = cv2.blur(gray, (5, 5))
     # blur = cv2.GaussianBlur(gray, (17, 17), 0)
-    circles = cv2.HoughCircles(blur, cv2.HOUGH_GRADIENT, 1.5, 100, param1=100, param2=param2, minRadius=minRad, maxRadius=maxRad)
+    circles = cv2.HoughCircles(blur, cv2.HOUGH_GRADIENT, 1.5, 100, param1=100, param2=param2, minRadius=minRad,
+                               maxRadius=maxRad)
 
     infoCercles = []
     if circles is not None:
@@ -51,4 +51,3 @@ def Balles(img, color, error, param2, minRad, maxRad):
     cv2.imshow("blur", blur)
     cv2.imshow("gray", gray)
     return infoCercles
-

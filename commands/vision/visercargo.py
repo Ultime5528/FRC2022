@@ -3,10 +3,10 @@ import math
 import commands2
 from commands2 import CommandBase
 
-from commands.avancer import Avancer
+import properties
+from commands.basepilotable.avancer import Avancer
 from subsystems.basepilotable import BasePilotable
 from subsystems.visiontargets import VisionTargets
-import properties
 
 
 class ViserCargo(CommandBase):
@@ -68,3 +68,4 @@ class ViserCargoAvancer(commands2.SequentialCommandGroup):
                 lambda: properties.values.viser_cargo_forward_speed,
             )
         )
+        self.setName(self.__class__.__name__)

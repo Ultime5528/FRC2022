@@ -1,12 +1,12 @@
 from math import isclose
 
-from .general_utils import (convert_to_absolute_values, convert_to_relative_values)
-
 from .enumerators import BBFormat, BBType, CoordinatesType
+from .general_utils import (convert_to_absolute_values, convert_to_relative_values)
 
 
 class BoundingBox:
     """ Class representing a bounding box. """
+
     def __init__(self,
                  image_name,
                  class_id=None,
@@ -298,13 +298,13 @@ class BoundingBox:
         det2img_size = det2.getImageSize()
 
         if det1.get_class_id() == det2.get_class_id() and \
-           det1.get_confidence() == det2.get_confidence() and \
-           det1BB[0] == det2BB[0] and \
-           det1BB[1] == det2BB[1] and \
-           det1BB[2] == det2BB[2] and \
-           det1BB[3] == det2BB[3] and \
-           det1img_size[0] == det1img_size[0] and \
-           det2img_size[1] == det2img_size[1]:
+                det1.get_confidence() == det2.get_confidence() and \
+                det1BB[0] == det2BB[0] and \
+                det1BB[1] == det2BB[1] and \
+                det1BB[2] == det2BB[2] and \
+                det1BB[3] == det2BB[3] and \
+                det1img_size[0] == det1img_size[0] and \
+                det2img_size[1] == det2img_size[1]:
             return True
         return False
 

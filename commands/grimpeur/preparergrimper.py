@@ -11,9 +11,9 @@ from subsystems.grimpeursecondaire import GrimpeurSecondaire
 
 class PreparerGrimper(commands2.SequentialCommandGroup):
     def __init__(
-        self,
-        grimpeur_primaire: GrimpeurPrimaire,
-        grimpeur_secondaire: GrimpeurSecondaire,
+            self,
+            grimpeur_primaire: GrimpeurPrimaire,
+            grimpeur_secondaire: GrimpeurSecondaire,
     ):
         super().__init__(
             commands2.ParallelCommandGroup(
@@ -26,20 +26,14 @@ class PreparerGrimper(commands2.SequentialCommandGroup):
                     ),
                 ),
             ),
-            BougerPrimaire(
-                grimpeur_primaire,
-                lambda: properties.values.grimpeur_primaire_hauteur_clip,
-            ),
+            BougerPrimaire.to_clip(grimpeur_primaire),
             BougerSecondaire(
                 grimpeur_secondaire,
                 lambda: properties.values.grimpeur_secondaire_hauteur_alignement - 20,
             ),
             commands2.ParallelCommandGroup(
                 DescendreCompletSecondaire(grimpeur_secondaire),
-                BougerPrimaire(
-                    grimpeur_primaire,
-                    lambda: properties.values.grimpeur_primaire_hauteur_max,
-                ),
+                BougerPrimaire.to_max(grimpeur_primaire),
             ),
         )
         self.setName(self.__class__.__name__)

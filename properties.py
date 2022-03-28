@@ -17,9 +17,8 @@ class Properties:
     intake_speed = ntproperty("/Properties/intake_speed", 1, writeDefault=False, persistent=persistent)
     intake_duree_ejection = ntproperty("/Properties/intake_duree_ejection", 1.5, writeDefault=False, persistent=persistent)
     intake_reverse_speed = ntproperty("/Properties/intake_reverse_speed", -1, writeDefault=False, persistent=persistent)
-
-    transporter_reverse_speed = ntproperty("/Properties/transporter_reverse_speed", -1, writeDefault=False, persistent=persistent)
-    transporter_speed = ntproperty("/Properties/transporter_speed", 1, writeDefault=False, persistent=persistent)
+    intake_convoyeur_speed_lent = ntproperty("/Properties/intake_convoyeur_speed_lent", 0.44, writeDefault=False, persistent=persistent)
+    intake_convoyeur_speed_rapide = ntproperty("/Properties/intake_convoyeur_speed_rapide", 0.6, writeDefault=False, persistent=persistent)
     intake_ultrason_bas_threshold = ntproperty("/Properties/intake_ultrason_bas_threshold", 0.5, writeDefault=False, persistent=persistent)
     intake_ultrason_haut_threshold = ntproperty("/Properties/intake_ultrason_haut_threshold", 0.5, writeDefault=False, persistent=persistent)
 
@@ -41,6 +40,11 @@ class Properties:
     grimpeur_secondaire_accel = ntproperty("/Properties/grimpeur_secondaire_accel", 0.03, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_hauteur_alignement = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement", 90.0, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_hauteur_max = ntproperty("/Properties/grimpeur_secondaire_hauteur_max", 100.0, writeDefault=False, persistent=persistent)
+
+    vision_hub_rectangularity_threshold = ntproperty("/Properties/vision_hub_rectangularity_threshold", 0.5, writeDefault=False,persistent=persistent)
+    vision_hub_perimeter_threshold = ntproperty("/Properties/vision_hub_perimeter_threshold", 7, writeDefault=False,persistent=persistent)
+    vision_hub_maxErrorX_multiplier = ntproperty("/Properties/vision_hub_maxErrorX_multiplier", 0.4, writeDefault=False,persistent=persistent)
+    vision_hub_maxErrorY_multiplier = ntproperty("/Properties/vision_hub_maxErrorY_multiplier", 0.2, writeDefault=False,persistent=persistent)
 
     vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
     vision_cargo_crop_x_min = ntproperty("/Properties/vision_cargo_crop_x_min", 0.05, writeDefault=False, persistent=persistent)
@@ -66,6 +70,4 @@ class Properties:
     viser_cargo_x_offset = ntproperty("/Properties/viser_cargo_x_offset", 0, writeDefault=False, persistent=persistent)
     viser_cargo_y_offset = ntproperty("/Properties/viser_cargo_y_offset", 0, writeDefault=False, persistent=persistent)
 
-
 values = Properties()
-

@@ -1,7 +1,12 @@
-import numpy as np
 import cv2
-from networktables import NetworkTables
+import numpy as np
 from cscore import CameraServer
+from networktables import NetworkTables
+
+import properties
+
+debug = False
+
 
 class Target:
     def __init__(self, y):
@@ -24,7 +29,8 @@ def hub_loop():
     cs.kBasePort = 1181
     cs.enableLogging()
 
-    hub_cam = cs.startAutomaticCapture(name="hub_cam", path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
+    hub_cam = cs.startAutomaticCapture(name="hub_cam",
+                                       path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
     hub_cam.setResolution(320, 240)
     hub_cam.setFPS(30)
     hub_cam.setBrightness(0)
@@ -38,10 +44,8 @@ def hub_loop():
 
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
-
     lowerGreen = (50, 0, 160)
     highGreen = (100, 255, 200)
-
 
     while True:
         ret, img = cvSink.grabFrame(img)
@@ -57,32 +61,34 @@ def hub_loop():
 
         validRects = []
         if cnts is not None:
-            print("==========")
-            print("nb cnts :", len(cnts))
             for cnt in cnts:
-                print("---")
                 area = cv2.contourArea(cnt)
-                print("area", area)
                 perimeter = cv2.arcLength(cnt, True)
-                print("perimeter :", perimeter)
                 minRect = cv2.minAreaRect(cnt)
                 (_, _), (minW, minH), _ = minRect
-                print("minW :", minW)
-                print("minH :", minH)
 
                 minRect = np.int0(cv2.boxPoints(minRect))
                 minArea = cv2.contourArea(minRect)
-                print("minArea :", minArea)
 
                 rectangularity = area / minArea if minArea else 0
-                print("rectangularity :", rectangularity)
+                ratio = None
 
-                if rectangularity >= 0.5 and perimeter >= 7:
+                if rectangularity >= properties.values.vision_hub_rectangularity_threshold and perimeter >= properties.values.vision_hub_perimeter_threshold:
                     x, y, w, h = cv2.boundingRect(cnt)
                     ratio = max(w, h) / min(w, h)
-                    print("rapport :", ratio)
                     if 1.25 <= ratio <= 3.5 and w > h:
                         validRects.append((x, y, w, h))
+                if debug:
+                    print("==========")
+                    print("nb cnts :", len(cnts))
+                    print("---")
+                    print("area", area)
+                    print("perimeter :", perimeter)
+                    print("minW :", minW)
+                    print("minH :", minH)
+                    print("minArea :", minArea)
+                    print("rectangularity :", rectangularity)
+                    print("rapport :", ratio)
 
         for (x, y, w, h) in validRects:
             cv2.rectangle(img_cnts, (x, y), (x + w, y + h), (0, 255, 255), 1)
@@ -95,8 +101,8 @@ def hub_loop():
             yCenter = y + (h / 2)
             validPositions.append((xCenter, yCenter))
 
-        maxErrorX = int(img.shape[1] * 0.4)
-        maxErrorY = int(img.shape[0] * 0.20)
+        maxErrorX = int(img.shape[1] * properties.values.vision_hub_maxErrorX_multiplier)
+        maxErrorY = int(img.shape[0] * properties.values.vision_hub_maxErrorY_multiplier)
         targets = []
 
         for targetX, targetY in validPositions:
@@ -117,7 +123,6 @@ def hub_loop():
                 elif bestTarget.score <= target.score:
                     bestTarget = target
 
-
             position = np.mean(bestTarget.positions, axis=0).astype("int")
             norm_x = (position[0] / img.shape[1]) * 2 - 1
             norm_y = (position[1] / img.shape[0]) * 2 - 1
@@ -126,12 +131,11 @@ def hub_loop():
             nt_normy.setDouble(norm_y)
             nt_found.setBoolean(True)
 
-            NetworkTables.flush()
-
-            cv2.circle(img, tuple(position), 3, (255, 0 ,255), 3)
+            cv2.circle(img, tuple(position), 3, (255, 0, 255), 3)
         else:
             nt_found.setBoolean(False)
 
+        NetworkTables.flush()
         outputStream.putFrame(img)
         yield
 

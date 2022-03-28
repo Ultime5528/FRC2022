@@ -1,11 +1,12 @@
 import rev
 import wpilib
+from wpilib import DigitalInput, RobotBase
+from wpilib.simulation import DIOSim
 
 import ports
-from wpilib import DigitalInput, RobotBase
-from utils.subsystembase import SubsystemBase
 import properties
 from utils.sparkmaxsim import SparkMaxSim
+from utils.subsystembase import SubsystemBase
 
 
 class GrimpeurSecondaire(SubsystemBase):
@@ -29,12 +30,25 @@ class GrimpeurSecondaire(SubsystemBase):
 
         if RobotBase.isSimulation():
             self._motor_secondaire_sim = SparkMaxSim(self._motor_secondaire)
+            self._switch_bas_sim = DIOSim(self._switch_bas_secondaire)
+            self._switch_haut_sim = DIOSim(self._switch_haut_secondaire)
 
     def periodic(self) -> None:
         wpilib.SmartDashboard.putNumber("Encodeur Secondaire", self.getPosition())
 
     def simulationPeriodic(self):
         self._motor_secondaire_sim.setVelocity(self._motor_secondaire.get())
+        self._motor_secondaire_sim.setPosition(self._motor_secondaire_sim.getPosition() + self._motor_secondaire.get())
+
+        if self._motor_secondaire_sim.getPosition() <= 0:
+            self._switch_bas_sim.setValue(True)
+        else:
+            self._switch_bas_sim.setValue(False)
+
+        if self._motor_secondaire_sim.getPosition() >= properties.values.grimpeur_secondaire_hauteur_max:
+            self._switch_haut_sim.setValue(True)
+        else:
+            self._switch_haut_sim.setValue(False)
 
     def set_moteur(self, speed: float):
         self._motor_secondaire.set(speed)

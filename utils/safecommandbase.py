@@ -1,5 +1,6 @@
-import commands2
 from functools import wraps
+
+import commands2
 
 __all__ = ["SafeCommandBase"]
 
@@ -29,6 +30,7 @@ def wrap_none(f, name):
                 if wrapped._exception_count >= exception_threshold:
                     print(f"Command method {name}.{f.__name__} has been disabled")
                     wrapped._disabled = True
+
     wrapped._exception_count = 0
     wrapped._disabled = False
     return wrapped

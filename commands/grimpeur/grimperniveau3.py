@@ -8,11 +8,7 @@ from subsystems.grimpeursecondaire import GrimpeurSecondaire
 
 # TODO Hauteurs lambda
 class GrimperNiveau3(commands2.SequentialCommandGroup):
-    def __init__(
-        self,
-        grimpeur_primaire: GrimpeurPrimaire,
-        grimpeur_secondaire: GrimpeurSecondaire,
-    ):
+    def __init__(self, grimpeur_primaire: GrimpeurPrimaire, grimpeur_secondaire: GrimpeurSecondaire):
         super().__init__(
             commands2.SequentialCommandGroup(
                 BougerSecondaire(grimpeur_secondaire, 4),
