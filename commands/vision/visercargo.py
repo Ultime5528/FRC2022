@@ -68,3 +68,4 @@ class ViserCargoAvancer(commands2.SequentialCommandGroup):
                 lambda: properties.values.viser_cargo_forward_speed,
             )
         )
+        self.setName(self.__class__.__name__)
