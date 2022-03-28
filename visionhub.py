@@ -1,23 +1,11 @@
-import threading
-
-import numpy as np
 import cv2
-from networktables import NetworkTables
+import numpy as np
 from cscore import CameraServer
+from networktables import NetworkTables
 
 import properties
 
-isConnected = threading.Condition()
-notified = [False]
-
 debug = False
-
-def connectionListener(connected, info):
-    with isConnected:
-        notified[0] = True
-        isConnected.notify()
-    print("NetworkTables connected :", connected)
-    print(info)
 
 class Target:
     def __init__(self, y):
@@ -31,14 +19,6 @@ class Target:
 
 
 def hub_loop():
-    NetworkTables.initialize(server="10.55.28.2")
-    NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
-    # with isConnected:
-    #     print("Waiting for connection...")
-    #     if not notified[0]:
-    #         isConnected.wait()
-    # print("Connected!")
-
     nt_normx = NetworkTables.getEntry("/Vision/Hub/Norm_X")
     nt_normy = NetworkTables.getEntry("/Vision/Hub/Norm_Y")
     nt_found = NetworkTables.getEntry("/Vision/Hub/Found")
@@ -48,7 +28,8 @@ def hub_loop():
     cs.kBasePort = 1181
     cs.enableLogging()
 
-    hub_cam = cs.startAutomaticCapture(name="hub_cam", path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
+    hub_cam = cs.startAutomaticCapture(name="hub_cam",
+                                       path="/dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0")
     hub_cam.setResolution(320, 240)
     hub_cam.setFPS(30)
     hub_cam.setBrightness(0)
@@ -62,10 +43,8 @@ def hub_loop():
 
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
-
     lowerGreen = (50, 0, 160)
     highGreen = (100, 255, 200)
-
 
     while True:
         ret, img = cvSink.grabFrame(img)
@@ -142,7 +121,6 @@ def hub_loop():
                 elif bestTarget.score <= target.score:
                     bestTarget = target
 
-
             position = np.mean(bestTarget.positions, axis=0).astype("int")
             norm_x = (position[0] / img.shape[1]) * 2 - 1
             norm_y = (position[1] / img.shape[0]) * 2 - 1
@@ -151,12 +129,12 @@ def hub_loop():
             nt_normy.setDouble(norm_y)
             nt_found.setBoolean(True)
 
-            NetworkTables.flush()
 
-            cv2.circle(img, tuple(position), 3, (255, 0 ,255), 3)
+            cv2.circle(img, tuple(position), 3, (255, 0, 255), 3)
         else:
             nt_found.setBoolean(False)
 
+        NetworkTables.flush()
         outputStream.putFrame(img)
         yield
 

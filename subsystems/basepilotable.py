@@ -1,20 +1,19 @@
 import math
 
 import navx
-import wpilib.drive
+import rev
 import wpilib
+import wpilib.drive
 from wpilib import RobotBase, RobotController
+from wpilib.simulation import DifferentialDrivetrainSim, SimDeviceSim
 from wpimath.geometry import Pose2d, Rotation2d
+from wpimath.kinematics import DifferentialDriveOdometry
 from wpimath.system import LinearSystemId
 from wpimath.system.plant import DCMotor
-from utils.sparkmaxsim import SparkMaxSim
-from wpimath.kinematics import DifferentialDriveOdometry
-from wpilib.simulation import DifferentialDrivetrainSim, SimDeviceSim
-
-from utils.subsystembase import SubsystemBase
-import rev
 
 import ports
+from utils.sparkmaxsim import SparkMaxSim
+from utils.subsystembase import SubsystemBase
 
 
 class BasePilotable(SubsystemBase):
@@ -41,9 +40,7 @@ class BasePilotable(SubsystemBase):
         self._motor_right_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
         self._motor_right_follower.follow(self._motor_right)
 
-
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
-
         self.addChild("DifferentialDrive", self._drive)
 
         # Odometry
@@ -69,9 +66,9 @@ class BasePilotable(SubsystemBase):
             self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [
                 0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005
             ])
-            
-    def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
-        self._drive.arcadeDrive(forwardSpeed, rotation, False)
+
+    def arcadeDrive(self, forward: float, rotation: float) -> None:
+        self._drive.arcadeDrive(forward, rotation, False)
 
     def tankDrive(self, left: float, right: float) -> None:
         self._drive.tankDrive(left, right, False)
@@ -92,7 +89,6 @@ class BasePilotable(SubsystemBase):
         self._right_encoder_offset = self._encoder_right.getPosition()
         self._gyro.reset()
         self._odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
-
 
         if RobotBase.isSimulation():
             self._drive_sim.setPose(Pose2d())
@@ -136,5 +132,3 @@ class BasePilotable(SubsystemBase):
         # SmartDashboard.putNumber("Wold accel x", self._gyro.getWorldLinearAccelX())
         # SmartDashboard.putNumber("Wold accel z", self._gyro.getWorldLinearAccelZ())
         # SmartDashboard.putNumber("rotation", self._gyro.getRotation2d().degrees())
-    
-

@@ -1,5 +1,6 @@
-import wpilib
 import commands2
+import wpilib
+
 import ports
 
 

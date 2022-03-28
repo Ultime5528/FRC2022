@@ -1,6 +1,7 @@
 import rev
 from wpilib.simulation import SimDeviceSim
 
+
 class SparkMaxSim:
     def __init__(self, spark_max: rev.CANSparkMax):
         self.sim_device = SimDeviceSim(f"SPARK MAX [{spark_max.getDeviceId()}]")

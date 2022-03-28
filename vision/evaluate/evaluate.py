@@ -6,9 +6,9 @@ from typing import List, Tuple, Callable, Dict
 import cv2
 import eel
 import numpy as np
+import watchdog.events
 from tqdm.auto import tqdm
 from watchdog.observers import Observer
-import watchdog.events
 
 from ..dataset import get_dataset, Color, Photo, Cargo
 
@@ -32,9 +32,9 @@ def image_to_base64(img):
 
 
 def annotate_photo(
-    img: np.ndarray,
-    targets: List[Cargo],
-    preds: Dict[Color, List[Tuple[int, int, int, int]]],
+        img: np.ndarray,
+        targets: List[Cargo],
+        preds: Dict[Color, List[Tuple[int, int, int, int]]],
 ):
     for cargo in targets:
         cv2.rectangle(img, (cargo.left, cargo.top), (cargo.right, cargo.bottom), (0, 255, 0), thickness=1)
@@ -123,4 +123,5 @@ def evaluate(func: VisionAlgorithm):
 
 if __name__ == '__main__':
     from ..balldetection import algorithms
+
     evaluate(algorithms.RANSAC)
