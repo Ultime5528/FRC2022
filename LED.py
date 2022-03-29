@@ -17,14 +17,19 @@ def interpoler(t, couleur1, couleur2):
 Color = Union[np.ndarray, Tuple[int, int, int], List[int]]
 
 class ModeLED(Enum):
-    STARTUP = "startup"
+    NONE = "none"
     SHOOT = "shoot"
+    INTAKE = "intake"
+
 
 class LEDController(commands2.SubsystemBase):
     red_hsv = np.array([0, 255, 255])
     blue_hsv = np.array([120, 255, 255])
+    yellow_hsv = np.array([30, 255, 255])
+    orange_hsv = np.array([10, 255, 255])
     black = np.array([0, 0, 0])
     white = np.array([0, 0, 255])
+    last = 0
 
     def __init__(self):
         super().__init__()
@@ -33,6 +38,7 @@ class LEDController(commands2.SubsystemBase):
         self.led_strip.setLength(len(self.buffer))
         self.time = 0
         self.led_strip.start()
+        ModeLED.NONE
 
     def set_hsv(self, i: int, color: Color):
         self.buffer[i].setHSV(*color)
@@ -72,6 +78,25 @@ class LEDController(commands2.SubsystemBase):
             return interpoler(prop, color, self.black)
         self.set_all(get_color)
 
+    def half_waves(self, color):
+        def get_color(i: int):
+            prop = 0.5 * math.cos((2 * math.pi / 50) * (self.time + i)) + 0.5
+            if self.last - prop <= 0:
+                t = prop
+            else:
+                t = abs(prop - 1)
+                print(t)
+            self.last = prop
+            return interpoler(t, color, self.black)
+        self.set_all(get_color)
+
+    def explode(self, color, speed):
+        if self.time % speed == 0:
+            if self.time % (speed * 2) == 0:
+                self.set_all(lambda i: color)
+            else:
+                self.set_all(lambda i: self.black)
+
     def periodic(self) -> None:
         self.time += 1
 
@@ -83,11 +108,21 @@ class LEDController(commands2.SubsystemBase):
         else:  # kBlue
             color = self.blue_hsv
 
-        if wpilib.DriverStation.isAutonomous():
+        if wpilib.DriverStation.isAutonomous(): #auto
             self.ripples(color)
-        elif wpilib.DriverStation.isTeleop():
-            self.waves(color)
-        elif
+        elif wpilib.DriverStation.isTeleop(): #teleop
+            if ModeLED.INTAKE:
+                self.waves(color)
+            elif ModeLED.SHOOT:
+                self.half_waves(color)
+            elif wpilib.DriverStation.getMatchTime() >= 30:
+                self.explode(self.yellow_hsv, 50)
+            elif wpilib.DriverStation.getMatchTime() >= 15:
+                self.explode(self.orange_hsv, 35)
+            elif wpilib.DriverStation.getMatchTime() >= 5:
+                self.explode(color, 10)
+            else:
+                self.set_all(lambda i: color)
         else:  # game hasn't started
             if alliance == wpilib.DriverStation.Alliance.kInvalid:
                 self.select_team()
