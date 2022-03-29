@@ -29,7 +29,8 @@ from commands.shooter.dashboardshoot import DashboardShoot
 from commands.shooter.ejectershooter import EjecterShooter
 from commands.shooter.interpolatedshoot import InterpolatedShoot
 from commands.shooter.manualshoot import ManualShoot
-from commands.vision.visercargo import ViserCargo, ViserCargoAvancer
+from commands.vision.visercargo import ViserCargo
+from commands.vision.visercargoavancer import ViserCargoAvancer
 from commands.vision.viserhub import ViserHub
 from commands.vision.viserprendre import ViserPrendre
 from commands.vision.visertirer import ViserTirer
@@ -70,7 +71,7 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 7).whenPressed(Piloter(self.base_pilotable, self.stick))
         JoystickButton(self.stick, 2).whenPressed(
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
-        JoystickButton(self.stick, 3).whenPressed(ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
+        JoystickButton(self.stick, 3).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
 
         JoystickButton(self.stick, 4).whenPressed(PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
         JoystickButton(self.stick, 4).whenReleased(Piloter(self.base_pilotable, self.stick))
@@ -85,7 +86,7 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
         # JoystickButton(self.console_1, 3).whenPressed(Exploser(self.led_controller))
         JoystickButton(self.console_1, 6).whenPressed(
-            ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
+            ViserCargoAvancer(self.base_pilotable, self.vision_targets))
         # JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
         JoystickButton(self.console_1, 1).toggleWhenPressed(EjecterIntake(self.intake))
