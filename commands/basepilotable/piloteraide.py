@@ -23,6 +23,6 @@ class PiloterAide(CommandBase):
         x = -interpoler(self.stick.getY())
 
         if self.vision.hasRightCargoNear:
-            y *= properties.values.aide_pilotage_slow_factor
+            y = min(y, properties.values.aide_pilotage_slow_factor)
 
         self.base_pilotable.arcadeDrive(y, x)
