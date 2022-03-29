@@ -1,7 +1,6 @@
 import wpilib
 from commands2 import CommandBase
 
-import properties
 from subsystems.intake import Intake
 
 
@@ -24,4 +23,4 @@ class EjecterIntake(CommandBase):
         self.intake.stopIntake()
 
     def isFinished(self) -> bool:
-        return self.timer.get() >= properties.values.intake_duree_ejection
+        return False
