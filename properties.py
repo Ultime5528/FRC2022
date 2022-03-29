@@ -48,6 +48,7 @@ class Properties:
     vision_hub_maxErrorY_multiplier = ntproperty("/Properties/vision_hub_maxErrorY_multiplier", 0.2, writeDefault=False,persistent=persistent)
 
     vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
+    vision_cargo_normy_threshold = ntproperty("/Properties/vision_cargo_normy_threshold", -0.5, writeDefault=False, persistent=persistent)
     vision_cargo_crop_x_min = ntproperty("/Properties/vision_cargo_crop_x_min", 0.05, writeDefault=False, persistent=persistent)
     vision_cargo_crop_x_max = ntproperty("/Properties/vision_cargo_crop_x_max", 0.95, writeDefault=False, persistent=persistent)
     vision_cargo_crop_y_min = ntproperty("/Properties/vision_cargo_crop_y_min", 0.10, writeDefault=False, persistent=persistent)
