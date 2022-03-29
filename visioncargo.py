@@ -8,7 +8,7 @@ from vision.color import Color
 
 W = 320
 H = 240
-DEBUG = True
+DEBUG = False
 
 
 class Cargo:
