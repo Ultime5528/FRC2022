@@ -8,6 +8,8 @@ import commands2
 import ports
 import numpy as np
 
+from subsystems.intake import Intake
+
 
 def interpoler(t, couleur1, couleur2):
     assert 0 <= t <= 1
@@ -16,9 +18,11 @@ def interpoler(t, couleur1, couleur2):
 
 Color = Union[np.ndarray, Tuple[int, int, int], List[int]]
 
+
 class ModeLED(Enum):
     STARTUP = "startup"
     SHOOT = "shoot"
+
 
 class LEDController(commands2.SubsystemBase):
     red_hsv = np.array([0, 255, 255])
@@ -26,8 +30,10 @@ class LEDController(commands2.SubsystemBase):
     black = np.array([0, 0, 0])
     white = np.array([0, 0, 255])
 
-    def __init__(self):
+    def __init__(self, intake: Intake):
         super().__init__()
+        self.intake = intake
+
         self.led_strip = wpilib.AddressableLED(ports.led_strip)
         self.buffer = [wpilib.AddressableLED.LEDData() for _ in range(300)]
         self.led_strip.setLength(len(self.buffer))
@@ -66,9 +72,9 @@ class LEDController(commands2.SubsystemBase):
                     return self.white
             self.set_all(get_color)
 
-    def waves(self, color):
+    def waves(self, color, nombreballons):
         def get_color(i: int):
-            prop = 0.5 * math.cos((2 * math.pi / 20) * (self.time / 5 + i)) + 0.5
+            prop = 0.5 * math.cos(2 * math.pi / (20/(nombreballons+1)) * (self.time / 5 + i)) + 0.5
             return interpoler(prop, color, self.black)
         self.set_all(get_color)
 
@@ -86,7 +92,7 @@ class LEDController(commands2.SubsystemBase):
         if wpilib.DriverStation.isAutonomous():
             self.ripples(color)
         elif wpilib.DriverStation.isTeleop():
-            self.waves(color)
+            self.waves(color, self.intake.ballCount())
         else:  # game hasn't started
             if alliance == wpilib.DriverStation.Alliance.kInvalid:
                 self.select_team()
