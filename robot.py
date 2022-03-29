@@ -52,7 +52,7 @@ class Robot(commands2.TimedCommandRobot):
         self.shooter = Shooter()
         self.grimpeur = Grimpeur()
         self.vision_targets = VisionTargets(self.base_pilotable)
-        self.led_controller = LEDController()
+        self.led_controller = LEDController(self.intake)
         #
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
         #
