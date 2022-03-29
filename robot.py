@@ -7,6 +7,7 @@ import properties
 from LED import LEDController
 from commands.basepilotable.avancer import Avancer
 from commands.basepilotable.piloter import Piloter
+from commands.basepilotable.piloteraide import PiloterAide
 from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
 from commands.basepilotable.tourner import Tourner
 from commands.grimpeur.bougerprimaire import BougerPrimaire
@@ -70,6 +71,9 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 2).whenPressed(
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.stick, 3).whenPressed(ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
+
+        JoystickButton(self.stick, 4).whenPressed(PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
+        JoystickButton(self.stick, 4).whenReleased(Piloter(self.base_pilotable, self.stick))
 
         # CONSOLE
         JoystickButton(self.console_1, 5).whenPressed(GrimperNiveau2(self.grimpeur_primaire))

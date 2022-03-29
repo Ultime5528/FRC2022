@@ -4,6 +4,8 @@ persistent = True
 
 
 class Properties:
+    aide_pilotage_slow_factor = ntproperty("/Properties/aide_pilotage_slow_factor", 0.5, writeDefault=False, persistent=persistent)
+
     shooter_backspin_speed = ntproperty("/Properties/shooter_backspin_speed", 100, writeDefault=False, persistent=persistent)
     shooter_speed = ntproperty("/Properties/shooter_speed", 100, writeDefault=False, persistent=persistent)
 

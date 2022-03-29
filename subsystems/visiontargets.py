@@ -83,6 +83,15 @@ class VisionTargets(commands2.SubsystemBase):
         else:
             return None
 
+    def hasRightCargoNear(self):
+        for cargo in self.cargos:
+            if cargo.is_red == is_red_alliance() \
+                    and cargo.nw > properties.values.vision_cargo_normw_threshold \
+                    and cargo.ny < properties.values.vision_cargo_normy_threshold:
+                return True
+
+        return False
+
     def hasWrongCargoNear(self):
         for cargo in self.cargos:
             if cargo.is_red != is_red_alliance() \
