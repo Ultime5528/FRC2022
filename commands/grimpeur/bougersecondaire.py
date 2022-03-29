@@ -6,6 +6,24 @@ from utils.trapezoidalmotion import TrapezoidalMotion
 
 
 class BougerSecondaire(SafeCommandBase):
+    @classmethod
+    def to_next_level(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_primaire_hauteur_level_3)
+        cmd.setName(cmd.getName() + " level 3")
+        return cmd
+
+    @classmethod
+    def to_max(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_secondaire_hauteur_max)
+        cmd.setName(cmd.getName() + " max")
+        return cmd
+
+    @classmethod
+    def to_aligner(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_secondaire_hauteur_alignement)
+        cmd.setName(cmd.getName() + " aligner")
+        return cmd
+
     def __init__(self, grimpeur: GrimpeurSecondaire, position: FloatProperty):
         super().__init__()
         self.grimpeur = grimpeur

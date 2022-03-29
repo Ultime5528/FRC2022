@@ -116,11 +116,15 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_max(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_clip(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", DescendreCompletPrimaire(self.grimpeur_primaire))
+        put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_middle(self.grimpeur_primaire))
 
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire(self.grimpeur_secondaire,
                                                                         lambda: properties.values.grimpeur_secondaire_hauteur_alignement))
         put_command_on_dashboard("GrimpeurSecondaire", MonterCompletSecondaire(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", DescendreCompletSecondaire(self.grimpeur_secondaire))
+        put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_aligner(self.grimpeur_secondaire))
+        put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_next_level(self.grimpeur_secondaire))
+
 
         put_command_on_dashboard("Grimper", ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))
         put_command_on_dashboard("Grimper", PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
