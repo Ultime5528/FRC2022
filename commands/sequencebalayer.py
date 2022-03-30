@@ -1,8 +1,8 @@
 import commands2
 
 from commands.balayerballon import BalayerBallon
-from commands.descendreintake import DescendreIntake
-from commands.monterintake import MonterIntake
+from commands.intake.descendreintake import DescendreIntake
+from commands.intake.monterintake import MonterIntake
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
 from subsystems.intake import Intake
 
