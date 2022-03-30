@@ -3,8 +3,8 @@ import wpilib
 from commands2.button import JoystickButton
 from wpimath.geometry import Pose2d, Rotation2d
 
-import properties
 from LED import LEDController
+from commands.balayerballon import BalayerBallon
 from commands.basepilotable.avancer import Avancer
 from commands.basepilotable.piloter import Piloter
 from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
@@ -20,10 +20,10 @@ from commands.grimpeur.montercompletsecondaire import MonterCompletSecondaire
 from commands.grimpeur.preparergrimper import PreparerGrimper
 from commands.grimpeur.resetgrimpeurs import ResetGrimpeurs
 from commands.intake.descendreintake import DescendreIntake
-from commands.intake.ejecterintake import EjecterIntake
 from commands.intake.monterintake import MonterIntake
 from commands.intake.prendreballon import PrendreBallon
 from commands.intake.sequenceprendre import SequencePrendre
+from commands.sequencebalayer import SequenceBalayer
 from commands.shooter.dashboardshoot import DashboardShoot
 from commands.shooter.ejectershooter import EjecterShooter
 from commands.shooter.interpolatedshoot import InterpolatedShoot
@@ -84,7 +84,7 @@ class Robot(commands2.TimedCommandRobot):
             ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
         # JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
-        JoystickButton(self.console_1, 1).whenPressed(EjecterIntake(self.intake))
+        JoystickButton(self.console_1, 1).whenPressed(SequenceBalayer(self.grimpeur_secondaire, self.intake))
         AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
         AxisTrigger(self.console_1, 0, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
         AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))
@@ -98,7 +98,8 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Intake", DescendreIntake(self.grimpeur_secondaire))
         put_command_on_dashboard("Intake", PrendreBallon(self.intake))
         put_command_on_dashboard("Intake", SequencePrendre(self.grimpeur_secondaire, self.intake))
-        put_command_on_dashboard("Intake", EjecterIntake(self.intake))
+        put_command_on_dashboard("Intake", BalayerBallon(self.intake))
+        put_command_on_dashboard("Intake", SequenceBalayer(self.grimpeur_secondaire, self.intake))
 
         put_command_on_dashboard("Shooter", ManualShoot(self.shooter, self.intake, 3000, 3000))
         put_command_on_dashboard("Shooter", InterpolatedShoot(self.shooter, self.intake, self.vision_targets))

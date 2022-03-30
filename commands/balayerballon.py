@@ -1,17 +1,16 @@
 import wpilib
-from commands2 import CommandBase
 
 import properties
 from subsystems.intake import Intake
+from utils.safecommandbase import SafeCommandBase
 
 
-class EjecterIntake(CommandBase):
+class BalayerBallon(SafeCommandBase):
     def __init__(self, intake: Intake):
         super().__init__()
         self.addRequirements(intake)
-        self.setName("Ejecter Intake")
-        self.timer = wpilib.Timer()
         self.intake = intake
+        self.timer = wpilib.Timer()
 
     def initialize(self) -> None:
         self.timer.reset()
