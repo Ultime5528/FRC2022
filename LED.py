@@ -3,12 +3,14 @@ from enum import Enum
 import math
 from typing import Callable, Union, Tuple, List
 
+import commands2
 import wpilib
 
 import ports
 import numpy as np
 
 from subsystems.intake import Intake
+from subsystems.shooter import Shooter
 
 
 def interpoler(t, couleur1, couleur2):
@@ -34,16 +36,17 @@ class LEDController(commands2.SubsystemBase):
     white = np.array([0, 0, 255])
     last = 0
 
-    def __init__(self, intake: Intake):
+    def __init__(self, intake: Intake, shooter: Shooter):
         super().__init__()
         self.intake = intake
-
+        self.shooter = shooter
         self.led_strip = wpilib.AddressableLED(ports.led_strip)
         self.buffer = [wpilib.AddressableLED.LEDData() for _ in range(300)]
         self.led_strip.setLength(len(self.buffer))
         self.time = 0
         self.led_strip.start()
         ModeLED.NONE
+        self.mode = ModeLED
 
     def set_hsv(self, i: int, color: Color):
         self.buffer[i].setHSV(*color)
@@ -69,8 +72,8 @@ class LEDController(commands2.SubsystemBase):
         self.set_all(lambda i: color)
 
     def ripples(self, color):
-        if self.time % 10 == 0:
-            def get_color():
+        def get_color(i: int):
+            if self.time % 10 == 0:
                 if random.random() <= (1 - (wpilib.DriverStation.getMatchTime() / 15)):
                     return color
                 else:
@@ -104,6 +107,12 @@ class LEDController(commands2.SubsystemBase):
 
     def periodic(self) -> None:
         self.time += 1
+        if self.shooter.setpoint != 0:
+            ModeLED.SHOOT
+        elif 1 == 0:
+            ModeLED.INTAKE
+        else:
+            ModeLED.NONE
 
         alliance = wpilib.DriverStation.getAlliance()
         if alliance == wpilib.DriverStation.Alliance.kInvalid:
@@ -116,9 +125,9 @@ class LEDController(commands2.SubsystemBase):
         if wpilib.DriverStation.isAutonomous(): #auto
             self.ripples(color)
         elif wpilib.DriverStation.isTeleop(): #teleop
-            if ModeLED.INTAKE:
+            if ModeLED.INTAKE == self.mode:
                 self.waves(color, self.intake.ballCount())
-            elif ModeLED.SHOOT:
+            elif ModeLED.SHOOT == self.mode:
                 self.half_waves(color)
             elif wpilib.DriverStation.getMatchTime() >= 30:
                 self.explode(self.yellow_hsv, 50)
