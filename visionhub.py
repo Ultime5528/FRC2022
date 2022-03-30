@@ -131,9 +131,12 @@ def hub_loop():
             nt_normy.setDouble(norm_y)
             nt_found.setBoolean(True)
 
-            cv2.circle(img, tuple(position), 3, (255, 0, 255), 3)
+            cv2.circle(img, tuple(position), 1, (255, 0, 255), 3)
         else:
             nt_found.setBoolean(False)
+
+        denormalized_viser_hub_x_offset = int(img.shape[1] / 2 * (properties.values.viser_hub_x_offset + 1))
+        cv2.line(img, (denormalized_viser_hub_x_offset, 0), (denormalized_viser_hub_x_offset, int(img.shape[0])), (255, 255, 255), 1)
 
         NetworkTables.flush()
         outputStream.putFrame(img)
