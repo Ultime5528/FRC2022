@@ -7,6 +7,7 @@ from LED import LEDController
 from commands.balayerballon import BalayerBallon
 from commands.basepilotable.avancer import Avancer
 from commands.basepilotable.piloter import Piloter
+from commands.basepilotable.piloteraide import PiloterAide
 from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
 from commands.basepilotable.tourner import Tourner
 from commands.grimpeur.bougerprimaire import BougerPrimaire
@@ -28,9 +29,9 @@ from commands.shooter.dashboardshoot import DashboardShoot
 from commands.shooter.ejectershooter import EjecterShooter
 from commands.shooter.interpolatedshoot import InterpolatedShoot
 from commands.shooter.manualshoot import ManualShoot
-from commands.vision.visercargo import ViserCargo, ViserCargoAvancer
+from commands.vision.visercargo import ViserCargo
+from commands.vision.visercargoavancer import ViserCargoAvancer
 from commands.vision.viserhub import ViserHub
-from commands.vision.viserprendre import ViserPrendre
 from commands.vision.visertirer import ViserTirer
 from subsystems.basepilotable import BasePilotable
 from subsystems.grimpeurprimaire import GrimpeurPrimaire
@@ -69,7 +70,8 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 7).whenPressed(Piloter(self.base_pilotable, self.stick))
         JoystickButton(self.stick, 2).whenPressed(
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
-        JoystickButton(self.stick, 3).whenPressed(ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
+        JoystickButton(self.stick, 3).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
+        JoystickButton(self.stick, 4).whenHeld(PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
 
         # CONSOLE
         JoystickButton(self.console_1, 5).whenPressed(GrimperNiveau2(self.grimpeur_primaire))
@@ -80,8 +82,7 @@ class Robot(commands2.TimedCommandRobot):
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
         # JoystickButton(self.console_1, 3).whenPressed(Exploser(self.led_controller))
-        JoystickButton(self.console_1, 6).whenPressed(
-            ViserPrendre(self.base_pilotable, self.intake, self.vision_targets))
+        JoystickButton(self.console_1, 6).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
         # JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
         JoystickButton(self.console_1, 1).whenPressed(SequenceBalayer(self.grimpeur_secondaire, self.intake))
@@ -133,6 +134,7 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Vision", ViserHub(self.base_pilotable, self.vision_targets))
         put_command_on_dashboard("Vision", ViserCargo(self.base_pilotable, self.vision_targets))
         put_command_on_dashboard("Vision", ViserCargoAvancer(self.base_pilotable, self.vision_targets))
+        put_command_on_dashboard("Vision", PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
 
     def robotPeriodic(self) -> None:
         # TODO if FMS

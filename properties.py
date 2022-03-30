@@ -12,6 +12,8 @@ persistent = True
 
 
 class Properties:
+    aide_pilotage_slow_factor = ntproperty("/Properties/aide_pilotage_slow_factor", 0.5, writeDefault=False, persistent=persistent)
+
     shooter_backspin_speed = ntproperty("/Properties/shooter_backspin_speed", 1500, writeDefault=False, persistent=persistent)
     shooter_speed = ntproperty("/Properties/shooter_speed", 1500, writeDefault=False, persistent=persistent)
 
@@ -23,7 +25,6 @@ class Properties:
     shooter_end_time = ntproperty("/Properties/shooter_end_time", 4, writeDefault=False, persistent=persistent)
 
     intake_speed = ntproperty("/Properties/intake_speed", 0.4, writeDefault=False, persistent=persistent)
-    intake_duree_ejection = ntproperty("/Properties/intake_duree_ejection", 1.5, writeDefault=False, persistent=persistent)
     intake_reverse_speed = ntproperty("/Properties/intake_reverse_speed", -0.5, writeDefault=False, persistent=persistent)
     intake_convoyeur_speed_lent = ntproperty("/Properties/intake_convoyeur_speed_lent", 0.44, writeDefault=False, persistent=persistent)
     intake_convoyeur_speed_rapide = ntproperty("/Properties/intake_convoyeur_speed_rapide", 0.6, writeDefault=False, persistent=persistent)
@@ -56,6 +57,7 @@ class Properties:
     vision_hub_maxErrorY_multiplier = ntproperty("/Properties/vision_hub_maxErrorY_multiplier", 0.2, writeDefault=False,persistent=persistent)
 
     vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
+    vision_cargo_normy_threshold = ntproperty("/Properties/vision_cargo_normy_threshold", -0.5, writeDefault=False, persistent=persistent)
     vision_cargo_crop_x_min = ntproperty("/Properties/vision_cargo_crop_x_min", 0.11, writeDefault=False, persistent=persistent)
     vision_cargo_crop_x_max = ntproperty("/Properties/vision_cargo_crop_x_max", 0.85, writeDefault=False, persistent=persistent)
     vision_cargo_crop_y_min = ntproperty("/Properties/vision_cargo_crop_y_min", 0.4, writeDefault=False, persistent=persistent)

@@ -1,6 +1,5 @@
 import wpilib
 
-import properties
 from subsystems.intake import Intake
 from utils.safecommandbase import SafeCommandBase
 
@@ -23,4 +22,4 @@ class BalayerBallon(SafeCommandBase):
         self.intake.stopIntake()
 
     def isFinished(self) -> bool:
-        return self.timer.get() >= properties.values.intake_duree_ejection
+        return False

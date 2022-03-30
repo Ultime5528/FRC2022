@@ -83,12 +83,20 @@ class VisionTargets(commands2.SubsystemBase):
         else:
             return None
 
-    def hasWrongCargoNear(self):
+    def _has_cargo_near(self, is_red: bool) -> bool:
         for cargo in self.cargos:
-            if cargo.is_red != is_red_alliance() and cargo.nw > properties.values.vision_cargo_normw_threshold:
+            if cargo.is_red == is_red \
+                    and cargo.nw > properties.values.vision_cargo_normw_threshold \
+                    and cargo.ny < properties.values.vision_cargo_normy_threshold:
                 return True
 
         return False
+
+    def hasRightCargoNear(self):
+        return self._has_cargo_near(is_red_alliance())
+
+    def hasWrongCargoNear(self):
+        return self._has_cargo_near(not is_red_alliance())
 
     def simulationPeriodic(self):
         fakehubpose = self.fakehub.getPose()
