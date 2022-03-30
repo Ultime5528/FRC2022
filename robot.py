@@ -112,7 +112,7 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Shooter", DashboardShoot(self.shooter, self.intake))
         put_command_on_dashboard("Shooter", EjecterShooter(self.shooter, self.intake))
 
-        put_command_on_dashboard("BasePilotable", Avancer(self.base_pilotable, -1, 0.15))
+        put_command_on_dashboard("BasePilotable", Avancer(self.base_pilotable, 1, 0.15))
         put_command_on_dashboard("BasePilotable", Tourner(self.base_pilotable, -90, 0.1))
         put_command_on_dashboard("BasePilotable", SuivreTrajectoire(self.base_pilotable,
                                                                     [Pose2d(0, 0, Rotation2d.fromDegrees(0)),

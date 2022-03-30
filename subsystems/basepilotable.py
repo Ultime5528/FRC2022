@@ -80,18 +80,19 @@ class BasePilotable(SubsystemBase):
         self._drive_sim.update(0.02)
         self._motor_left_sim.setPosition(self._drive_sim.getLeftPosition() + self._left_encoder_offset)
         self._motor_left_sim.setVelocity(self._drive_sim.getLeftVelocity())
-        self._motor_right_sim.setPosition(-(self._drive_sim.getRightPosition() + self._right_encoder_offset))
+        self._motor_right_sim.setPosition(-self._drive_sim.getRightPosition() + self._right_encoder_offset)
         self._motor_right_sim.setVelocity(self._drive_sim.getRightVelocity())
         self._gyro_sim.set(-self._drive_sim.getHeading().degrees())
 
     def resetOdometry(self) -> None:
         self._left_encoder_offset = self._encoder_left.getPosition()
         self._right_encoder_offset = self._encoder_right.getPosition()
-        self._gyro.reset()
         self._odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
 
         if RobotBase.isSimulation():
             self._drive_sim.setPose(Pose2d())
+        else:
+            self._gyro.reset()
 
     def getAngle(self):
         return -math.remainder(self._gyro.getAngle(), 360.0)
