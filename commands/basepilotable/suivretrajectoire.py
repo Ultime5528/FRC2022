@@ -46,7 +46,7 @@ class SuivreTrajectoire(commands2.CommandBase):
 
         if self.addRobotPose:
             self.trajectory = TrajectoryGenerator.generateTrajectory(
-                [self.basePilotable.getPose2D(), *self.waypoints],
+                [self.basePilotable.getPose(), *self.waypoints],
                 TrajectoryConfig(self.maxAcceleration, self.maxVelocity),
             )
             self.states = self.trajectory.states()

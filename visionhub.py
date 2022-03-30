@@ -5,7 +5,7 @@ from networktables import NetworkTables
 
 import properties
 
-debug = False
+DEBUG = False
 
 
 class Target:
@@ -40,7 +40,11 @@ def hub_loop():
     cvSink = cs.getVideo(camera=hub_cam)
 
     outputStream = cs.putVideo("Hub", 320, 240)
-    binStream = cs.putVideo("Hub bin", 320, 240)
+
+    if DEBUG:
+        binStream = cs.putVideo("Hub bin", 320, 240)
+    else:
+        binStream = None
 
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
@@ -78,7 +82,8 @@ def hub_loop():
                     ratio = max(w, h) / min(w, h)
                     if 1.25 <= ratio <= 3.5 and w > h:
                         validRects.append((x, y, w, h))
-                if debug:
+
+                if DEBUG:
                     print("==========")
                     print("nb cnts :", len(cnts))
                     print("---")
@@ -93,7 +98,9 @@ def hub_loop():
         for (x, y, w, h) in validRects:
             cv2.rectangle(img_cnts, (x, y), (x + w, y + h), (0, 255, 255), 1)
 
-        binStream.putFrame(img_cnts)
+        if binStream:
+            binStream.putFrame(img_cnts)
+
         validPositions = []
 
         for x, y, w, h in validRects:

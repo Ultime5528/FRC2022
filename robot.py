@@ -5,6 +5,7 @@ from wpimath.geometry import Pose2d, Rotation2d
 
 import properties
 from LED import LEDController
+from commands.auto.auto4ballons import Auto4Ballons
 from commands.basepilotable.avancer import Avancer
 from commands.basepilotable.piloter import Piloter
 from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
@@ -111,7 +112,7 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Shooter", DashboardShoot(self.shooter, self.intake))
         put_command_on_dashboard("Shooter", EjecterShooter(self.shooter, self.intake))
 
-        put_command_on_dashboard("BasePilotable", Avancer(self.base_pilotable, -1, 0.15))
+        put_command_on_dashboard("BasePilotable", Avancer(self.base_pilotable, 1, 0.15))
         put_command_on_dashboard("BasePilotable", Tourner(self.base_pilotable, -90, 0.1))
         put_command_on_dashboard("BasePilotable", SuivreTrajectoire(self.base_pilotable,
                                                                     [Pose2d(0, 0, Rotation2d.fromDegrees(0)),
@@ -122,11 +123,14 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_max(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_clip(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", DescendreCompletPrimaire(self.grimpeur_primaire))
+        put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_middle(self.grimpeur_primaire))
 
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire(self.grimpeur_secondaire,
                                                                         lambda: properties.values.grimpeur_secondaire_hauteur_alignement))
         put_command_on_dashboard("GrimpeurSecondaire", MonterCompletSecondaire(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", DescendreCompletSecondaire(self.grimpeur_secondaire))
+        put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_aligner(self.grimpeur_secondaire))
+        put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_next_level(self.grimpeur_secondaire))
 
         put_command_on_dashboard("Grimper", ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))
         put_command_on_dashboard("Grimper", PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
@@ -137,6 +141,11 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Vision", ViserHub(self.base_pilotable, self.vision_targets))
         put_command_on_dashboard("Vision", ViserCargo(self.base_pilotable, self.vision_targets))
         put_command_on_dashboard("Vision", ViserCargoAvancer(self.base_pilotable, self.vision_targets))
+
+        put_command_on_dashboard("Autonome", Auto4Ballons(self.base_pilotable,
+                                                          self.grimpeur_secondaire,
+                                                          self.stick, self.shooter,
+                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
 
     def robotPeriodic(self) -> None:
         # try:
@@ -149,11 +158,12 @@ class Robot(commands2.TimedCommandRobot):
         self.autoCommand = self.autoChooser.getSelected()
 
         if self.autoCommand:
-           self.autoCommand.schedule()
+            self.autoCommand.schedule()
 
     def teleopInit(self) -> None:
         if self.autoCommand:
-           self.autoCommand.cancel()
+            self.autoCommand.cancel()
+
 
 if __name__ == "__main__":
     wpilib.run(Robot)

@@ -20,6 +20,12 @@ class BougerPrimaire(SafeCommandBase):
         cmd.setName(cmd.getName() + " max")
         return cmd
 
+    @classmethod
+    def to_middle(cls, grimpeur: GrimpeurPrimaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_primaire_hauteur_max/2)
+        cmd.setName(cmd.getName() + " middle")
+        return cmd
+
     def __init__(self, grimpeur: GrimpeurPrimaire, hauteur: FloatProperty):
         super().__init__()
         self.grimpeur = grimpeur

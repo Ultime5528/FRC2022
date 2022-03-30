@@ -25,8 +25,10 @@ class AbstractShoot(SafeCommandBase):
 
         if self.shooter.atSetpoint():
             self.intake.activerConvoyeurRapide()
+            self.intake.activerIntake()
         else:
             self.intake.stopConvoyeur()
+            self.intake.stopIntake()
 
         if not self.intake.hasBallIntake() and not self.intake.hasBallConvoyeur():
             self.timer.start()
@@ -40,3 +42,4 @@ class AbstractShoot(SafeCommandBase):
     def end(self, interrupted: bool) -> None:
         self.shooter.stop()
         self.intake.stopConvoyeur()
+        self.intake.stopIntake()
