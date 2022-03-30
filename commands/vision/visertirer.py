@@ -8,13 +8,20 @@ from subsystems.basepilotable import BasePilotable
 from subsystems.intake import Intake
 from subsystems.shooter import Shooter
 from subsystems.visiontargets import VisionTargets
+from commands.shooter.preparerinterpolated import PreparerInterpolated
 
 
 class ViserTirer(commands2.SequentialCommandGroup):
     def __init__(
-            self, basepilotable: BasePilotable, stick: Joystick, shooter: Shooter, intake: Intake, vision: VisionTargets
+            self, basepilotable: BasePilotable, stick: Joystick, shooter: Shooter, intake: Intake, vision_targets: VisionTargets
     ):
         super().__init__(
-            ViserHub(basepilotable, vision),
-            commands2.ParallelDeadlineGroup(DashboardShoot(shooter, intake), Piloter(basepilotable, stick)),
+            commands2.ParallelDeadlineGroup(
+                ViserHub(basepilotable, vision_targets),
+                PreparerInterpolated(shooter, vision_targets)
+            ),
+            commands2.ParallelDeadlineGroup(
+                DashboardShoot(shooter, intake),
+                Piloter(basepilotable, stick)
+            ),
         )
