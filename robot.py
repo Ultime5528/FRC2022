@@ -32,7 +32,6 @@ from commands.shooter.manualshoot import ManualShoot
 from commands.vision.visercargo import ViserCargo
 from commands.vision.visercargoavancer import ViserCargoAvancer
 from commands.vision.viserhub import ViserHub
-from commands.vision.viserprendre import ViserPrendre
 from commands.vision.visertirer import ViserTirer
 from subsystems.basepilotable import BasePilotable
 from subsystems.grimpeurprimaire import GrimpeurPrimaire
@@ -72,7 +71,6 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.stick, 2).whenPressed(
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.stick, 3).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
-
         JoystickButton(self.stick, 4).whenHeld(PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
 
         # CONSOLE
