@@ -19,9 +19,15 @@ class BougerSecondaire(SafeCommandBase):
         return cmd
 
     @classmethod
-    def to_aligner(cls, grimpeur: GrimpeurSecondaire):
-        cmd = cls(grimpeur, lambda: properties.values.grimpeur_secondaire_hauteur_alignement)
-        cmd.setName(cmd.getName() + " aligner")
+    def to_aligner_bas(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_secondaire_hauteur_alignement_bas)
+        cmd.setName(cmd.getName() + " aligner bas")
+        return cmd
+
+    @classmethod
+    def to_aligner_haut(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_secondaire_hauteur_alignement_haut)
+        cmd.setName(cmd.getName() + " aligner haut")
         return cmd
 
     def __init__(self, grimpeur: GrimpeurSecondaire, position: FloatProperty):
