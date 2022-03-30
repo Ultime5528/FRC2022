@@ -281,6 +281,10 @@ imgui.ini
 /simgui-ds.json
 
 vision/dataset_cache/
+
+networktables.ini
+
+networktables.ini.bak
 
 networktables.ini
 

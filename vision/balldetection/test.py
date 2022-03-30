@@ -1,13 +1,14 @@
 import cv2
-import balldetection
-import algorithms
 
-#img = cv2.imread('C:/Users/Tremb/OneDrive/Documents/coding/FRC/balldetection/20211119_095809.jpg')
-#optimal_shape = 530
-#h, w, _ = img.shape
-#f = optimal_shape / w if w >= h else optimal_shape / h
-#img = cv2.resize(img, (0, 0), fx=f, fy=f)
-#print(img.shape)
+import algorithms
+import balldetection
+
+# img = cv2.imread('C:/Users/Tremb/OneDrive/Documents/coding/FRC/balldetection/20211119_095809.jpg')
+# optimal_shape = 530
+# h, w, _ = img.shape
+# f = optimal_shape / w if w >= h else optimal_shape / h
+# img = cv2.resize(img, (0, 0), fx=f, fy=f)
+# print(img.shape)
 
 cam = cv2.VideoCapture(0)
 

@@ -1,12 +1,12 @@
-from typing import Optional
-
-from . import balldetection
+import math
+from dataclasses import dataclass
+from typing import Optional, Tuple
 
 import cv2
 import numpy as np
-import math
 
-from dataclasses import dataclass
+from . import balldetection as bd
+from .balldetection import ResultHolder
 
 
 @dataclass
@@ -39,7 +39,7 @@ def _smallestSidePercentage(img: np.ndarray, percentage: float) -> int:
     return int(img.shape[0] * percentage if img.shape[0] < img.shape[1] else img.shape[1] * percentage)
 
 
-def houghCircles(img: np.ndarray, color: balldetection.Color, error: float = 10,
+def houghCircles(img: np.ndarray, color: bd.Color, error: float = 10,
                  minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
@@ -56,7 +56,7 @@ def houghCircles(img: np.ndarray, color: balldetection.Color, error: float = 10,
 
     res = []
     if circles is not None:
-        cnts = balldetection.findColorContours(img, color)
+        cnts = bd.findColorContours(img, color)
 
         circlesData = _convertToCircles(cnts)
         circlesData = filter(lambda c: c.radius > minRadius, circlesData)
@@ -80,7 +80,7 @@ def houghCircles(img: np.ndarray, color: balldetection.Color, error: float = 10,
     return res
 
 
-def circularity(img: np.ndarray, color: balldetection.Color, error: float = 0.5,
+def circularity(img: np.ndarray, color: bd.Color, error: float = 0.5,
                 minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
@@ -91,8 +91,8 @@ def circularity(img: np.ndarray, color: balldetection.Color, error: float = 0.5,
     """
     minRadius = _smallestSidePercentage(img, minRadiusPerc)
 
-    cnts = balldetection.findColorContours(img, color)
-    circles = balldetection.filterCircles(cnts, error)
+    cnts = bd.findColorContours(img, color)
+    circles = bd.filterCircles(cnts, error)
 
     res = []
     if circles is not None:
@@ -104,7 +104,7 @@ def circularity(img: np.ndarray, color: balldetection.Color, error: float = 0.5,
     return res
 
 
-def circularityConvex(img: np.ndarray, color: balldetection.Color, error: float = 0.1,
+def circularityConvex(img: np.ndarray, color: bd.Color, error: float = 0.1,
                       minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
@@ -115,9 +115,9 @@ def circularityConvex(img: np.ndarray, color: balldetection.Color, error: float 
     """
     minRadius = _smallestSidePercentage(img, minRadiusPerc)
 
-    cnts = balldetection.findColorContours(img, color)
-    hulls = balldetection.convexContours(cnts)
-    circles = balldetection.filterCircles(hulls, error)
+    cnts = bd.findColorContours(img, color)
+    hulls = bd.convexContours(cnts)
+    circles = bd.filterCircles(hulls, error)
 
     res = []
     if circles is not None:
@@ -129,8 +129,13 @@ def circularityConvex(img: np.ndarray, color: balldetection.Color, error: float 
     return res
 
 
-def circularityMoments(img: np.ndarray, color: balldetection.Color, error: float = 0.2,
-                       minRadiusPerc: float = minRadiusPercDefault, rs: Optional[int]=None, rv: Optional[int]=None, bs: Optional[int]=None, bv: Optional[int]=None):
+def circularityMoments(img: np.ndarray, color: bd.Color, error: float = 0.2,
+                       minRadiusPerc: float = minRadiusPercDefault,
+                       red_hsv_low: Optional[Tuple[int, int, int]] = None,
+                       red_hsv_high: Optional[Tuple[int, int, int]] = None,
+                       blue_hsv_low: Optional[Tuple[int, int, int]] = None,
+                       blue_hsv_high: Optional[Tuple[int, int, int]] = None,
+                       mask_result: ResultHolder = None):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
@@ -140,8 +145,9 @@ def circularityMoments(img: np.ndarray, color: balldetection.Color, error: float
     """
     minRadius = _smallestSidePercentage(img, minRadiusPerc)
 
-    cnts = balldetection.findColorContours(img, color, rs, rv, bs, bv)
-    circles = balldetection.filterCirclesMoments(cnts, error)
+    cnts = bd.findColorContours(img, color, red_hsv_low, red_hsv_high, blue_hsv_low, blue_hsv_high,
+                                mask_result=mask_result)
+    circles = bd.filterCirclesMoments(cnts, error)
 
     res = []
     if circles is not None:
@@ -153,7 +159,7 @@ def circularityMoments(img: np.ndarray, color: balldetection.Color, error: float
     return res
 
 
-def circularityConvexMoments(img: np.ndarray, color: balldetection.Color, error: float = 0.05,
+def circularityConvexMoments(img: np.ndarray, color: bd.Color, error: float = 0.05,
                              minRadiusPerc: float = minRadiusPercDefault):
     """
     :param img: Source image, BGR
@@ -164,9 +170,9 @@ def circularityConvexMoments(img: np.ndarray, color: balldetection.Color, error:
     """
     minRadius = _smallestSidePercentage(img, minRadiusPerc)
 
-    cnts = balldetection.findColorContours(img, color)
-    hulls = balldetection.convexContours(cnts)
-    circles = balldetection.filterCirclesMoments(hulls, error)
+    cnts = bd.findColorContours(img, color)
+    hulls = bd.convexContours(cnts)
+    circles = bd.filterCirclesMoments(hulls, error)
 
     res = []
     if circles is not None:
@@ -178,8 +184,9 @@ def circularityConvexMoments(img: np.ndarray, color: balldetection.Color, error:
     return res
 
 
-def RANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: float = 10,
-           minRadiusPerc: float = minRadiusPercDefault, threshold_distance_percentage:Optional[float] = None, threshold_inlier_count:Optional[int] = None):
+def RANSAC(img: np.ndarray, color: bd.Color, maxIterations: float = 10,
+           minRadiusPerc: float = minRadiusPercDefault, threshold_distance_percentage: Optional[float] = None,
+           threshold_inlier_count: Optional[int] = None):
     """
     :param img: Source image, BGR
     :param color: Color of the balls to track
@@ -189,14 +196,14 @@ def RANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: float = 1
     """
     minRadius = _smallestSidePercentage(img, minRadiusPerc)
 
-    cnts = balldetection.findColorContours(img, color)
+    cnts = bd.findColorContours(img, color)
     cnts = filter(lambda x: cv2.boundingRect(x)[3] > minRadius * 2, cnts)
-    res = balldetection.findCirclesInContours(cnts, maxIterations, threshold_distance_percentage, threshold_inlier_count)
+    res = bd.findCirclesInContours(cnts, maxIterations, threshold_distance_percentage, threshold_inlier_count)
 
     return res
 
 
-def cannyRANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: float = 10,
+def cannyRANSAC(img: np.ndarray, color: bd.Color, maxIterations: float = 10,
                 minRadiusPerc: float = minRadiusPercDefault, ratioThreshold: float = 0.3, minColorRatio: float = 0.5):
     """
     :param img: Source image, BGR
@@ -209,13 +216,13 @@ def cannyRANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: floa
     minRadius = _smallestSidePercentage(img, minRadiusPerc)
     absLogRatioThreshold = abs(math.log10(ratioThreshold))
 
-    edges = balldetection.findEdges(img)
+    edges = bd.findEdges(img)
     cnts, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     # filtrer canny
     filtered = []
 
-    mask = balldetection.maskColor(img, color)
+    mask = bd.maskColor(img, color)
     for cnt in cnts:
         x, y, w, h = cv2.boundingRect(cnt)
 
@@ -245,7 +252,6 @@ def cannyRANSAC(img: np.ndarray, color: balldetection.Color, maxIterations: floa
 
         filtered.append(cnt)
 
-
-    res = balldetection.findCirclesInContours(filtered, maxIterations)
+    res = bd.findCirclesInContours(filtered, maxIterations)
 
     return res

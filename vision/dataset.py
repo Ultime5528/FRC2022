@@ -1,17 +1,16 @@
-from dataclasses import dataclass
-from enum import Enum
 import math
-from pathlib import Path
 import shutil
+from dataclasses import dataclass
+from pathlib import Path
 from typing import List
-from dotenv import load_dotenv
+
 import supervisely_lib as sly
+from dotenv import load_dotenv
 from supervisely_lib.annotation.label import Label
 from tqdm.auto import tqdm
 
 from .color import Color
 from .evaluate.metrics.bounding_box import BoundingBox, BBFormat
-
 
 TEAM_NAME = "Ultime 5528"
 WORKSPACE_NAME = "FRC 2022"

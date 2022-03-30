@@ -1,10 +1,25 @@
-import commands2
-from networktables import NetworkTables
-# from pyfrc.physics.visionsim import VisionSim
-from wpimath.geometry import Pose2d
-from wpilib import RobotBase, Timer
+from dataclasses import dataclass
 
+import commands2
+import wpilib
+from networktables import NetworkTables
+from wpilib import RobotBase, Timer
+from wpimath.geometry import Pose2d
+
+import properties
 from subsystems.basepilotable import BasePilotable
+
+
+def is_red_alliance():
+    return wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed
+
+
+@dataclass
+class Cargo:
+    nx: float
+    ny: float
+    nw: float
+    is_red: bool
 
 
 class VisionTargets(commands2.SubsystemBase):
@@ -16,7 +31,8 @@ class VisionTargets(commands2.SubsystemBase):
 
         self.cargoNormxEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_X")
         self.cargoNormyEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_Y")
-        self.cargoFoundEntry = NetworkTables.getEntry("/Vision/Cargo/Found")
+        self.cargoNormwEntry = NetworkTables.getEntry("/Vision/Cargo/Norm_W")
+        self.cargoIsRedEntry = NetworkTables.getEntry("/Vision/Cargo/IsRed")
 
         if RobotBase.isSimulation():
             from pyfrc.physics.visionsim import VisionSim
@@ -49,16 +65,38 @@ class VisionTargets(commands2.SubsystemBase):
         return self.hubFoundEntry.getBoolean(False)
 
     @property
-    def cargoNormX(self):
-        return self.cargoNormxEntry.getDouble(0)
+    def cargos(self):
+        nxs = self.cargoNormxEntry.getDoubleArray([])
+        nys = self.cargoNormyEntry.getDoubleArray([])
+        nws = self.cargoNormwEntry.getDoubleArray([])
+        is_reds = self.cargoIsRedEntry.getBooleanArray([])
+
+        return [Cargo(nx, ny, nw, is_red) for nx, ny, nw, is_red in zip(nxs, nys, nws, is_reds)]
 
     @property
-    def cargoNormY(self):
-        return self.cargoNormyEntry.getDouble(0)
+    def nearestCargo(self):
+        is_red = is_red_alliance()
+        good_cargos = [cargo for cargo in self.cargos if cargo.is_red == is_red]
 
-    @property
-    def cargoFound(self):
-        return self.cargoFoundEntry.getBoolean(False)
+        if good_cargos:
+            return max(good_cargos, key=lambda x: x.nw)
+        else:
+            return None
+
+    def _has_cargo_near(self, is_red: bool) -> bool:
+        for cargo in self.cargos:
+            if cargo.is_red == is_red \
+                    and cargo.nw > properties.values.vision_cargo_normw_threshold \
+                    and cargo.ny < properties.values.vision_cargo_normy_threshold:
+                return True
+
+        return False
+
+    def hasRightCargoNear(self):
+        return self._has_cargo_near(is_red_alliance())
+
+    def hasWrongCargoNear(self):
+        return self._has_cargo_near(not is_red_alliance())
 
     def simulationPeriodic(self):
         fakehubpose = self.fakehub.getPose()
@@ -75,7 +113,7 @@ class VisionTargets(commands2.SubsystemBase):
 
         if hubs:
             found, time, angle, distance = hubs[0]
-            if hubs[0][0]:
+            if found:
                 norm_x = angle / 60
                 norm_y = distance / 10
 
@@ -85,20 +123,26 @@ class VisionTargets(commands2.SubsystemBase):
             else:
                 self.hubFoundEntry.setBoolean(False)
         else:
-            self.cargoFoundEntry.setBoolean(False)
+            self.hubFoundEntry.setBoolean(False)
 
         cargos = self.cargo_sim.compute(Timer.getFPGATimestamp(), pose.X(), pose.Y(), pose.rotation().radians())
 
+        reset_cargos = True
+
         if cargos:
             found, time, angle, distance = cargos[0]
-            if cargos[0][0]:
+            if found:
                 norm_x = angle / 60
                 norm_y = distance / 10
 
-                self.cargoNormxEntry.setDouble(norm_x)
-                self.cargoNormyEntry.setDouble(norm_y)
-                self.cargoFoundEntry.setBoolean(True)
-            else:
-                self.cargoFoundEntry.setBoolean(False)
-        else:
-            self.cargoFoundEntry.setBoolean(False)
+                self.cargoNormxEntry.setDoubleArray([norm_x])
+                self.cargoNormyEntry.setDoubleArray([norm_y])
+                self.cargoNormwEntry.setDoubleArray([norm_y / 2])
+                self.cargoIsRedEntry.setBooleanArray([is_red_alliance()])
+                reset_cargos = False
+
+        if reset_cargos:
+            self.cargoNormxEntry.setDoubleArray([])
+            self.cargoNormyEntry.setDoubleArray([])
+            self.cargoNormwEntry.setDoubleArray([])
+            self.cargoIsRedEntry.setBooleanArray([])
