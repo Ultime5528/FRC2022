@@ -27,6 +27,7 @@ class Properties:
 
     grimpeur_primaire_vitesse_descendre = ntproperty("/Properties/grimpeur_primaire_vitesse_descendre", -0.5, writeDefault=False, persistent=persistent)
     grimpeur_primaire_vitesse_monter = ntproperty("/Properties/grimpeur_primaire_vitesse_monter", 0.5, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_vitesse_descendre_slow = ntproperty("/Properties/grimpeur_primaire_vitesse_descendre_slow", -0.25, writeDefault=False, persistent=persistent)
     grimpeur_primaire_start_speed = ntproperty("/Properties/grimpeur_primaire_start_speed", 0.2, writeDefault=False, persistent=persistent)
     grimpeur_primaire_end_speed = ntproperty("/Properties/grimpeur_primaire_end_speed", 1.0, writeDefault=False, persistent=persistent)
     grimpeur_primaire_accel = ntproperty("/Properties/grimpeur_primaire_accel", 0.03, writeDefault=False, persistent=persistent)
