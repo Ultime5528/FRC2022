@@ -73,8 +73,7 @@ class Robot(commands2.TimedCommandRobot):
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.stick, 3).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
 
-        JoystickButton(self.stick, 4).whenPressed(PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
-        JoystickButton(self.stick, 4).whenReleased(Piloter(self.base_pilotable, self.stick))
+        JoystickButton(self.stick, 4).whenHeld(PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
 
         # CONSOLE
         JoystickButton(self.console_1, 5).whenPressed(GrimperNiveau2(self.grimpeur_primaire))
@@ -85,8 +84,7 @@ class Robot(commands2.TimedCommandRobot):
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
         # JoystickButton(self.console_1, 3).whenPressed(Exploser(self.led_controller))
-        JoystickButton(self.console_1, 6).whenPressed(
-            ViserCargoAvancer(self.base_pilotable, self.vision_targets))
+        JoystickButton(self.console_1, 6).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
         # JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
         JoystickButton(self.console_1, 1).toggleWhenPressed(EjecterIntake(self.intake))
@@ -137,6 +135,7 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Vision", ViserHub(self.base_pilotable, self.vision_targets))
         put_command_on_dashboard("Vision", ViserCargo(self.base_pilotable, self.vision_targets))
         put_command_on_dashboard("Vision", ViserCargoAvancer(self.base_pilotable, self.vision_targets))
+        put_command_on_dashboard("Vision", PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
 
     def robotPeriodic(self) -> None:
         # TODO if FMS
