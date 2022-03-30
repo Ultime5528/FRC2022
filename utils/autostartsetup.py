@@ -1,26 +1,24 @@
-import win32gui
-from win32api import GetSystemMetrics
+import pygetwindow
 import os
 import time
-import ctypes
+import webbrowser
+from colorama import Fore
+chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
 
-driver_station_handle = None
-driver_station_start_command = r'start "" "C:\Program Files (x86)\FRC Driver Station\DriverStation.exe" '
-os.system(driver_station_start_command)
-user32 = ctypes.windll
-screensize = [GetSystemMetrics(0), GetSystemMetrics(1)]
+os.system("cls")
+print(Fore.GREEN)
+os.startfile(r"C:\Program Files (x86)\FRC Driver Station\DriverStation.exe")
+os.system(r"C:\Users\Admin\Desktop\FRC2022\.dashboard\pynetworktables2js.exe --team 5528")
+print(Fore.BLUE + "Waiting" + Fore.RESET)
+time.sleep(1)
 
-def winEnumHandler(handle, ctx):
-    global driver_station_handle
-    if win32gui.IsWindowVisible(handle) and "FRC Driver Station" in win32gui.GetWindowText(handle):
-        driver_station_handle = handle
+try:
+    DriverStation = pygetwindow.getWindowsWithTitle("FRC Driver Station")[0]
+except IndexError:
+    print(Fore.RED + 'FRC Driver Station not detected')
 
-while not driver_station_handle:
-    win32gui.EnumWindows(winEnumHandler, None)
-    time.sleep(1)
+DriverStation.moveTo(0, 0)
 
-if driver_station_handle:
-    print("Found DriverStation")
-    print(screensize)
-    driver_station_rect = win32gui.GetWindowRect(driver_station_handle)
-    win32gui.MoveWindow(driver_station_handle, 0, 0, 500, 500, True)
+time.sleep(1)
+webbrowser.get(chrome_path).open(r"youtube.com")
+print(Fore.RESET)
