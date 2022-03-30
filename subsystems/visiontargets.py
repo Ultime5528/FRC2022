@@ -98,6 +98,25 @@ class VisionTargets(commands2.SubsystemBase):
     def hasWrongCargoNear(self):
         return self._has_cargo_near(not is_red_alliance())
 
+    def optimalCargoOrientation(self):
+        cargos = self.cargos
+
+        if not self.cargos:
+            return None
+
+        def score(x):
+            return (properties.values.aide_pilotage_width_x_balance*x.nw
+                                + (1-properties.values.aide_pilotage_width_x_balance)*(1-x.nx))
+
+        cargosnweights = [(x, score(x)) for x in cargos]
+
+        optimal = max(cargosnweights, key=lambda x: x[1])
+
+        if optimal[1] <= properties.values.aide_pilotage_optimal_threshold:
+            return None
+
+        return optimal[0].nx * 180
+
     def simulationPeriodic(self):
         fakehubpose = self.fakehub.getPose()
         self.hub_target.x = fakehubpose.X()

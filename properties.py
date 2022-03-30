@@ -12,6 +12,9 @@ persistent = True
 
 
 class Properties:
+    aide_pilotage_orientation_influence = ntproperty("/Properties/aide_pilotage_orientation_influence", 0.3, writeDefault=False, persistent=persistent)
+    aide_pilotage_width_x_balance = ntproperty("/Properties/aide_pilotage_width_x_balance", 0.5, writeDefault=False, persistent=persistent)
+    aide_pilotage_optimal_threshold = ntproperty("/Properties/aide_pilotage_optimal_threshold", 0.5, writeDefault=False, persistent=persistent)
     aide_pilotage_slow_factor = ntproperty("/Properties/aide_pilotage_slow_factor", 0.5, writeDefault=False, persistent=persistent)
 
     shooter_backspin_speed = ntproperty("/Properties/shooter_backspin_speed", 1500, writeDefault=False, persistent=persistent)

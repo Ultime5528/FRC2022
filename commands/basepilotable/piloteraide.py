@@ -1,3 +1,5 @@
+import math
+
 import wpilib
 
 import properties
@@ -16,8 +18,20 @@ class PiloterAide(SafeCommandBase):
         self.addRequirements(base_pilotable)
 
     def execute(self):
-        forward = -interpoler(self.stick.getY())
-        turn = interpoler(self.stick.getX())
+        x = interpoler(self.stick.getX())
+        y = interpoler(self.stick.getY())
+
+        ori = math.atan2(y, x)
+        mag = x**2+y**2
+
+        vori = self.vision.optimalCargoOrientation()
+
+        if vori:
+            ori = (1 - properties.values.aide_pilotage_orientation_influence) * ori \
+                 + properties.values.aide_pilotage_orientation_influence * vori
+
+        forward = -mag * math.sin(ori)
+        turn = mag * math.cos(ori)
 
         if self.vision.hasRightCargoNear:
             forward = min(forward, properties.values.aide_pilotage_slow_factor)
