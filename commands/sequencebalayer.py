@@ -1,8 +1,8 @@
 import commands2
 
+from commands.balayerballon import BalayerBallon
 from commands.descendreintake import DescendreIntake
 from commands.monterintake import MonterIntake
-from commands.balayerballon import BalayerBallon
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
 from subsystems.intake import Intake
 
@@ -14,4 +14,4 @@ class SequenceBalayer(commands2.SequentialCommandGroup):
             BalayerBallon(intake),
             MonterIntake(grimpeur_secondaire),
         )
-        self.setName("Sequence Balayer")
+        self.setName(self.__class__.__name__)
