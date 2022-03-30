@@ -5,6 +5,7 @@ from wpimath.geometry import Pose2d, Rotation2d
 
 import properties
 from LED import LEDController
+from commands.auto.auto4ballons import Auto4Ballons
 from commands.basepilotable.avancer import Avancer
 from commands.basepilotable.piloter import Piloter
 from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
@@ -131,7 +132,6 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_aligner(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_next_level(self.grimpeur_secondaire))
 
-
         put_command_on_dashboard("Grimper", ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))
         put_command_on_dashboard("Grimper", PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
         put_command_on_dashboard("Grimper", GrimperNiveau2(self.grimpeur_primaire))
@@ -141,6 +141,11 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Vision", ViserHub(self.base_pilotable, self.vision_targets))
         put_command_on_dashboard("Vision", ViserCargo(self.base_pilotable, self.vision_targets))
         put_command_on_dashboard("Vision", ViserCargoAvancer(self.base_pilotable, self.vision_targets))
+
+        put_command_on_dashboard("Autonome", Auto4Ballons(self.base_pilotable,
+                                                          self.grimpeur_secondaire,
+                                                          self.stick, self.shooter,
+                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
 
     def robotPeriodic(self) -> None:
         # try:
@@ -153,11 +158,12 @@ class Robot(commands2.TimedCommandRobot):
         self.autoCommand = self.autoChooser.getSelected()
 
         if self.autoCommand:
-           self.autoCommand.schedule()
+            self.autoCommand.schedule()
 
     def teleopInit(self) -> None:
         if self.autoCommand:
-           self.autoCommand.cancel()
+            self.autoCommand.cancel()
+
 
 if __name__ == "__main__":
     wpilib.run(Robot)
