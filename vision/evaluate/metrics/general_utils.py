@@ -1,9 +1,8 @@
-import fnmatch
 import os
 
 import cv2
+
 # import matplotlib.pyplot as plt
-import numpy as np
 # from PyQt5 import QtCore, QtGui
 from .enumerators import BBFormat
 
@@ -251,7 +250,6 @@ def draw_bb_into_image(image, boundingBox, color, thickness, label=None):
         cv2.putText(image, label, (xin_bb, yin_bb), font, fontScale, (0, 0, 0), fontThickness,
                     cv2.LINE_AA)
     return image
-
 
 # def plot_bb_per_classes(dict_bbs_per_class,
 #                         horizontally=True,

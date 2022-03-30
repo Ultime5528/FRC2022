@@ -1,15 +1,14 @@
-from dataclasses import dataclass
-
-import numpy as np
 import cv2
-from networktables import NetworkTables
+import numpy as np
 from cscore import CameraServer
-from vision.color import Color
+from networktables import NetworkTables
+
 from vision.balldetection.algorithms import circularityMoments, ResultHolder
+from vision.color import Color
 
 W = 320
 H = 240
-DEBUG = True
+DEBUG = False
 
 
 class Cargo:
@@ -41,7 +40,7 @@ class Cargo:
 def crop_center(img, x_min, x_max, y_min, y_max):
     h = img.shape[0]
     w = img.shape[1]
-    return img[int(h * y_min) : int(h * y_max), int(w * x_min) : int(w * x_max)]
+    return img[int(h * y_min): int(h * y_max), int(w * x_min): int(w * x_max)]
 
 
 def mask_crop_center(img, x_min, x_max, y_min, y_max):
@@ -72,7 +71,7 @@ def cargo_loop():
     blue_hsv_low = NetworkTables.getEntry("/Properties/vision_cargo_blue_hsv_low")
     blue_hsv_high = NetworkTables.getEntry("/Properties/vision_cargo_blue_hsv_high")
 
-    min_radius = NetworkTables.getEntry("/Properties/vision_cargo_min_radius",)
+    min_radius = NetworkTables.getEntry("/Properties/vision_cargo_min_radius")
     circularity_error = NetworkTables.getEntry("/Properties/vision_cargo_circularity_error")
 
     cs = CameraServer.getInstance()

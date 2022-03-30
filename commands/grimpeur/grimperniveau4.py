@@ -10,18 +10,16 @@ from subsystems.grimpeursecondaire import GrimpeurSecondaire
 
 # TODO Hauteurs lambda
 class GrimperNiveau4(commands2.SequentialCommandGroup):
-    def __init__(
-        self,
-        grimpeur_primaire: GrimpeurPrimaire,
-        grimpeur_secondaire: GrimpeurSecondaire,
-    ):
+    def __init__(self, grimpeur_primaire: GrimpeurPrimaire, grimpeur_secondaire: GrimpeurSecondaire):
         super().__init__(
-            commands2.SequentialCommandGroup(
-                BougerPrimaire(grimpeur_primaire, 5),
-                DescendreCompletSecondaire(grimpeur_secondaire),
-                DescendreCompletPrimaire(grimpeur_primaire),
-                BougerSecondaire(grimpeur_secondaire, 4),
-                BougerPrimaire(grimpeur_primaire, 10),
-            )
+            BougerSecondaire.to_max(grimpeur_secondaire),
+            BougerPrimaire.to_max(grimpeur_primaire),
+            BougerSecondaire.to_aligner(grimpeur_secondaire),
+            BougerPrimaire.to_middle(grimpeur_primaire),
+            DescendreCompletSecondaire(grimpeur_secondaire),
+            DescendreCompletPrimaire(grimpeur_primaire),
+            BougerSecondaire.to_next_level(grimpeur_secondaire),
+            BougerPrimaire.to_max(grimpeur_primaire),
+            BougerPrimaire.to_middle(grimpeur_primaire)
         )
         self.setName(self.__class__.__name__)

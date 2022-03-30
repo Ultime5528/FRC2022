@@ -1,18 +1,33 @@
-from typing import Callable
-import commands2
-import wpilib
 import properties
-
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
+from utils.properties import FloatProperty, to_callable
+from utils.safecommandbase import SafeCommandBase
 from utils.trapezoidalmotion import TrapezoidalMotion
 
 
-class BougerSecondaire(commands2.CommandBase):
-    def __init__(self, grimpeur: GrimpeurSecondaire, get_position: Callable[[], float]):
+class BougerSecondaire(SafeCommandBase):
+    @classmethod
+    def to_next_level(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_primaire_hauteur_level_3)
+        cmd.setName(cmd.getName() + " level 3")
+        return cmd
+
+    @classmethod
+    def to_max(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_secondaire_hauteur_max)
+        cmd.setName(cmd.getName() + " max")
+        return cmd
+
+    @classmethod
+    def to_aligner(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_secondaire_hauteur_alignement)
+        cmd.setName(cmd.getName() + " aligner")
+        return cmd
+
+    def __init__(self, grimpeur: GrimpeurSecondaire, position: FloatProperty):
         super().__init__()
-        self.setName("BougerSecondaire")
         self.grimpeur = grimpeur
-        self.get_position = get_position
+        self.get_position = to_callable(position)
         self.addRequirements(self.grimpeur)
         self.motion = TrapezoidalMotion()
 

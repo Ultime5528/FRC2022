@@ -1,6 +1,6 @@
 import math
-import cv2
 
+import cv2
 
 
 def Balles2(img, color, error):
@@ -14,10 +14,8 @@ def Balles2(img, color, error):
     if color == "bleu":
         mask = cv2.inRange(hsv, (90, 86, 50), (130, 255, 255))
 
-
     blur = cv2.medianBlur(mask, 5)
     cnts, _ = cv2.findContours(blur, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
 
     infoCercles = []
 
@@ -27,7 +25,7 @@ def Balles2(img, color, error):
             area = cv2.contourArea(cnt)
             perimeter = cv2.arcLength(cnt, True)
             # cv2.drawContours(img, [cnt], -1, (0, 255, 0), 3)
-            circularity = 4 * math.pi * area / perimeter**2 if perimeter else 0
+            circularity = 4 * math.pi * area / perimeter ** 2 if perimeter else 0
             if abs(1 - circularity) <= error:
                 # cv2.drawContours(img, [cnt], -1, (255, 0, 0), 3)
                 cercleX = round(x)

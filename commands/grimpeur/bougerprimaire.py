@@ -1,16 +1,36 @@
 from typing import Callable
+
+import properties
 from subsystems.grimpeurprimaire import GrimpeurPrimaire
+from utils.properties import FloatProperty, to_callable
 from utils.safecommandbase import SafeCommandBase
 from utils.trapezoidalmotion import TrapezoidalMotion
-import properties
 
 
 class BougerPrimaire(SafeCommandBase):
-    def __init__(self, grimpeur: GrimpeurPrimaire, get_hauteur: Callable[[], float]):
+    @classmethod
+    def to_clip(cls, grimpeur: GrimpeurPrimaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_primaire_hauteur_clip)
+        cmd.setName(cmd.getName() + " clip")
+        return cmd
+
+    @classmethod
+    def to_max(cls, grimpeur: GrimpeurPrimaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_primaire_hauteur_max)
+        cmd.setName(cmd.getName() + " max")
+        return cmd
+
+    @classmethod
+    def to_middle(cls, grimpeur: GrimpeurPrimaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_primaire_hauteur_max/2)
+        cmd.setName(cmd.getName() + " middle")
+        return cmd
+
+    def __init__(self, grimpeur: GrimpeurPrimaire, hauteur: FloatProperty):
         super().__init__()
         self.grimpeur = grimpeur
         self.addRequirements(self.grimpeur)
-        self.get_hauteur = get_hauteur
+        self.get_hauteur = to_callable(hauteur)
         self.motion = TrapezoidalMotion()
 
     def initialize(self) -> None:

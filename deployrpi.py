@@ -1,10 +1,13 @@
+import asyncio
+import json
+
 import robotpy_installer.sshcontroller
 import websockets
-import json
-import asyncio
 
+from utils.unixfile import convert_line_endings
 
 ip_address = "10.55.28.6"
+
 
 class SshController(robotpy_installer.sshcontroller.SshController):
     def put(self, src, dest):
@@ -39,11 +42,15 @@ with SshController(ip_address, "pi", "raspberry") as controller:
     controller.put("visioncargo.py", "/home/pi/visioncargo.py")
     controller.put("visionhub.py", "/home/pi/visionhub.py")
     controller.put("visionmaster.py", "/home/pi/visionmaster.py")
+    controller.put("properties.py", "/home/pi/properties.py")
+
+    convert_line_endings("runCamera")
     controller.put("runCamera", "/home/pi/runCamera")
-    controller.exec_cmd("chmod 777 runCamera")
-    controller.exec_cmd("rm -rf /home/pi/vision")
+    controller.exec_cmd("chmod 777 runCamera", print_output=True)
+
+    controller.exec_cmd("rm -rf /home/pi/vision", print_output=True)
     controller.sftp("./vision", "/home/pi/")
-    # controller.exec_cmd("pkill -f python3")
+    # controller.exec_cmd("pkill -f python3", print_output=True)
 
 send_message("systemReadOnly")
 send_message("visionKill")

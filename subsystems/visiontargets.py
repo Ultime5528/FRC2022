@@ -2,11 +2,9 @@ from dataclasses import dataclass
 
 import commands2
 import wpilib
-from commands2 import Trigger
 from networktables import NetworkTables
-# from pyfrc.physics.visionsim import VisionSim
-from wpimath.geometry import Pose2d
 from wpilib import RobotBase, Timer
+from wpimath.geometry import Pose2d
 
 import properties
 from subsystems.basepilotable import BasePilotable

@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, Tuple
 
 
 class LinearInterpolator:
-    def __init__(self, points: List):
+    def __init__(self, points: List[Tuple[float, float]]):
         self.points = points
 
     def interpolate(self, x):
@@ -17,4 +17,5 @@ class LinearInterpolator:
         if i == len(self.points):
             return self.points[i - 1][1]
 
-        return (self.points[i][1] - self.points[i - 1][1]) / (self.points[i][0] - self.points[i - 1][0]) * (x - self.points[i - 1][0]) + self.points[i - 1][1]
+        return (self.points[i][1] - self.points[i - 1][1]) / (self.points[i][0] - self.points[i - 1][0]) * (
+                    x - self.points[i - 1][0]) + self.points[i - 1][1]

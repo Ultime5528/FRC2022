@@ -1,12 +1,12 @@
 import cv2
-from tqdm.auto import tqdm
 import xlsxwriter
+from tqdm.auto import tqdm
 
-from vision.evaluate.metrics.bounding_box import BoundingBox
-from vision.dataset import Color, get_dataset
-from vision.evaluate.metrics.enumerators import BBType
-from vision.evaluate.metrics import summary
 from vision import balldetection
+from vision.dataset import Color, get_dataset
+from vision.evaluate.metrics import summary
+from vision.evaluate.metrics.bounding_box import BoundingBox
+from vision.evaluate.metrics.enumerators import BBType
 
 
 def to_pred_bbox(image_name: str, color: Color, xywh: tuple[int, int, int, int]):
@@ -49,9 +49,10 @@ algorithms_format = workbook.add_format()
 algorithms_format.set_bg_color("#bebebe")
 
 headers = ["Precision[blue]@.50", "Precision[red]@.50", "AveragePrecision@.50", "Recall[blue]@.50",
- "Recall[red]@.50", "AverageRecall@.50", "F1[blue]@.50", "F1[red]@.50", "AverageF1@.50", "Precision[blue]@.75",
- "Precision[red]@.75", "AveragePrecision@.75", "Recall[blue]@.75", "Recall[red]@.75", "AverageRecall@.75",
- "F1[blue]@.75", "F1[red]@.75", "AverageF1@.75", "AR[red]", "AR[blue]", "mAR"]
+           "Recall[red]@.50", "AverageRecall@.50", "F1[blue]@.50", "F1[red]@.50", "AverageF1@.50",
+           "Precision[blue]@.75",
+           "Precision[red]@.75", "AveragePrecision@.75", "Recall[blue]@.75", "Recall[red]@.75", "AverageRecall@.75",
+           "F1[blue]@.75", "F1[red]@.75", "AverageF1@.75", "AR[red]", "AR[blue]", "mAR"]
 
 maxWidths = []
 for i, header in enumerate(["Algorithm"] + headers):
@@ -73,7 +74,7 @@ for i, header in enumerate(["Algorithm"] + headers):
 
 # Get dataset & generate ground truth
 dataset = get_dataset()
-cached_images = {photo.name:cv2.imread(photo.img_path) for photo in dataset}
+cached_images = {photo.name: cv2.imread(photo.img_path) for photo in dataset}
 gt = [cargo.to_groundtruth_bbox(photo.name) for photo in dataset for cargo in photo.cargos]
 
 print("Mesuring algorithms...")
@@ -81,22 +82,23 @@ for i, alg in enumerate(algorithms):
     print(f"Mesuring {alg.__name__}...")
 
     # Generate predictions
-    preds = [to_pred_bbox(photo.name, color, box) for photo in tqdm(dataset) for color in Color for box in alg(cached_images[photo.name], color)]
+    preds = [to_pred_bbox(photo.name, color, box) for photo in tqdm(dataset) for color in Color for box in
+             alg(cached_images[photo.name], color)]
 
     # Calculate metrics
     metrics = summary.get_summary(gt, preds)
 
     # Write to Excel sheet
-    worksheet.write(i+1, 0, alg.__name__, algorithms_format)
+    worksheet.write(i + 1, 0, alg.__name__, algorithms_format)
     width = len(alg.__name__)
     if width > maxWidths[0]:
         maxWidths[0] = width
 
     for j, key in enumerate(headers):
-        worksheet.write(i + 1, j+1, metrics[key])
+        worksheet.write(i + 1, j + 1, metrics[key])
         width = len(str(metrics[key]))
-        if width > maxWidths[j+1]:
-            maxWidths[j+1] = width
+        if width > maxWidths[j + 1]:
+            maxWidths[j + 1] = width
 
 print("Applying auto-fit...")
 for i, maxWidth in enumerate(maxWidths):
