@@ -43,8 +43,7 @@ class Auto4Ballons(commands2.SequentialCommandGroup):
             commands2.ParallelRaceGroup(
                 # commands2.WaitCommand(10),
                 commands2.ParallelDeadlineGroup(
-                    # ViserTirer(base_pilotable, stick, shooter, intake, vision),
-                    ManualShoot(shooter, intake, 1500, 1500),
+                    ViserTirer(base_pilotable, stick, shooter, intake, vision),
                     MonterIntake(grimpeur_secondaire)
                 ),
             ),
@@ -63,8 +62,7 @@ class Auto4Ballons(commands2.SequentialCommandGroup):
             Avancer(base_pilotable, -1, -0.2),
             commands2.ParallelCommandGroup(
                 MonterIntake(grimpeur_secondaire),
-                ManualShoot(shooter, intake, 1500, 1500),
-                # ViserTirer(base_pilotable, stick, shooter, intake, vision),
+                ViserTirer(base_pilotable, stick, shooter, intake, vision),
             )
 
         )
