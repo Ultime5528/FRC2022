@@ -119,6 +119,7 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_clip(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", DescendreCompletPrimaire(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_middle(self.grimpeur_primaire))
+        put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_middle_lent(self.grimpeur_primaire))
 
         put_command_on_dashboard("GrimpeurSecondaire", MonterCompletSecondaire(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", DescendreCompletSecondaire(self.grimpeur_secondaire))
