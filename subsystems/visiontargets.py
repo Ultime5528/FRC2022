@@ -106,7 +106,7 @@ class VisionTargets(commands2.SubsystemBase):
 
         def score(x):
             return (properties.values.aide_pilotage_width_x_balance*x.nw
-                                + (1-properties.values.aide_pilotage_width_x_balance)*(1-x.nx))
+                                + (1-properties.values.aide_pilotage_width_x_balance)*(1-abs(x.nx)))
 
         cargosnweights = [(x, score(x)) for x in cargos]
 
@@ -115,7 +115,7 @@ class VisionTargets(commands2.SubsystemBase):
         if optimal[1] <= properties.values.aide_pilotage_optimal_threshold:
             return None
 
-        return optimal[0].nx * 180
+        return optimal[0].nx * properties.values.aide_pilotage_half_FOV
 
     def simulationPeriodic(self):
         fakehubpose = self.fakehub.getPose()
