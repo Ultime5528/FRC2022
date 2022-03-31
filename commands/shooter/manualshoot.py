@@ -4,6 +4,10 @@ from subsystems.shooter import Shooter
 
 
 class ManualShoot(AbstractShoot):
+    @classmethod
+    def bas(cls, shooter: Shooter):
+        cls = 
+
     def __init__(self, shooter: Shooter, intake: Intake, setpoint: float, backspin_setpoint: float):
         super().__init__(shooter, intake)
         self.setpoint = setpoint
