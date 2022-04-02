@@ -30,6 +30,12 @@ class BougerSecondaire(SafeCommandBase):
         cmd.setName(cmd.getName() + " aligner haut")
         return cmd
 
+    @classmethod
+    def to_intake_haut(cls, grimpeur: GrimpeurSecondaire):
+        cmd = cls(grimpeur, lambda: properties.values.grimpeur_secondaire_hauteur_intake_haut)
+        cmd.setName(cmd.getName() + " max")
+        return cmd
+
     def __init__(self, grimpeur: GrimpeurSecondaire, position: FloatProperty):
         super().__init__()
         self.grimpeur = grimpeur
