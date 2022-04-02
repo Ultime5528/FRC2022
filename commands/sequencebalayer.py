@@ -12,6 +12,5 @@ class SequenceBalayer(commands2.SequentialCommandGroup):
         super().__init__(
             DescendreIntake(grimpeur_secondaire),
             BalayerBallon(intake),
-            MonterIntake(grimpeur_secondaire,intake),
         )
         self.setName(self.__class__.__name__)

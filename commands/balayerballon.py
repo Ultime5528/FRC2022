@@ -9,11 +9,6 @@ class BalayerBallon(SafeCommandBase):
         super().__init__()
         self.addRequirements(intake)
         self.intake = intake
-        self.timer = wpilib.Timer()
-
-    def initialize(self) -> None:
-        self.timer.reset()
-        self.timer.start()
 
     def execute(self) -> None:
         self.intake.ejecter()
