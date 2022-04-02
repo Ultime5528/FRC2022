@@ -106,6 +106,7 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Shooter", InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
         put_command_on_dashboard("Shooter", DashboardShoot(self.shooter, self.intake))
         put_command_on_dashboard("Shooter", EjecterShooter(self.shooter, self.intake))
+        put_command_on_dashboard("Shooter", ManualShoot.bas(self.shooter, self.intake))
 
         put_command_on_dashboard("BasePilotable", Avancer(self.base_pilotable, -1, 0.15))
         put_command_on_dashboard("BasePilotable", Tourner(self.base_pilotable, -90, 0.1))
