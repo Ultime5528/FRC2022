@@ -7,7 +7,9 @@ import properties
 class ManualShoot(AbstractShoot):
     @classmethod
     def bas(cls, shooter: Shooter, intake: Intake, setpoint: float, backspin_setpoint: float):
-        cls = cls(shooter, intake, properties.values.shooter_speed_bas, properties.values.shooter_backspin_speed_bas)
+        cmd = cls(shooter, intake, properties.values.shooter_speed_bas, properties.values.shooter_backspin_speed_bas)
+        cmd.setName(cmd.getName() + " bas")
+        return cmd
 
     def __init__(self, shooter: Shooter, intake: Intake, setpoint: float, backspin_setpoint: float):
         super().__init__(shooter, intake)
