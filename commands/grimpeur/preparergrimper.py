@@ -20,16 +20,13 @@ class PreparerGrimper(commands2.SequentialCommandGroup):
                 DescendreCompletPrimaire(grimpeur_primaire),
                 commands2.SequentialCommandGroup(
                     DescendreCompletSecondaire(grimpeur_secondaire),
-                    BougerSecondaire(
-                        grimpeur_secondaire,
-                        lambda: properties.values.grimpeur_secondaire_hauteur_alignement,
-                    ),
+                    BougerSecondaire.to_aligner_bas(grimpeur_secondaire),
                 ),
             ),
             BougerPrimaire.to_clip(grimpeur_primaire),
             BougerSecondaire(
                 grimpeur_secondaire,
-                lambda: properties.values.grimpeur_secondaire_hauteur_alignement - 20,
+                lambda: properties.values.grimpeur_secondaire_hauteur_alignement_bas - 20,
             ),
             commands2.ParallelCommandGroup(
                 DescendreCompletSecondaire(grimpeur_secondaire),
