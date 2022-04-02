@@ -79,6 +79,7 @@ class Robot(commands2.TimedCommandRobot):
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.stick, 3).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
         JoystickButton(self.stick, 4).whenHeld(PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
+        JoystickButton(self.stick, 5).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
 
         # CONSOLE
         JoystickButton(self.console_1, 5).whenPressed(GrimperNiveau2(self.grimpeur_primaire))
@@ -88,21 +89,21 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.console_1, 7).whenPressed(
             ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
-        # JoystickButton(self.console_1, 3).whenPressed(Exploser(self.led_controller))
+        JoystickButton(self.console_1, 3).whenPressed(ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 6).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
         # JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
         JoystickButton(self.console_1, 1).whenPressed(SequenceBalayer(self.grimpeur_secondaire, self.intake))
-        AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire, self.intake))
+        AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
         AxisTrigger(self.console_1, 0, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire, self.intake))
+        AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))
         AxisTrigger(self.console_1, 1, inverted=True).whenActive(DescendreIntake(self.grimpeur_secondaire))
         # Pour une raison inconnue, le trigger doit être gardé comme attribut pour que les test fonctionnent.
         # self.trigger = WrongCargoTrigger(self.vision_targets)
         # self.trigger.whenActive(EjecterIntake(self.intake))
 
     def setup_dashboard(self):
-        put_command_on_dashboard("Intake", MonterIntake(self.grimpeur_secondaire, self.intake))
+        put_command_on_dashboard("Intake", MonterIntake(self.grimpeur_secondaire))
         put_command_on_dashboard("Intake", DescendreIntake(self.grimpeur_secondaire))
         put_command_on_dashboard("Intake", PrendreBallon(self.intake))
         put_command_on_dashboard("Intake", SequencePrendre(self.grimpeur_secondaire, self.intake))
