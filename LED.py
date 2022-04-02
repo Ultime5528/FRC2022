@@ -44,6 +44,7 @@ class LEDController(commands2.SubsystemBase):
         self.buffer = [wpilib.AddressableLED.LEDData() for _ in range(300)]
         self.led_strip.setLength(len(self.buffer))
         self.time = 0
+        self.explosiveness = 1
         self.led_strip.start()
         ModeLED.NONE
         self.mode = ModeLED
@@ -72,12 +73,12 @@ class LEDController(commands2.SubsystemBase):
         self.set_all(lambda i: color)
 
     def ripples(self, color):
-        def get_color(i: int):
-            if self.time % 10 == 0:
+        if self.time % 10 == 0:
+            def get_color(i: int):
                 if random.random() <= (1 - (wpilib.DriverStation.getMatchTime() / 15)):
                     return color
                 else:
-                    return self.white
+                    return self.black
             self.set_all(get_color)
 
     def waves(self, color, nombreballons):
@@ -93,26 +94,37 @@ class LEDController(commands2.SubsystemBase):
                 t = prop
             else:
                 t = abs(prop - 1)
-                print(t)
             self.last = prop
             return interpoler(t, color, self.black)
         self.set_all(get_color)
 
-    def explode(self, color, speed):
+    def flash(self, color, speed):
         if self.time % speed == 0:
             if self.time % (speed * 2) == 0:
                 self.set_all(lambda i: color)
             else:
                 self.set_all(lambda i: self.black)
 
+    def explode(self, color):
+        if self.time % 3 == 0:
+            def get_color(i: int):
+                y = random.random()
+                if y <= self.explosiveness:
+                    return interpoler(y / self.explosiveness, color, np.array([color[0], 0, 255]))
+                else:
+                    return self.black
+            self.explosiveness -= 0.02
+            self.set_all(get_color)
+
+
     def periodic(self) -> None:
         self.time += 1
         if self.shooter.setpoint != 0:
-            ModeLED.SHOOT
-        elif 1 == 0:
-            ModeLED.INTAKE
+            self.mode = ModeLED.SHOOT
+        elif self.intake.getIntakeSpeed() != 0:
+            self.mode = ModeLED.INTAKE
         else:
-            ModeLED.NONE
+            self.mode = ModeLED.NONE
 
         alliance = wpilib.DriverStation.getAlliance()
         if alliance == wpilib.DriverStation.Alliance.kInvalid:
@@ -122,26 +134,29 @@ class LEDController(commands2.SubsystemBase):
         else:  # kBlue
             color = self.blue_hsv
 
-        if wpilib.DriverStation.isAutonomous(): #auto
+        if wpilib.DriverStation.isAutonomousEnabled(): #auto
             self.ripples(color)
-        elif wpilib.DriverStation.isTeleop(): #teleop
+        elif wpilib.DriverStation.isTeleopEnabled(): #teleop
             if ModeLED.INTAKE == self.mode:
                 self.waves(color, self.intake.ballCount())
             elif ModeLED.SHOOT == self.mode:
                 self.half_waves(color)
-            elif wpilib.DriverStation.getMatchTime() >= 30:
-                self.explode(self.yellow_hsv, 50)
-            elif wpilib.DriverStation.getMatchTime() >= 15:
-                self.explode(self.orange_hsv, 35)
-            elif wpilib.DriverStation.getMatchTime() >= 5:
-                self.explode(color, 10)
+            elif wpilib.DriverStation.getMatchTime() <= 1:
+                self.explode(color)
+            elif wpilib.DriverStation.getMatchTime() <= 5:
+                self.explosiveness = 1
+                self.flash(color, 10)
+            elif wpilib.DriverStation.getMatchTime() <= 15:
+                self.flash(self.orange_hsv, 35)
+            elif wpilib.DriverStation.getMatchTime() <= 30:
+                self.flash(self.yellow_hsv, 50)
             else:
                 self.set_all(lambda i: color)
-    
+
         else:  # game hasn't started
+            print("disabled")
             if alliance == wpilib.DriverStation.Alliance.kInvalid:
                 self.select_team()
-            else:  # kBlue
+            else:
                 self.set_all(lambda i: color)
-
         self.led_strip.setData(self.buffer)

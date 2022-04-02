@@ -53,6 +53,9 @@ class Intake(SubsystemBase):
     def ejecter(self):
         self._motor_intake.set(properties.values.intake_reverse_speed)
 
+    def getIntakeSpeed(self):
+        return self._motor_intake.get()
+
     def periodic(self):
         wpilib.SmartDashboard.putBoolean("Sensor intake", self.hasBallIntake())
         wpilib.SmartDashboard.putBoolean("Sensor transporter", self.hasBallConvoyeur())
