@@ -23,6 +23,8 @@ class Properties:
     shooter_feedforward_percentage = ntproperty("/Properties/shooter_feedforward_percentage", 0.95, writeDefault=False, persistent=persistent)
     shooter_tolerance = ntproperty("/Properties/shooter_tolerance", 100, writeDefault=False, persistent=persistent)
     shooter_end_time = ntproperty("/Properties/shooter_end_time", 4, writeDefault=False, persistent=persistent)
+    shooter_backspin_speed_bas = ntproperty("/Properties/shooter_backspin_speed_bas", 2000, writeDefault=False, persistent=persistent)
+    shooter_speed_bas = ntproperty("/Properties/shooter_speed_bas", 1000, writeDefault=False, persistent=persistent)
 
     intake_speed = ntproperty("/Properties/intake_speed", 0.4, writeDefault=False, persistent=persistent)
     intake_reverse_speed = ntproperty("/Properties/intake_reverse_speed", -0.5, writeDefault=False, persistent=persistent)

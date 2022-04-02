@@ -1,12 +1,13 @@
 from commands.shooter.abstractshoot import AbstractShoot
 from subsystems.intake import Intake
 from subsystems.shooter import Shooter
+import properties
 
 
 class ManualShoot(AbstractShoot):
     @classmethod
-    def bas(cls, shooter: Shooter):
-        cls = 
+    def bas(cls, shooter: Shooter, intake: Intake, setpoint: float, backspin_setpoint: float):
+        cls = cls(shooter, intake, properties.values.shooter_speed_bas, properties.values.shooter_backspin_speed_bas)
 
     def __init__(self, shooter: Shooter, intake: Intake, setpoint: float, backspin_setpoint: float):
         super().__init__(shooter, intake)
