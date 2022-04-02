@@ -36,6 +36,7 @@ class Properties:
 
     grimpeur_primaire_vitesse_descendre = ntproperty("/Properties/grimpeur_primaire_vitesse_descendre", -0.5, writeDefault=False, persistent=persistent)
     grimpeur_primaire_vitesse_monter = ntproperty("/Properties/grimpeur_primaire_vitesse_monter", 0.5, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_vitesse_descendre_slow = ntproperty("/Properties/grimpeur_primaire_vitesse_descendre_slow", -0.25, writeDefault=False, persistent=persistent)
     grimpeur_primaire_start_speed = ntproperty("/Properties/grimpeur_primaire_start_speed", 0.2, writeDefault=False, persistent=persistent)
     grimpeur_primaire_end_speed = ntproperty("/Properties/grimpeur_primaire_end_speed", 1.0, writeDefault=False, persistent=persistent)
     grimpeur_primaire_accel = ntproperty("/Properties/grimpeur_primaire_accel", 0.03, writeDefault=False, persistent=persistent)
@@ -47,9 +48,11 @@ class Properties:
     grimpeur_secondaire_start_speed = ntproperty("/Properties/grimpeur_secondaire_start_speed", 0.2, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_end_speed = ntproperty("/Properties/grimpeur_secondaire_end_speed", 1.0, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_accel = ntproperty("/Properties/grimpeur_secondaire_accel", 0.03, writeDefault=False, persistent=persistent)
-    grimpeur_secondaire_hauteur_alignement = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement", 90.0, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_hauteur_max = ntproperty("/Properties/grimpeur_secondaire_hauteur_max", 120, writeDefault=False, persistent=persistent)
     grimpeur_primaire_hauteur_level_3 = ntproperty("/Properties/grimpeur_primaire_hauteur_level_3", 50, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_hauteur_alignement_bas = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement_bas", 90.0, writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_hauteur_alignement_haut = ntproperty("/Properties/grimpeur_secondaire_hauteur_alignement_haut", 80.0,writeDefault=False, persistent=persistent)
+    grimpeur_secondaire_hauteur_intake_haut = ntproperty("/Properties/grimpeur_secondaire_hauteur_intake_haut", 10,writeDefault=False, persistent=persistent)
 
     vision_hub_rectangularity_threshold = ntproperty("/Properties/vision_hub_rectangularity_threshold", 0.5, writeDefault=False,persistent=persistent)
     vision_hub_perimeter_threshold = ntproperty("/Properties/vision_hub_perimeter_threshold", 7, writeDefault=False,persistent=persistent)

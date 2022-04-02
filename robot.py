@@ -86,16 +86,16 @@ class Robot(commands2.TimedCommandRobot):
         # JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
         JoystickButton(self.console_1, 1).whenPressed(SequenceBalayer(self.grimpeur_secondaire, self.intake))
-        AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire, self.intake))
         AxisTrigger(self.console_1, 0, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire, self.intake))
         AxisTrigger(self.console_1, 1, inverted=True).whenActive(DescendreIntake(self.grimpeur_secondaire))
         # Pour une raison inconnue, le trigger doit être gardé comme attribut pour que les test fonctionnent.
         # self.trigger = WrongCargoTrigger(self.vision_targets)
         # self.trigger.whenActive(EjecterIntake(self.intake))
 
     def setup_dashboard(self):
-        put_command_on_dashboard("Intake", MonterIntake(self.grimpeur_secondaire))
+        put_command_on_dashboard("Intake", MonterIntake(self.grimpeur_secondaire, self.intake))
         put_command_on_dashboard("Intake", DescendreIntake(self.grimpeur_secondaire))
         put_command_on_dashboard("Intake", PrendreBallon(self.intake))
         put_command_on_dashboard("Intake", SequencePrendre(self.grimpeur_secondaire, self.intake))
@@ -119,10 +119,11 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_clip(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", DescendreCompletPrimaire(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_middle(self.grimpeur_primaire))
+        put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_middle_lent(self.grimpeur_primaire))
 
         put_command_on_dashboard("GrimpeurSecondaire", MonterCompletSecondaire(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", DescendreCompletSecondaire(self.grimpeur_secondaire))
-        put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_aligner(self.grimpeur_secondaire))
+        put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_aligner_bas(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_next_level(self.grimpeur_secondaire))
 
         put_command_on_dashboard("Grimper", ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))

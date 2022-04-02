@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 
 import properties
 from subsystems.grimpeurprimaire import GrimpeurPrimaire
@@ -26,8 +26,21 @@ class BougerPrimaire(SafeCommandBase):
         cmd.setName(cmd.getName() + " middle")
         return cmd
 
-    def __init__(self, grimpeur: GrimpeurPrimaire, hauteur: FloatProperty):
+    @classmethod
+    def to_middle_lent(cls, grimpeur: GrimpeurPrimaire):
+        cmd = cls(
+            grimpeur,
+            lambda: properties.values.grimpeur_primaire_hauteur_max / 2,
+            lambda: properties.values.grimpeur_primaire_vitesse_descendre_slow
+        )
+        cmd.setName(cmd.getName() + " middle lent")
+        return cmd
+
+    def __init__(self, grimpeur: GrimpeurPrimaire, hauteur: FloatProperty, speed: Optional[FloatProperty] = None):
         super().__init__()
+        if not speed:
+            speed = lambda: properties.values.grimpeur_primaire_start_speed
+        self.get_speed = to_callable(speed)
         self.grimpeur = grimpeur
         self.addRequirements(self.grimpeur)
         self.get_hauteur = to_callable(hauteur)
@@ -37,7 +50,7 @@ class BougerPrimaire(SafeCommandBase):
         self.motion.update(
             start_position=self.grimpeur.getPosition(),
             end_position=self.get_hauteur(),
-            start_speed=properties.values.grimpeur_primaire_start_speed,
+            start_speed=self.get_speed(),
             end_speed=properties.values.grimpeur_primaire_end_speed,
             accel=properties.values.grimpeur_primaire_accel
         )
