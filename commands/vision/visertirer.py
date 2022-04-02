@@ -3,6 +3,7 @@ from wpilib import Joystick
 
 from commands.basepilotable.piloter import Piloter
 from commands.shooter.dashboardshoot import DashboardShoot
+from commands.shooter.interpolatedshoot import InterpolatedShoot
 from commands.vision.viserhub import ViserHub
 from subsystems.basepilotable import BasePilotable
 from subsystems.intake import Intake
@@ -16,5 +17,5 @@ class ViserTirer(commands2.SequentialCommandGroup):
     ):
         super().__init__(
             ViserHub(basepilotable, vision),
-            commands2.ParallelDeadlineGroup(DashboardShoot(shooter, intake), Piloter(basepilotable, stick)),
+            commands2.ParallelDeadlineGroup(InterpolatedShoot(shooter, intake, vision), Piloter(basepilotable, stick)),
         )
