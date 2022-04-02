@@ -19,9 +19,9 @@ class PiloterAide(SafeCommandBase):
 
     def execute(self):
         x = interpoler(self.stick.getX())
-        y = interpoler(self.stick.getY())
+        y = interpoler(-self.stick.getY())
 
-        ori = math.atan2(y, x)
+        ori = math.degrees(math.atan2(y, x))
         mag = x**2+y**2
 
         vori = self.vision.optimalCargoOrientation()
@@ -30,7 +30,7 @@ class PiloterAide(SafeCommandBase):
             ori = (1 - properties.values.aide_pilotage_orientation_influence) * ori \
                  + properties.values.aide_pilotage_orientation_influence * vori
 
-        forward = -mag * math.sin(ori)
+        forward = mag * math.sin(ori)
         turn = mag * math.cos(ori)
 
         if self.vision.hasRightCargoNear:
