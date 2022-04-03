@@ -5,7 +5,7 @@ from networktables import NetworkTables
 
 import properties
 
-DEBUG = False
+DEBUG = True
 
 
 class Target:
@@ -56,11 +56,18 @@ def hub_loop():
 
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, properties.values.vision_hub_lowergreen, properties.values.vision_hub_highergreen)
+
+        dilate = 1
+        kernel = np.ones((dilate * 2 + 1, dilate * 2 + 1), "uint8")
+        mask = cv2.erode(mask, kernel, iterations=1)
+        mask = cv2.dilate(mask, kernel, iterations=2)
+        # mask = cv2.erode(mask, kernel, iterations=1)
+
         _, cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         # cv2.imshow('mask', mask)
         if DEBUG:
-            cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR, mask)
-            cv2.drawContours(mask, cnts, -1, (0, 0, 255), -1)
+            mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+            mask = cv2.drawContours(mask, cnts, -1, (0, 0, 255), 1)
 
         validRects = []
         if cnts is not None:
@@ -115,7 +122,7 @@ def hub_loop():
             for x, y in validPositions:
                 if abs(targetY - y) < maxErrorY and abs(targetX - x) < maxErrorX:
                     target.positions.append((x, y))
-                    target.error += abs(targetY - y)
+                    target.error += abs(targetY - y) + abs(targetX - x)
             targets.append(target)
 
         if targets:
@@ -129,8 +136,9 @@ def hub_loop():
                     bestTarget = target
 
             if DEBUG:
-                for p in bestTarget.positions:
-                    cv2.circle(mask, p, 3, (0, 0, 255), 5)
+                pass
+                # for p in bestTarget.positions:
+                #     cv2.circle(mask, (int(p[0]), int(p[1])), 3, (0, 0, 255), 5)
 
             position = np.mean(bestTarget.positions, axis=0).astype("int")
             norm_x = (position[0] / img.shape[1]) * 2 - 1

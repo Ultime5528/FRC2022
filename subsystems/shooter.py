@@ -20,7 +20,7 @@ def compute_speed_percentage(speed, setpoint):
 
 
 class Shooter(commands2.SubsystemBase):
-    main_verified_points = [[0.1, 2500], [0.15, 2500], [0.2, 2600], [0.333, 2700], [0.4, 2800], [0.56, 2900], [0.7, 3300]]
+    main_verified_points = [[0.1, 2500], [0.15, 2500], [0.2, 2600], [0.333, 2700], [0.4, 2800], [0.56, 2900], [0.64, 4300], [0.7, 4500]]
     backspin_verified_points = main_verified_points
     main_interpolator = LinearInterpolator(main_verified_points)
     backspin_interpolator = LinearInterpolator(backspin_verified_points)
