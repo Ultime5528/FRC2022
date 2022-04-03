@@ -1,5 +1,6 @@
 import commands2
 import wpilib
+from wpilib import PowerDistribution
 from commands2.button import JoystickButton
 from wpimath.geometry import Pose2d, Rotation2d
 
@@ -44,6 +45,7 @@ from triggers.axistrigger import AxisTrigger
 from utils.dashboard import put_command_on_dashboard
 
 
+
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
         # CameraServer.launch("visionhub.py:main")
@@ -60,6 +62,8 @@ class Robot(commands2.TimedCommandRobot):
         self.grimpeur_secondaire = GrimpeurSecondaire()
         self.vision_targets = VisionTargets(self.base_pilotable)
         self.led_controller = LEDController()
+
+        self.pdp = PowerDistribution()
 
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
 
@@ -158,6 +162,7 @@ class Robot(commands2.TimedCommandRobot):
         # except Exception as e:
         #     print(e)
         #     traceback.print_exc()
+        wpilib.SmartDashboard.putNumber("Current Grimpeur Secondaire", self.pdp.getCurrent(9))
 
     def autonomousInit(self) -> None:
         self.autoCommand = self.autoChooser.getSelected()
