@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>My Robot Dashboard!</title>
+    <title>KRAKEN DASHBOARD</title>
     <script src="jquery-2.2.2.min.js"></script>
     <script src="/networktables/camera.js"></script>
 	<link rel="stylesheet" href="style.css">
@@ -10,18 +10,20 @@
 
 <body>
     <frc-dashboard onload="ntLoaded()">
-        <div style="display: flex;align-items: center;">
-            <img src="Ultime-5528-Monochrome-Rouge.svg" width="100px" height="100px" style="margin-right: 36px"/>
+        <div style="display: flex;align-items: center;justify-content: center;">
+            <img src="kraken.svg" height="100px"/>
+            <br>
             <div style="display: inline-block; margin-right: 36px;">
                 NetworkTables websocket: <span id="connectstate">Unknown state</span><br/>
                 Robot: <span id="robotstate">Unknown state</span> @ <span id="robotAddress">disconnected</span>
             </div>
             <frc-basic-fms-info></frc-basic-fms-info>
+            <img src="Ultime-5528-Monochrome-Rouge.svg" width="100px" height="100px"/>
         </div>
         <hr/>
 
-        <div style="display: flex; flex-wrap: nowrap">
-            <div style="width: min(100%, 640px)">
+        <div style="display: flex; flex-wrap: wrap;justify-content: center;">
+            <div style="width: min(100%, 640px); margin-right: 3%;">
                 <h2 class="secondary-text">Vision Hub</h2>
                 <div id="hub_output" style="width: 100%"></div>
             </div>
@@ -31,88 +33,63 @@
             </div>
         </div>
 
-        <div id="Properties">
-            <h2 class="secondary-text"><i>Shooter</i></h2>
-            <div id="CommandButtons">
-                <frc-robot-command label="Shoot" source-key="/SmartDashboard/Shoot"></frc-robot-command>
-                <frc-robot-command label="Eject" source-key="/SmartDashboard/Shooter Eject"></frc-robot-command>
-                <frc-robot-command label="Speed Testing Shoot" source-key="/SmartDashboard/Speed Testing Shoot"></frc-robot-command>
+        <div style="display: flex;">
+            <div style="margin-right:5%;">
+                <h2 class="secondary-text">Mode autonome</h2>
+                <frc-combo-box name="Mode Auto" default="Rien" options='["Rien","2 Ballons", "4 Ballons"]' source-key="/SmartDashboard/ModeAutonome"></frc-combo-box>
+                <div class="boolean-box-title">
+                    <h2 class="secondary-text">Aide au pilotage</h2>
+                    <frc-boolean-box true-color="var(--lumo-primary-color)" false-color="var(--lumo-primary-color-10pct)" source-key="/SmartDashboard/Vision/PiloterAide/running"></frc-boolean-box>
+                    <div></div>
+                </div>
+
+                <h3 class="secondary-text">Influence</h3>
+                <frc-custom-slider min="0" max="1" block-increment="0.01" source-key="/Properties/aide_pilotage_orientation_influence"></frc-custom-slider>
+
+                <h3 class="secondary-text">Vitesse de ralentissement</h3>
+                <frc-custom-slider min="0" max="1" block-increment="0.01" source-key="/Properties/aide_pilotage_slow_factor"></frc-custom-slider>
             </div>
-            <nt-number key="/SmartDashboard/BackspinMotor" value="1"></nt-number>
-            <nt-number key="/SmartDashboard/MainMotors" value="1"></nt-number>
-            <nt-number key="/SmartDashboard/MainMotorPercentSpeed" value="1"></nt-number>
-            <nt-number key="/SmartDashboard/BackspinMotorPercentSpeed" value="1"></nt-number>
-            <frc-number-field readonly label="Backspin Motor" source-key="/SmartDashboard/BackspinMotor"></frc-number-field>
-            <frc-number-field readonly label="Main Motors" source-key="/SmartDashboard/MainMotors"></frc-number-field>
-            <frc-number-field readonly label="Main Motor percent speed" source-key="/SmartDashboard/MainMotorPercentSpeed"></frc-number-field>
-            <frc-number-field readonly label="Backspin Motor percent speed" source-key="/SmartDashboard/BackspinMotorPercentSpeed"></frc-number-field>
-            <frc-number-field min="0" max="5200" step="100" has-controls label="Shooter Speed" source-key="/Properties/shooter_speed"></frc-number-field>
-            <frc-number-field min="0" max="5200" step="100" has-controls label="Shooter Backspin Speed" source-key="/Properties/shooter_backspin_speed"></frc-number-field>
-            <h3 class="secondary-text">Propriétés ejecter</h3>
-            <nt-number key="/Properties/shooter_ejecter_speed"></nt-number>
-            <nt-number key="/Properties/shooter_ejecter_backspin_speed"></nt-number>
-            <nt-number key="/Properties/shooter_ejecter_temps"></nt-number>
-            <frc-number-field label="Shooter Ejecter Speed" source-key="/Properties/shooter_ejecter_speed"></frc-number-field>
-            <frc-number-field label="Shooter Ejecter Backspin Speed" source-key="/Properties/shooter_ejecter_backspin_speed"></frc-number-field>
-            <frc-number-field label="Shooter Ejecter Temps" source-key="/Properties/shooter_ejecter_temps"></frc-number-field>
 
-            <h2 class="secondary-text"><i>Intake</i></h2>
-            <div id="CommandButton">
-                <frc-robot-command label="Monter Intake" source-key="/SmartDashboard/Monter Intake"></frc-robot-command>
-                <frc-robot-command label="Descendre Intake" source-key="/SmartDashboard/Descendre Intake"></frc-robot-command>
-                <frc-robot-command label="Arreter Intake" source-key="/SmartDashboard/Arreter Intake"></frc-robot-command>
-                <frc-robot-command label="Eject" source-key="/SmartDashboard/Ejecter Intake"></frc-robot-command>
+            <div>
+                <h2 class="secondary-text">Commandes</h2>
+                <h3 class="secondary-text">Intake</h3>
+                <frc-robot-command label="Balayer" source-key="/SmartDashboard/Intake/BalayerBallon"></frc-robot-command>
+                <frc-robot-command label="Descendre" source-key="/SmartDashboard/Intake/DescendreIntake"></frc-robot-command>
+                <frc-robot-command label="Monter" source-key="/SmartDashboard/Intake/Monter Intake"></frc-robot-command>
+                <frc-robot-command label="Prendre" source-key="/SmartDashboard/Intake/Prendre Ballon"></frc-robot-command>
+                <frc-robot-command label="Séquence Balayer" source-key="/SmartDashboard/Intake/SequenceBalayer"></frc-robot-command>
+                <frc-robot-command label="Séquence Prendre" source-key="/SmartDashboard/Intake/SequencePrendre"></frc-robot-command>
+            
+                <h3 class="secondary-text">Shooter</h3>
+                <frc-robot-command label="Manual shoot" source-key="/SmartDashboard/Intake/ManualShoot"></frc-robot-command>
+                <frc-robot-command label="Dashboard shoot" source-key="/SmartDashboard/Intake/DashboardShoot"></frc-robot-command>
+                <frc-robot-command label="Interpolated shoot" source-key="/SmartDashboard/Intake/InterpolatedShoot"></frc-robot-command>
+                <frc-robot-command label="Éjecter" source-key="/SmartDashboard/Intake/EjecterShooter"></frc-robot-command>
+            
+                <h3 class="secondary-text">Grimpeurs</h3>
+                <frc-robot-command label="Grimper niveau 2" source-key="/SmartDashboard/Grimper/GrimperNiveau2"></frc-robot-command>
+                <frc-robot-command label="Grimper niveau 3" source-key="/SmartDashboard/Grimper/GrimperNiveau3"></frc-robot-command>
+                <frc-robot-command label="Grimper niveau 4" source-key="/SmartDashboard/Grimper/GrimperNiveau4"></frc-robot-command>
+                <frc-robot-command label="Préparer grimper" source-key="/SmartDashboard/Grimper/PreparerGrimper"></frc-robot-command>
+                <frc-robot-command label="Reset grimpeurs" source-key="/SmartDashboard/Grimper/ResetGrimpeurs"></frc-robot-command>
+                <h4 class="secondary-text">Grimpeur primaire</h4>
+                <frc-robot-command label="Clip" source-key="/SmartDashboard/GrimpeurPrimaire/BougerPrimaire clip"></frc-robot-command>
+                <frc-robot-command label="Max" source-key="/SmartDashboard/GrimpeurPrimaire/BougerPrimaire max"></frc-robot-command>
+                <frc-robot-command label="Milieu" source-key="/SmartDashboard/GrimpeurPrimaire/BougerPrimaire middle"></frc-robot-command>
+                <frc-robot-command label="Descendre complet" source-key="/SmartDashboard/GrimpeurPrimaire/DescendreCompletPrimaire"></frc-robot-command>
+                <h4 class="secondary-text">Grimpeur secondaire</h4>
+                <frc-robot-command label="Aligner" source-key="/SmartDashboard/GrimpeurSecondaire/BougerSecondaire aligner"></frc-robot-command>
+                <frc-robot-command label="Niveau 3" source-key="/SmartDashboard/GrimpeurSecondaire/BougerSecondaire level 3"></frc-robot-command>
+                <frc-robot-command label="Monter complet" source-key="/SmartDashboard/GrimpeurSecondaire/MonterCompletSecondaire"></frc-robot-command>
+                <frc-robot-command label="Descendre complet" source-key="/SmartDashboard/GrimpeurSecondaire/DescendreCompletSecondaire"></frc-robot-command>
+                
+                <h3 class="secondary-text">Vision</h3>
+                <frc-robot-command label="Pilotage Assisté" source-key="/SmartDashboard/Grimper/PiloterAide"></frc-robot-command>
+                <frc-robot-command label="Viser Cargo" source-key="/SmartDashboard/Grimper/Viser Cargo"></frc-robot-command>
+                <frc-robot-command label="Viser Cargo Avancer" source-key="/SmartDashboard/Grimper/ViserCargoAvancer"></frc-robot-command>
+                <frc-robot-command label="Viser Hub" source-key="/SmartDashboard/Grimper/Viser Hub"></frc-robot-command>
             </div>
-            <frc-number-field label="Intake Speed" source-key="/Properties/intake_speed"></frc-number-field>
-            <frc-number-field label="Intake Durée Ejection" source-key="/Properties/intake_duree_ejection"></frc-number-field>
-            <frc-number-field label="Intake Reverse Speed" source-key="/Properties/intake_reverse_speed"></frc-number-field>
-
-            <h2 class="secondary-text">Transporteur</h2>
-            <frc-number-field label="Transporter Speed" source-key="/Properties/transporter_speed"></frc-number-field>
-            <frc-number-field label="Transporter Reverse Speed" source-key="/Properties/transporter_reverse_speed"></frc-number-field>
-
-            <h2 class="secondary-text">Trajectoire</h2>
-            <frc-number-field label="Trajectoire Angle P" source-key="/Properties/trajectoire_angle_p"></frc-number-field>
-            <frc-number-field label="Trajectoire Vue Avant" source-key="/Properties/trajectoire_vue_avant"></frc-number-field>
-
-            <h2 class="secondary-text">Grimpeur</h2>
-            <frc-number-field label="Grimpeur Vitesse Monter" source-key="/Properties/grimpeur_vitesse_monter"></frc-number-field>
-            <frc-number-field label="Grimpeur Vitesse Descend" source-key="/Properties/grimpeur_vitesse_descend"></frc-number-field>
-            <frc-number-field label="Grimpeur Vitesse Monter Secondaire" source-key="/Properties/grimpeur_vitesse_monter_secondaire"></frc-number-field>
-            <frc-number-field label="Grimpeur Vitesse Descend Secondaire" source-key="/Properties/grimpeur_vitesse_descend_secondaire"></frc-number-field>
-            <frc-number-field label="Grimpeur Distance Alignement" source-key="/Properties/grimpeur_distance_alignement"></frc-number-field>
-
-            <h2 class="secondary-text">Vision</h2>
-			<nt-number key="/Properties/viser_hub_speed" value="1" ></nt-number>
-			<nt-number key="/Properties/viser_hub_threshold" value="1"></nt-number>
-			<nt-number key="/Properties/viser_hub_x_offset" value="1"></nt-number>
-            <nt-number key="/Properties/vision_hub_maxErrorX_multiplier" value="1"></nt-number>
-			<nt-number key="/Properties/vision_hub_maxErrorY_multiplier" value="1"></nt-number>
-			<nt-number key="/Properties/vision_hub_rectangularity_threshold" value="1"></nt-number>
-			<nt-number key="/Properties/vision_hub_perimeter_threshold" value="1"></nt-number>
-            <nt-number key="/Properties/viser_cargo_forward_speed" value="0.3" ></nt-number>
-			<nt-number key="/Properties/viser_cargo_turn_speed" value="0.3"></nt-number>
-			<nt-number key="/Properties/viser_cargo_x_threshold" value="0.05"></nt-number>
-			<nt-number key="/Properties/viser_cargo_y_threshold" value="0.05"></nt-number>
-			<nt-number key="/Properties/viser_cargo_x_offset" value="0.05"></nt-number>
-			<nt-number key="/Properties/viser_cargo_y_offset" value="0.05"></nt-number>
-            <frc-number-field min="0" max="1" step="0.05" has-controls label="Viser Hub Vitesse" source-key="/Properties/viser_hub_speed"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Threshold" source-key="/Properties/viser_hub_threshold"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Hub Offset X" source-key="/Properties/viser_hub_x_offset"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Vision Hub Max Error X" source-key="Properties/vision_hub_maxErrorX_multiplier"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Vision Hub Max Error Y" source-key="Properties/vision_hub_maxErrorY_multiplier"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Vision Hub Rectangularity Threshold" source-key="/Properties/vision_hub_rectangularity_threshold"></frc-number-field>
-            <frc-number-field min="0" max="50" step="1" has-controls label="Vision Hub Perimeter Threshold" source-key="/Properties/vision_hub_perimeter_threshold"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Forward Speed" source-key="/Properties/viser_cargo_forward_speed"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Turn Speed" source-key="/Properties/viser_cargo_turn_speed"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo X Threshold" source-key="/Properties/viser_cargo_x_threshold"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo X Offset" source-key="/Properties/viser_cargo_x_offset"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Y Offset" source-key="/Properties/viser_cargo_y_offset"></frc-number-field>
-            <frc-number-field min="0" max="1" step="0.01" has-controls label="Viser Cargo Y Threshold" source-key="/Properties/viser_cargo_y_threshold"></frc-number-field>
-
-
         </div>
-        <script src="./frc-web-components.min.js"></script>
         <script>
             function onRobotConnection(connected) {
                 document.getElementById("robotstate").innerHTML = connected ? "Connected!" : "Disconnected";
@@ -158,7 +135,11 @@
                     }
                 });
             }
+
         </script>
+
+        <script src="./frc-web-components.js"></script>
+        <script src="/components/customslider.js"></script>
 </body>
 
 </html>
