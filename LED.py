@@ -56,6 +56,11 @@ class LEDController(commands2.SubsystemBase):
         for i in range(len(self.buffer)):
             self.set_hsv(i, color_func(i))
 
+    def pulse(self, color):
+        pixel_value = round(220 * math.cos((1 / (12 * math.pi)) * self.time))
+        hue, saturation, value = color
+        self.set_all(lambda i: (hue, saturation, pixel_value + 290))
+
     def rainbow(self):
         for i in range(len(self.buffer)):
             pixel_hue = (self.time + int(i * 180 / len(self.buffer))) % 180
@@ -154,9 +159,9 @@ class LEDController(commands2.SubsystemBase):
                 self.set_all(lambda i: color)
 
         else:  # game hasn't started
-            print("disabled")
+            #print("disabled")
             if alliance == wpilib.DriverStation.Alliance.kInvalid:
                 self.select_team()
             else:
-                self.set_all(lambda i: color)
+                self.pulse(color)
         self.led_strip.setData(self.buffer)
