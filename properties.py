@@ -61,6 +61,8 @@ class Properties:
     vision_hub_perimeter_threshold = ntproperty("/Properties/vision_hub_perimeter_threshold", 7, writeDefault=False,persistent=persistent)
     vision_hub_maxErrorX_multiplier = ntproperty("/Properties/vision_hub_maxErrorX_multiplier", 0.4, writeDefault=False,persistent=persistent)
     vision_hub_maxErrorY_multiplier = ntproperty("/Properties/vision_hub_maxErrorY_multiplier", 0.2, writeDefault=False,persistent=persistent)
+    vision_hub_lowergreen = ntproperty("/Properties/vision_hub_lowergreen", [50, 0, 160], writeDefault=False,persistent=persistent)
+    vision_hub_highergreen = ntproperty("/Properties/vision_hub_highergreen", [100, 255, 200], writeDefault=False,persistent=persistent)
 
     vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
     vision_cargo_normy_threshold = ntproperty("/Properties/vision_cargo_normy_threshold", -0.5, writeDefault=False, persistent=persistent)
