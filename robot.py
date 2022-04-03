@@ -5,6 +5,7 @@ from commands2.button import JoystickButton
 from wpimath.geometry import Pose2d, Rotation2d
 
 from LED import LEDController
+from commands.auto.auto2ballons import Auto2Ballons
 from commands.auto.auto4ballons import Auto4Ballons
 from commands.balayerballon import BalayerBallon
 from commands.basepilotable.avancer import Avancer
@@ -73,6 +74,12 @@ class Robot(commands2.TimedCommandRobot):
         self.autoCommand: commands2.CommandBase = None
         self.autoChooser = wpilib.SendableChooser()
         self.autoChooser.setDefaultOption("Rien", None)
+        self.autoChooser.setDefaultOption("4 Ballons", Auto4Ballons(self.base_pilotable,
+                                                          self.stick, self.shooter,
+                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
+        self.autoChooser.setDefaultOption("2 Ballons", Auto2Ballons(self.base_pilotable,
+                                                          self.stick, self.shooter,
+                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
         # self.autoChooser.addOption("Auto xxxx", None)
         wpilib.SmartDashboard.putData("ModeAutonome", self.autoChooser)
 
@@ -151,7 +158,6 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Vision", PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
 
         put_command_on_dashboard("Autonome", Auto4Ballons(self.base_pilotable,
-                                                          self.grimpeur_secondaire,
                                                           self.stick, self.shooter,
                                                           self.intake, self.vision_targets, self.grimpeur_secondaire))
 

@@ -20,7 +20,6 @@ class Auto2Ballons(commands2.SequentialCommandGroup):
     def __init__(
             self,
             base_pilotable: BasePilotable,
-            grimpeur: GrimpeurSecondaire,
             stick: Joystick,
             shooter: Shooter,
             intake: Intake,
@@ -36,7 +35,7 @@ class Auto2Ballons(commands2.SequentialCommandGroup):
                     SuivreTrajectoire(base_pilotable,
                                       [Pose2d(1.1, 0, Rotation2d.fromDegrees(0))],
                                       0.2, reset=True, addRobotPose=True),
-                    DescendreIntake(grimpeur),
+                    DescendreIntake(grimpeur_secondaire),
                 )
             ),
 
