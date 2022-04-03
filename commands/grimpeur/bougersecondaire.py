@@ -56,6 +56,7 @@ class BougerSecondaire(SafeCommandBase):
         self.motion = TrapezoidalMotion()
 
     def initialize(self) -> None:
+        self.grimpeur.update_current_limit()
         self.motion.update(
             start_position=self.grimpeur.getPosition(),
             end_position=self.get_position(),

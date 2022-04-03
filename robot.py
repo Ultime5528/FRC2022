@@ -1,9 +1,11 @@
 import commands2
 import wpilib
+from wpilib import PowerDistribution
 from commands2.button import JoystickButton
 from wpimath.geometry import Pose2d, Rotation2d
 
 from LED import LEDController
+from commands.auto.auto2ballons import Auto2Ballons
 from commands.auto.auto4ballons import Auto4Ballons
 from commands.balayerballon import BalayerBallon
 from commands.basepilotable.avancer import Avancer
@@ -44,6 +46,7 @@ from triggers.axistrigger import AxisTrigger
 from utils.dashboard import put_command_on_dashboard
 
 
+
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
         # CameraServer.launch("visionhub.py:main")
@@ -61,6 +64,8 @@ class Robot(commands2.TimedCommandRobot):
         self.vision_targets = VisionTargets(self.base_pilotable)
         self.led_controller = LEDController()
 
+        self.pdp = PowerDistribution()
+
         self.base_pilotable.setDefaultCommand(Piloter(self.base_pilotable, self.stick))
 
         self.setup_triggers()
@@ -69,6 +74,12 @@ class Robot(commands2.TimedCommandRobot):
         self.autoCommand: commands2.CommandBase = None
         self.autoChooser = wpilib.SendableChooser()
         self.autoChooser.setDefaultOption("Rien", None)
+        self.autoChooser.setDefaultOption("4 Ballons", Auto4Ballons(self.base_pilotable,
+                                                          self.stick, self.shooter,
+                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
+        self.autoChooser.setDefaultOption("2 Ballons", Auto2Ballons(self.base_pilotable,
+                                                          self.stick, self.shooter,
+                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
         # self.autoChooser.addOption("Auto xxxx", None)
         wpilib.SmartDashboard.putData("ModeAutonome", self.autoChooser)
 
@@ -147,7 +158,6 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("Vision", PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
 
         put_command_on_dashboard("Autonome", Auto4Ballons(self.base_pilotable,
-                                                          self.grimpeur_secondaire,
                                                           self.stick, self.shooter,
                                                           self.intake, self.vision_targets, self.grimpeur_secondaire))
 
@@ -158,6 +168,7 @@ class Robot(commands2.TimedCommandRobot):
         # except Exception as e:
         #     print(e)
         #     traceback.print_exc()
+        wpilib.SmartDashboard.putNumber("Current Grimpeur Secondaire", self.pdp.getCurrent(9))
 
     def autonomousInit(self) -> None:
         self.autoCommand = self.autoChooser.getSelected()
