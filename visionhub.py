@@ -48,9 +48,6 @@ def hub_loop():
 
     img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
 
-    lowerGreen = (50, 0, 160)
-    highGreen = (100, 255, 200)
-
     while True:
         ret, img = cvSink.grabFrame(img)
         if ret == 0:
@@ -58,10 +55,12 @@ def hub_loop():
             continue
 
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, lowerGreen, highGreen)
+        mask = cv2.inRange(hsv, properties.values.vision_hub_lowergreen, properties.values.vision_hub_highergreen)
         _, cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         # cv2.imshow('mask', mask)
-        img_cnts = cv2.drawContours(img.copy(), cnts, -1, (0, 0, 255), -1)
+        if DEBUG:
+            cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR, mask)
+            cv2.drawContours(mask, cnts, -1, (0, 0, 255), -1)
 
         validRects = []
         if cnts is not None:
@@ -95,11 +94,10 @@ def hub_loop():
                     print("rectangularity :", rectangularity)
                     print("rapport :", ratio)
 
-        for (x, y, w, h) in validRects:
-            cv2.rectangle(img_cnts, (x, y), (x + w, y + h), (0, 255, 255), 1)
-
         if binStream:
-            binStream.putFrame(img_cnts)
+            for (x, y, w, h) in validRects:
+                cv2.rectangle(mask, (x, y), (x + w, y + h), (0, 255, 255), 1)
+            binStream.putFrame(mask)
 
         validPositions = []
 
@@ -130,6 +128,10 @@ def hub_loop():
                 elif bestTarget.score <= target.score:
                     bestTarget = target
 
+            if DEBUG:
+                for p in bestTarget.positions:
+                    cv2.circle(mask, p, 3, (0, 0, 255), 5)
+
             position = np.mean(bestTarget.positions, axis=0).astype("int")
             norm_x = (position[0] / img.shape[1]) * 2 - 1
             norm_y = (position[1] / img.shape[0]) * 2 - 1
@@ -138,7 +140,7 @@ def hub_loop():
             nt_normy.setDouble(norm_y)
             nt_found.setBoolean(True)
 
-            cv2.circle(img, tuple(position), 1, (255, 0, 255), 3)
+            cv2.circle(img, tuple(position), 3, (255, 0, 255), 5)
         else:
             nt_found.setBoolean(False)
 
