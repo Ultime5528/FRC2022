@@ -132,8 +132,13 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("BasePilotable", SuivreTrajectoire(self.base_pilotable,
                                                                     [Pose2d(0, 0, Rotation2d.fromDegrees(0)),
                                                                      Pose2d(3, 1, Rotation2d.fromDegrees(0))],
-                                                                    0.2,
+                                                                    0.6,
                                                                     reset=True))
+
+        put_command_on_dashboard("BasePilotable", SuivreTrajectoire(self.base_pilotable,
+                                                                    [Pose2d(0, 0, Rotation2d.fromDegrees(180)),
+                                                                     Pose2d(1, -3, Rotation2d.fromDegrees(150))],
+                                                                    0.6, reversed=True), "SuivreTrajectoire reculons")
 
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_max(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_clip(self.grimpeur_primaire))
