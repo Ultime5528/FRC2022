@@ -1,19 +1,15 @@
-import math
-
-from commands2 import CommandBase
-
 import properties
 from subsystems.basepilotable import BasePilotable
 from subsystems.visiontargets import VisionTargets
+from utils.safecommandbase import SafeCommandBase
 
 
-class ViserHub(CommandBase):
+class ViserHub(SafeCommandBase):
     def __init__(self, base_pilotable: BasePilotable, visiontargets: VisionTargets):
         super().__init__()
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)
         self.visiontargets = visiontargets
-        self.setName("Viser Hub")
 
         self.error = float("inf")
 

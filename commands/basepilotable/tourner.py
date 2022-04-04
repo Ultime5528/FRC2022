@@ -1,18 +1,17 @@
 import math
 
-from commands2 import CommandBase
 
 from subsystems.basepilotable import BasePilotable
+from utils.safecommandbase import SafeCommandBase
 
 
-class Tourner(CommandBase):
+class Tourner(SafeCommandBase):
     def __init__(self, base_pilotable: BasePilotable, angle: float, speed: float):
         super().__init__()
         self.angle = angle
         self.speed = speed
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)
-        self.setName("Tourner")
 
     def initialize(self) -> None:
         self.base_pilotable.resetOdometry()

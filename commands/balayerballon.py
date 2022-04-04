@@ -1,5 +1,3 @@
-import wpilib
-
 from subsystems.intake import Intake
 from utils.safecommandbase import SafeCommandBase
 

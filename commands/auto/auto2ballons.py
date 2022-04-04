@@ -2,12 +2,10 @@ import commands2
 from wpilib import Joystick
 from wpimath.geometry import Pose2d, Rotation2d
 
-from commands.basepilotable.avancer import Avancer
 from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
 from commands.intake.descendreintake import DescendreIntake
 from commands.intake.monterintake import MonterIntake
 from commands.intake.prendreballon import PrendreBallon
-from commands.shooter.manualshoot import ManualShoot
 from commands.vision.visertirer import ViserTirer
 from subsystems.basepilotable import BasePilotable
 from subsystems.grimpeursecondaire import GrimpeurSecondaire

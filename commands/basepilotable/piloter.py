@@ -1,7 +1,7 @@
 import wpilib
-from commands2 import CommandBase
 
 from subsystems.basepilotable import BasePilotable
+from utils.safecommandbase import SafeCommandBase
 
 
 def interpoler(valeur: float, courbure=0.6, deadzoneY=0.05, deadzoneX=0.05):
@@ -13,14 +13,12 @@ def interpoler(valeur: float, courbure=0.6, deadzoneY=0.05, deadzoneX=0.05):
         return 0.0  # interpolate(deadzoneX) / deadzoneX * valeur;
 
 
-class Piloter(CommandBase):
+class Piloter(SafeCommandBase):
     def __init__(self, base_pilotable: BasePilotable, stick: wpilib.Joystick):
         super().__init__()
-
         self.stick = stick
         self.base_pilotable = base_pilotable
         self.addRequirements(base_pilotable)
-        self.setName("Piloter")
 
     def execute(self):
         self.base_pilotable.arcadeDrive(interpoler(self.stick.getY()) * -1, interpoler(self.stick.getX()))

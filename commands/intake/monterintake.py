@@ -1,9 +1,7 @@
 import commands2
 
 from commands.grimpeur.bougersecondaire import BougerSecondaire
-from commands.intake.arreterintake import ArreterIntake
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
-from subsystems.intake import Intake
 
 
 class MonterIntake(commands2.ParallelCommandGroup):

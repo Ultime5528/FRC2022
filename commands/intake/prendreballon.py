@@ -1,14 +1,12 @@
-from commands2 import CommandBase
-
 from subsystems.intake import Intake
+from utils.safecommandbase import SafeCommandBase
 
 
-class PrendreBallon(CommandBase):
+class PrendreBallon(SafeCommandBase):
     def __init__(self, intake: Intake):
         super().__init__()
         self.intake = intake
         self.addRequirements(self.intake)
-        self.setName("Prendre Ballon")
 
     def execute(self):
         self.intake.activerIntake()

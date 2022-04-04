@@ -1,5 +1,4 @@
 from utils.safecommandbase import SafeCommandBase
-import wpilib
 from subsystems.shooter import Shooter
 from subsystems.visiontargets import VisionTargets
 

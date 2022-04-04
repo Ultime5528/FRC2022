@@ -2,7 +2,6 @@ import commands2
 from wpilib import Joystick
 
 from commands.basepilotable.piloter import Piloter
-from commands.shooter.dashboardshoot import DashboardShoot
 from commands.shooter.interpolatedshoot import InterpolatedShoot
 from commands.vision.viserhub import ViserHub
 from subsystems.basepilotable import BasePilotable

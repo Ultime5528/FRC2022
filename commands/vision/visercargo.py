@@ -1,13 +1,11 @@
 import math
-
-from commands2 import CommandBase
-
 import properties
 from subsystems.basepilotable import BasePilotable
 from subsystems.visiontargets import VisionTargets
+from utils.safecommandbase import SafeCommandBase
 
 
-class ViserCargo(CommandBase):
+class ViserCargo(SafeCommandBase):
     def __init__(self, base_pilotable: BasePilotable, vision_targets: VisionTargets):
         super().__init__()
         self.base_pilotable = base_pilotable
@@ -15,7 +13,6 @@ class ViserCargo(CommandBase):
         self.vision_targets = vision_targets
         self.x_stop = False
         self.y_stop = False
-        self.setName("Viser Cargo")
         self._reset()
 
     def _reset(self):
