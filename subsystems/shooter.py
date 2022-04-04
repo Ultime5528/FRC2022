@@ -61,6 +61,9 @@ class Shooter(commands2.SubsystemBase):
             self.backspin_flywheel_sim = FlywheelSim(DCMotor.NEO(1), 1, 0.0025)
 
     def shoot(self, setpoint: float, backspin_setpoint):
+        setpoint = setpoint * 2**(properties.values.shooter_speed_multiplier / 100)
+        backspin_setpoint = backspin_setpoint * 2**(properties.values.shooter_speed_multiplier / 100)
+
         self.setpoint = setpoint
         self.backspin_setpoint = backspin_setpoint
 
