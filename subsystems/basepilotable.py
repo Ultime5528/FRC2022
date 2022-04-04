@@ -62,7 +62,7 @@ class BasePilotable(SubsystemBase):
             self._motor_right_sim = SparkMaxSim(self._motor_right)
             gyro_sim_device = SimDeviceSim("navX-Sensor[1]")
             self._gyro_sim = gyro_sim_device.getDouble("Yaw")
-            self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
+            self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 5, 0.3)
             self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [
                 0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005
             ])
