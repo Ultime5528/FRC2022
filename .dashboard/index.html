@@ -37,6 +37,10 @@
             <div style="margin-right:5%;">
                 <h2 class="secondary-text">Mode autonome</h2>
                 <frc-combo-box name="Mode Auto" default="Rien" options='["Rien","2 Ballons", "4 Ballons"]' source-key="/SmartDashboard/ModeAutonome"></frc-combo-box>
+
+                <h2 class="secondary-text">Vitesse de tir (%)</h2>
+                <frc-custom-slider min="-100" max="100" block-increment="1" source-key="/Properties/shooter_speed_multiplier"></frc-custom-slider>
+
                 <div class="boolean-box-title">
                     <h2 class="secondary-text">Aide au pilotage</h2>
                     <frc-boolean-box true-color="var(--lumo-primary-color)" false-color="var(--lumo-primary-color-10pct)" source-key="/SmartDashboard/Vision/PiloterAide/running"></frc-boolean-box>
