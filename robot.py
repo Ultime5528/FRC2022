@@ -52,6 +52,13 @@ class Robot(commands2.TimedCommandRobot):
         # CameraServer.launch("visionhub.py:main")
         # CameraServer.launch("visioncargo.py:main")
 
+        try:
+            import remoterepl
+            self.remote_repl = remoterepl.RemoteREPL(self)
+            print("RemoteREPL started !")
+        except ModuleNotFoundError:
+            wpilib.reportWarning("Package 'remoterepl' not installed")
+
         self.stick = wpilib.Joystick(0)
         self.console_1 = wpilib.Joystick(1)
         self.console_2 = wpilib.Joystick(2)
