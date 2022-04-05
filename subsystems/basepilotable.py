@@ -13,6 +13,7 @@ from wpimath.system.plant import DCMotor
 
 import ports
 from utils.sparkmaxsim import SparkMaxSim
+from utils.sparkmaxutil import configure_leader, configure_follower
 from utils.subsystembase import SubsystemBase
 
 
@@ -21,24 +22,19 @@ class BasePilotable(SubsystemBase):
         super().__init__()
         # Motors
         self._motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_left.restoreFactoryDefaults()
-        self._motor_left.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
+        configure_leader(self._motor_left, "brake")
+
         self._motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2,
                                                     rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_left_follower.restoreFactoryDefaults()
-        self._motor_left_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
-        self._motor_left_follower.follow(self._motor_left)
+        configure_follower(self._motor_left_follower, self._motor_left, "brake")
 
         self._motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1,
                                             rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_right.restoreFactoryDefaults()
-        self._motor_right.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
-        # self._motor_right.setInverted(True)
+        configure_leader(self._motor_right, "brake")
+
         self._motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2,
                                                      rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_right_follower.restoreFactoryDefaults()
-        self._motor_right_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
-        self._motor_right_follower.follow(self._motor_right)
+        configure_follower(self._motor_right_follower, self._motor_right, "brake")
 
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
         self.addChild("DifferentialDrive", self._drive)
@@ -62,7 +58,7 @@ class BasePilotable(SubsystemBase):
             self._motor_right_sim = SparkMaxSim(self._motor_right)
             gyro_sim_device = SimDeviceSim("navX-Sensor[1]")
             self._gyro_sim = gyro_sim_device.getDouble("Yaw")
-            self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
+            self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 5, 0.3)
             self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [
                 0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005
             ])

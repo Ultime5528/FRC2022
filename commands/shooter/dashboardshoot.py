@@ -10,5 +10,5 @@ class DashboardShoot(AbstractShoot):
 
     def shoot(self):
         self.shooter.shoot(
-            properties.values.shooter_speed, properties.values.shooter_speed
+            properties.values.shooter_speed, properties.values.shooter_backspin_speed
         )

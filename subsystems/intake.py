@@ -34,6 +34,9 @@ class Intake(SubsystemBase):
     def activerConvoyeurRapide(self):
         self._motor_convoyeur.set(properties.values.intake_convoyeur_speed_rapide)
 
+    def cancelInertia(self):
+        self._motor_convoyeur.set(properties.values.intake_convoyeur_reverse_speed)
+
     def stopConvoyeur(self):
         self._motor_convoyeur.set(0)
 
@@ -43,8 +46,18 @@ class Intake(SubsystemBase):
     def hasBallConvoyeur(self) -> bool:
         return self._ultrasonic_haut.get() < properties.values.intake_ultrason_haut_threshold
 
+    def ballCount(self) -> int:
+        if self.hasBallConvoyeur():
+            if self.hasBallIntake():
+                return 2
+            return 1
+        return 0
+
     def ejecter(self):
         self._motor_intake.set(properties.values.intake_reverse_speed)
+
+    def getIntakeSpeed(self):
+        return self._motor_intake.get()
 
     def periodic(self):
         wpilib.SmartDashboard.putBoolean("Sensor intake", self.hasBallIntake())

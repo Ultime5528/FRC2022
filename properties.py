@@ -17,8 +17,9 @@ if reset:
 class Properties:
     aide_pilotage_slow_factor = ntproperty("/Properties/aide_pilotage_slow_factor", 0.5, writeDefault=False, persistent=persistent)
 
-    shooter_backspin_speed = ntproperty("/Properties/shooter_backspin_speed", 2000, writeDefault=False, persistent=persistent)
-    shooter_speed = ntproperty("/Properties/shooter_speed", 2500, writeDefault=False, persistent=persistent)
+    shooter_backspin_speed = ntproperty("/Properties/shooter_backspin_speed", 1500, writeDefault=False, persistent=persistent)
+    shooter_speed = ntproperty("/Properties/shooter_speed", 1500, writeDefault=False, persistent=persistent)
+    shooter_speed_multiplier = ntproperty("/Properties/shooter_speed_multiplier", 0, writeDefault=False, persistent=persistent)
 
     shooter_ejecter_speed = ntproperty("/Properties/shooter_ejecter_speed", 1000, writeDefault=False, persistent=persistent)
     shooter_ejecter_backspin_speed = ntproperty("/Properties/shooter_ejecter_backspin_speed", 750, writeDefault=False, persistent=persistent)
@@ -31,8 +32,10 @@ class Properties:
 
     intake_speed = ntproperty("/Properties/intake_speed", 0.42, writeDefault=False, persistent=persistent)
     intake_reverse_speed = ntproperty("/Properties/intake_reverse_speed", -0.5, writeDefault=False, persistent=persistent)
-    intake_convoyeur_speed_lent = ntproperty("/Properties/intake_convoyeur_speed_lent", 0.35, writeDefault=False, persistent=persistent)
-    intake_convoyeur_speed_rapide = ntproperty("/Properties/intake_convoyeur_speed_rapide", 0.35, writeDefault=False, persistent=persistent)
+    intake_convoyeur_speed_lent = ntproperty("/Properties/intake_convoyeur_speed_lent", 0.44, writeDefault=False, persistent=persistent)
+    intake_convoyeur_speed_rapide = ntproperty("/Properties/intake_convoyeur_speed_rapide", 0.6, writeDefault=False, persistent=persistent)
+    intake_convoyeur_reverse_speed = ntproperty("/Properties/intake_convoyeur_reverse_speed", -0.25, writeDefault=False, persistent=persistent)
+    intake_convoyeur_inertia_time = ntproperty("/Properties/intake_convoyeur_inertia_time", 0.25, writeDefault=False, persistent=persistent)
     intake_ultrason_bas_threshold = ntproperty("/Properties/intake_ultrason_bas_threshold", 0.25, writeDefault=False, persistent=persistent)
     intake_ultrason_haut_threshold = ntproperty("/Properties/intake_ultrason_haut_threshold", 0.5, writeDefault=False, persistent=persistent)
 
@@ -65,6 +68,8 @@ class Properties:
     vision_hub_perimeter_threshold = ntproperty("/Properties/vision_hub_perimeter_threshold", 7, writeDefault=False,persistent=persistent)
     vision_hub_maxErrorX_multiplier = ntproperty("/Properties/vision_hub_maxErrorX_multiplier", 1, writeDefault=False,persistent=persistent)
     vision_hub_maxErrorY_multiplier = ntproperty("/Properties/vision_hub_maxErrorY_multiplier", 0.2, writeDefault=False,persistent=persistent)
+    vision_hub_lowergreen = ntproperty("/Properties/vision_hub_lowergreen", [50, 0, 160], writeDefault=False,persistent=persistent)
+    vision_hub_highergreen = ntproperty("/Properties/vision_hub_highergreen", [100, 255, 200], writeDefault=False,persistent=persistent)
 
     vision_cargo_normw_threshold = ntproperty("/Properties/vision_cargo_normw_threshold", 0.4, writeDefault=False, persistent=persistent)
     vision_cargo_normy_threshold = ntproperty("/Properties/vision_cargo_normy_threshold", -0.5, writeDefault=False, persistent=persistent)

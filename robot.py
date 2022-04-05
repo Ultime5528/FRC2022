@@ -52,6 +52,13 @@ class Robot(commands2.TimedCommandRobot):
         # CameraServer.launch("visionhub.py:main")
         # CameraServer.launch("visioncargo.py:main")
 
+        try:
+            import remoterepl
+            self.remote_repl = remoterepl.RemoteREPL(self)
+            print("RemoteREPL started !")
+        except ModuleNotFoundError:
+            wpilib.reportWarning("Package 'remoterepl' not installed")
+
         self.stick = wpilib.Joystick(0)
         self.console_1 = wpilib.Joystick(1)
         self.console_2 = wpilib.Joystick(2)
@@ -62,7 +69,7 @@ class Robot(commands2.TimedCommandRobot):
         self.grimpeur_primaire = GrimpeurPrimaire()
         self.grimpeur_secondaire = GrimpeurSecondaire()
         self.vision_targets = VisionTargets(self.base_pilotable)
-        self.led_controller = LEDController()
+        self.led_controller = LEDController(self.intake, self.shooter)
 
         self.pdp = PowerDistribution()
 
@@ -102,13 +109,13 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.console_1, 3).whenPressed(ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 6).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
-        # JoystickButton(self.console_2, 1).whenPressed(ManualShoot())
+        JoystickButton(self.console_2, 1).whenPressed(ManualShoot.bas(self.shooter, self.intake))
         JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
         JoystickButton(self.console_1, 1).whenPressed(SequenceBalayer(self.grimpeur_secondaire, self.intake))
-        AxisTrigger(self.console_1, 0, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 0, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 1, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 1, inverted=True).whenActive(DescendreIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 0, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 0, inverted=True).whenActive(DescendreIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 1, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
+        AxisTrigger(self.console_1, 1, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
         # Pour une raison inconnue, le trigger doit être gardé comme attribut pour que les test fonctionnent.
         # self.trigger = WrongCargoTrigger(self.vision_targets)
         # self.trigger.whenActive(EjecterIntake(self.intake))
@@ -132,8 +139,13 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("BasePilotable", SuivreTrajectoire(self.base_pilotable,
                                                                     [Pose2d(0, 0, Rotation2d.fromDegrees(0)),
                                                                      Pose2d(3, 1, Rotation2d.fromDegrees(0))],
-                                                                    0.2,
+                                                                    0.6,
                                                                     reset=True))
+
+        put_command_on_dashboard("BasePilotable", SuivreTrajectoire(self.base_pilotable,
+                                                                    [Pose2d(0, 0, Rotation2d.fromDegrees(180)),
+                                                                     Pose2d(1, -3, Rotation2d.fromDegrees(150))],
+                                                                    0.6, reversed=True), "SuivreTrajectoire reculons")
 
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_max(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_clip(self.grimpeur_primaire))
@@ -179,7 +191,6 @@ class Robot(commands2.TimedCommandRobot):
     def teleopInit(self) -> None:
         if self.autoCommand:
             self.autoCommand.cancel()
-
 
 if __name__ == "__main__":
     wpilib.run(Robot)
