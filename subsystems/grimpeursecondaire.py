@@ -25,6 +25,7 @@ class GrimpeurSecondaire(SubsystemBase):
         self._motor_secondaire = rev.CANSparkMax(ports.grimpeur_moteur_secondaire,
                                                  rev.CANSparkMax.MotorType.kBrushless)
         configure_leader(self._motor_secondaire, "brake", inverted=True)
+        self.update_current_limit()
         self._encoder_secondaire = self._motor_secondaire.getEncoder()
 
         if RobotBase.isSimulation():
@@ -72,3 +73,6 @@ class GrimpeurSecondaire(SubsystemBase):
 
     def reset_encoder(self):
         self._encoder_secondaire.setPosition(0)
+
+    def update_current_limit(self):
+        self._motor_secondaire.setSmartCurrentLimit(int(properties.values.grimpeur_secondaire_current_limit))

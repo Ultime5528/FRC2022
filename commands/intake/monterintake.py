@@ -7,10 +7,8 @@ from subsystems.intake import Intake
 
 
 class MonterIntake(commands2.ParallelCommandGroup):
-    def __init__(self, grimpeur_secondaire: GrimpeurSecondaire, intake: Intake):
+    def __init__(self, grimpeur_secondaire: GrimpeurSecondaire):
         super().__init__(
             BougerSecondaire.to_intake_haut(grimpeur_secondaire),
-            ArreterIntake(intake),
-
         )
         self.setName(self.__class__.__name__)
