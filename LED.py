@@ -141,21 +141,21 @@ class LEDController(commands2.SubsystemBase):
         if wpilib.DriverStation.isAutonomousEnabled(): #auto
             self.ripples(color)
         elif wpilib.DriverStation.isTeleopEnabled(): #teleop
-            if ModeLED.INTAKE == self.mode:
-                self.waves(color, self.intake.ballCount())
-            elif ModeLED.SHOOT == self.mode:
+            if ModeLED.SHOOT == self.mode:
                 self.half_waves(color)
+            elif ModeLED.INTAKE == self.mode:
+                self.waves(color, self.intake.ballCount())
             elif wpilib.DriverStation.getMatchTime() <= 1:
+                self.explosiveness = 1
                 self.explode(color)
             elif wpilib.DriverStation.getMatchTime() <= 5:
-                self.explosiveness = 1
                 self.flash(color, 10)
             elif wpilib.DriverStation.getMatchTime() <= 15:
                 self.flash(self.orange_hsv, 35)
             elif wpilib.DriverStation.getMatchTime() <= 30:
                 self.flash(self.yellow_hsv, 50)
             else:
-                self.set_all(lambda i: color)
+                self.waves(color, self.intake.ballCount())
 
         else:  # game hasn't started
             #print("disabled")
