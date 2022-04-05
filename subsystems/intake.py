@@ -34,6 +34,9 @@ class Intake(SubsystemBase):
     def activerConvoyeurRapide(self):
         self._motor_convoyeur.set(properties.values.intake_convoyeur_speed_rapide)
 
+    def cancelInertia(self):
+        self._motor_convoyeur.set(properties.values.intake_convoyeur_reverse_speed)
+
     def stopConvoyeur(self):
         self._motor_convoyeur.set(0)
 

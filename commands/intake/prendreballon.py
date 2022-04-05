@@ -1,5 +1,7 @@
+import wpilib
 from commands2 import CommandBase
 
+import properties
 from subsystems.intake import Intake
 
 
@@ -9,12 +11,21 @@ class PrendreBallon(CommandBase):
         self.intake = intake
         self.addRequirements(self.intake)
         self.setName("Prendre Ballon")
+        self.timer = wpilib.Timer()
+
+    def initialize(self) -> None:
+        self.timer.stop()
+        self.timer.reset()
+
 
     def execute(self):
         self.intake.activerIntake()
-
         if self.intake.hasBallConvoyeur():
-            self.intake.stopConvoyeur()
+            if self.timer.get() < properties.values.intake_convoyeur_inertia_time:
+                self.timer.start()
+                self.intake.cancelInertia()
+            else:
+                self.intake.stopConvoyeur()
         else:
             self.intake.activerConvoyeurLent()
 
