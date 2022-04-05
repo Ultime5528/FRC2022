@@ -86,20 +86,20 @@ def hub_loop():
                 if rectangularity >= properties.values.vision_hub_rectangularity_threshold and perimeter >= properties.values.vision_hub_perimeter_threshold:
                     x, y, w, h = cv2.boundingRect(cnt)
                     ratio = max(w, h) / min(w, h)
-                    if 1.25 <= ratio <= 3.5 and w > h:
+                    if 1.00 <= ratio <= 3.5 and w > h:
                         validRects.append((x, y, w, h))
 
-                if DEBUG:
-                    print("==========")
-                    print("nb cnts :", len(cnts))
-                    print("---")
-                    print("area", area)
-                    print("perimeter :", perimeter)
-                    print("minW :", minW)
-                    print("minH :", minH)
-                    print("minArea :", minArea)
-                    print("rectangularity :", rectangularity)
-                    print("rapport :", ratio)
+                # if DEBUG:
+                #     print("==========")
+                #     print("nb cnts :", len(cnts))
+                #     print("---")
+                #     print("area", area)
+                #     print("perimeter :", perimeter)
+                #     print("minW :", minW)
+                #     print("minH :", minH)
+                #     print("minArea :", minArea)
+                #     print("rectangularity :", rectangularity)
+                #     print("rapport :", ratio)
 
         if binStream:
             for (x, y, w, h) in validRects:
@@ -136,9 +136,9 @@ def hub_loop():
                     bestTarget = target
 
             if DEBUG:
-                pass
-                # for p in bestTarget.positions:
-                #     cv2.circle(mask, (int(p[0]), int(p[1])), 3, (0, 0, 255), 5)
+                # pass
+                for p in bestTarget.positions:
+                    cv2.circle(mask, (int(p[0]), int(p[1])), 3, (0, 0, 255), 5)
 
             position = np.mean(bestTarget.positions, axis=0).astype("int")
             norm_x = (position[0] / img.shape[1]) * 2 - 1
