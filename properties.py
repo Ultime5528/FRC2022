@@ -16,6 +16,7 @@ class Properties:
 
     shooter_backspin_speed = ntproperty("/Properties/shooter_backspin_speed", 1500, writeDefault=False, persistent=persistent)
     shooter_speed = ntproperty("/Properties/shooter_speed", 1500, writeDefault=False, persistent=persistent)
+    shooter_speed_multiplier = ntproperty("/Properties/shooter_speed_multiplier", 0, writeDefault=False, persistent=persistent)
 
     shooter_ejecter_speed = ntproperty("/Properties/shooter_ejecter_speed", 1000, writeDefault=False, persistent=persistent)
     shooter_ejecter_backspin_speed = ntproperty("/Properties/shooter_ejecter_backspin_speed", 1000, writeDefault=False, persistent=persistent)
