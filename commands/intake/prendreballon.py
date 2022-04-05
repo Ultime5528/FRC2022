@@ -17,7 +17,6 @@ class PrendreBallon(CommandBase):
         self.timer.stop()
         self.timer.reset()
 
-
     def execute(self):
         self.intake.activerIntake()
         if self.intake.hasBallConvoyeur():
@@ -28,6 +27,7 @@ class PrendreBallon(CommandBase):
                 self.intake.stopConvoyeur()
         else:
             self.intake.activerConvoyeurLent()
+            self.timer.reset()
 
     def isFinished(self) -> bool:
         return self.intake.hasBallIntake() and self.intake.hasBallConvoyeur()
