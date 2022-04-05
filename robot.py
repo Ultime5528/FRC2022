@@ -69,7 +69,7 @@ class Robot(commands2.TimedCommandRobot):
         self.grimpeur_primaire = GrimpeurPrimaire()
         self.grimpeur_secondaire = GrimpeurSecondaire()
         self.vision_targets = VisionTargets(self.base_pilotable)
-        self.led_controller = LEDController()
+        self.led_controller = LEDController(self.intake, self.shooter)
 
         self.pdp = PowerDistribution()
 
@@ -191,7 +191,6 @@ class Robot(commands2.TimedCommandRobot):
     def teleopInit(self) -> None:
         if self.autoCommand:
             self.autoCommand.cancel()
-
 
 if __name__ == "__main__":
     wpilib.run(Robot)

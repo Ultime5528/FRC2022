@@ -47,8 +47,8 @@ class Shooter(commands2.SubsystemBase):
         self.bang_bang_controller = BangBangController()
         self.feed_forward_controller = SimpleMotorFeedforwardMeters(0.124, 0.002105)
 
-        self.setpoint = 1
-        self.backspin_setpoint = 1
+        self.setpoint = 0
+        self.backspin_setpoint = 0
 
         if RobotBase.isSimulation():
             self.motor_left_sim = SparkMaxSim(self._motor_left)
