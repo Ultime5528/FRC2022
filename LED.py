@@ -46,8 +46,7 @@ class LEDController(commands2.SubsystemBase):
         self.time = 0
         self.explosiveness = 1
         self.led_strip.start()
-        ModeLED.NONE
-        self.mode = ModeLED
+        self.mode = ModeLED.NONE
 
     def set_hsv(self, i: int, color: Color):
         self.buffer[i].setHSV(*color)
@@ -57,9 +56,9 @@ class LEDController(commands2.SubsystemBase):
             self.set_hsv(i, color_func(i))
 
     def pulse(self, color):
-        pixel_value = round(220 * math.cos((1 / (12 * math.pi)) * self.time))
-        hue, saturation, value = color
-        self.set_all(lambda i: (hue, saturation, pixel_value + 290))
+        t = round(254 * abs(math.cos(self.time * 2 * math.pi / 500)**3))
+        hue, saturation, _ = color
+        self.set_all(lambda i: (hue, saturation, 255 - t))
 
     def rainbow(self):
         for i in range(len(self.buffer)):
