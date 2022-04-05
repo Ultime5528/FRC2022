@@ -10,6 +10,7 @@ import ports
 import properties
 from utils.linearinterpolator import LinearInterpolator
 from utils.sparkmaxsim import SparkMaxSim
+from utils.sparkmaxutil import configure_leader, configure_follower
 
 
 def compute_speed_percentage(speed, setpoint):
@@ -30,22 +31,16 @@ class Shooter(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
         self._motor_left = rev.CANSparkMax(ports.shooter_motor_gauche, rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_left.restoreFactoryDefaults()
-        self._motor_left.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
-        self._motor_left.setInverted(True)
+        configure_leader(self._motor_left, "coast", inverted=True)
 
         self._motor_right = rev.CANSparkMax(ports.shooter_motor_droit, rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_right.restoreFactoryDefaults()
-        self._motor_right.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
-        self._motor_right.follow(self._motor_left, invert=True)
+        configure_follower(self._motor_right, self._motor_left, "coast", inverted=True)
 
         self._backspin_motor = rev.CANSparkMax(ports.shooter_backspin_motor, rev.CANSparkMax.MotorType.kBrushless)
-        self._backspin_motor.restoreFactoryDefaults()
-        self._backspin_motor.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
-        self._backspin_motor.setInverted(True)
+        configure_leader(self._backspin_motor, "coast", inverted=True)
 
-        self.backspin_encoder = self._backspin_motor.getEncoder()
         self.encoder = self._motor_left.getEncoder()
+        self.backspin_encoder = self._backspin_motor.getEncoder()
 
         self.pid_controller = PIDController(0.0001, 0, 0)
         self.addChild("PID Controller", self.pid_controller)
