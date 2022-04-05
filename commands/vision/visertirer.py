@@ -26,3 +26,4 @@ class ViserTirer(commands2.SequentialCommandGroup):
                 Piloter(basepilotable, stick)
             ),
         )
+        self.setName(self.__class__.__name__)

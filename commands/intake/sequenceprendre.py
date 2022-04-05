@@ -14,6 +14,6 @@ class SequencePrendre(commands2.SequentialCommandGroup):
                 DescendreIntake(grimpeur_secondaire),
                 PrendreBallon(intake),
             ),
-            MonterIntake(grimpeur_secondaire, intake),
+            MonterIntake(grimpeur_secondaire),
         )
         self.setName(self.__class__.__name__)

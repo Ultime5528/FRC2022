@@ -6,7 +6,7 @@ from subsystems.visiontargets import VisionTargets
 
 class PreparerInterpolated(SafeCommandBase):
     def __init__(self, shooter: Shooter, vision_targets: VisionTargets):
-        super(self).__init__()
+        super().__init__()
         self.shooter = shooter
         self.vision_targets = vision_targets
 

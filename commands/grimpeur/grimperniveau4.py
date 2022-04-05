@@ -17,7 +17,10 @@ class GrimperNiveau4(commands2.SequentialCommandGroup):
             BougerSecondaire.to_aligner_haut(grimpeur_secondaire),
             commands2.ParallelCommandGroup([
                 BougerPrimaire.to_middle_lent(grimpeur_primaire),
-                DescendreCompletSecondaire(grimpeur_secondaire),
+                commands2.SequentialCommandGroup(
+                    BougerSecondaire.to_next_level_lent(grimpeur_secondaire),
+                    DescendreCompletSecondaire(grimpeur_secondaire),
+                ),
             ]),
             DescendreCompletPrimaire(grimpeur_primaire),
             BougerSecondaire.to_next_level(grimpeur_secondaire),
