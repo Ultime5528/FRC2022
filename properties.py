@@ -1,17 +1,7 @@
 from networktables import NetworkTables
 from networktables.util import ntproperty
 
-persistent = False
-reset = True
-
-if reset:
-    NetworkTables.deleteAllEntries()
-    import os
-    for p in ["networktables.ini", "networktables.ini.bak"]:
-        if os.path.exists(p):
-            os.remove(p)
-        else:
-            raise Exception("File does not exist :", p)
+persistent = True
 
 
 class Properties:
@@ -98,3 +88,14 @@ class Properties:
 
 
 values = Properties()
+
+
+def clear_properties():
+    for entry in NetworkTables.getEntries("/Properties", 0):
+        name: str = entry.getName()
+        assert name.startswith("/Properties/")
+        name = name.replace("/Properties/", "")
+        if not hasattr(values, name):
+            entry.clearPersistent()
+            entry.delete()
+            print("Deleted", name)
