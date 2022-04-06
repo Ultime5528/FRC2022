@@ -74,6 +74,7 @@ class Properties:
     vision_cargo_min_radius = ntproperty("/Properties/vision_cargo_min_radius", 0.03, writeDefault=False, persistent=persistent)
     vision_cargo_circularity_error = ntproperty("/Properties/vision_cargo_circularity_error", 0.2, writeDefault=False, persistent=persistent)
 
+    viser_hub_min_speed = ntproperty("/Properties/viser_hub_min_speed", 0.075, writeDefault=False, persistent=persistent)
     viser_hub_speed = ntproperty("/Properties/viser_hub_speed", 0.075, writeDefault=False, persistent=persistent)
     viser_hub_threshold = ntproperty("/Properties/viser_hub_threshold", 0.015, writeDefault=False, persistent=persistent)
     viser_hub_x_offset = ntproperty("/Properties/viser_hub_x_offset", 0, writeDefault=False, persistent=persistent)

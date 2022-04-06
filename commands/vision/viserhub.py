@@ -14,7 +14,6 @@ class ViserHub(CommandBase):
         self.addRequirements(base_pilotable)
         self.visiontargets = visiontargets
         self.setName("Viser Hub")
-
         self.error = float("inf")
 
     def initialize(self) -> None:
@@ -23,12 +22,12 @@ class ViserHub(CommandBase):
     def execute(self) -> None:
         if self.visiontargets.hubFound:
             self.error = self.visiontargets.hubNormX - properties.values.viser_hub_x_offset
-            speed = abs(self.error) * properties.values.viser_hub_speed + 0.05
+            speed = abs(self.error) * properties.values.viser_hub_speed + properties.values.viser_hub_min_speed
 
             if self.error >= 0:
-                self.base_pilotable.tankDrive(speed, 0)
+                self.base_pilotable.tankDrive(speed, -0.5 * speed)
             else:
-                self.base_pilotable.tankDrive(0, speed)
+                self.base_pilotable.tankDrive(-0.5 * speed, speed)
         else:
             self.base_pilotable.tankDrive(0, 0)
 
