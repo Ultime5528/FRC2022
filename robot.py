@@ -1,18 +1,13 @@
 import commands2
 import wpilib
-from wpilib import PowerDistribution
+from commands2 import CommandBase
 from commands2.button import JoystickButton
-from wpimath.geometry import Pose2d, Rotation2d
+from wpilib import PowerDistribution
 
 from LED import LEDController
 from commands.auto.auto2ballons import Auto2Ballons
 from commands.auto.auto4ballons import Auto4Ballons
-from commands.balayerballon import BalayerBallon
-from commands.basepilotable.avancer import Avancer
 from commands.basepilotable.piloter import Piloter
-from commands.basepilotable.piloteraide import PiloterAide
-from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
-from commands.basepilotable.tourner import Tourner
 from commands.grimpeur.bougerprimaire import BougerPrimaire
 from commands.grimpeur.bougersecondaire import BougerSecondaire
 from commands.grimpeur.descendrecompletprimaire import DescendreCompletPrimaire
@@ -25,14 +20,10 @@ from commands.grimpeur.preparergrimper import PreparerGrimper
 from commands.grimpeur.resetgrimpeurs import ResetGrimpeurs
 from commands.intake.descendreintake import DescendreIntake
 from commands.intake.monterintake import MonterIntake
-from commands.intake.prendreballon import PrendreBallon
 from commands.intake.sequenceprendre import SequencePrendre
 from commands.sequencebalayer import SequenceBalayer
-from commands.shooter.dashboardshoot import DashboardShoot
-from commands.shooter.ejectershooter import EjecterShooter
 from commands.shooter.interpolatedshoot import InterpolatedShoot
 from commands.shooter.manualshoot import ManualShoot
-from commands.vision.visercargo import ViserCargo
 from commands.vision.visercargoavancer import ViserCargoAvancer
 from commands.vision.viserhub import ViserHub
 from commands.vision.visertirer import ViserTirer
@@ -47,6 +38,15 @@ from triggers.axistrigger import AxisTrigger
 from utils.dashboard import put_command_on_dashboard
 
 
+def when_pressed_dashboard(subsystem:str, command:CommandBase, stick:wpilib.Joystick, button:int, held:bool=False):
+    if held:
+        JoystickButton(stick, button).whenHeld(command)
+    else:
+        JoystickButton(stick, button).whenPressed(command)
+
+    put_command_on_dashboard(subsystem, command)
+
+    return command
 
 class Robot(commands2.TimedCommandRobot):
     def robotInit(self):
@@ -82,73 +82,50 @@ class Robot(commands2.TimedCommandRobot):
         self.autoCommand: commands2.CommandBase = None
         self.autoChooser = wpilib.SendableChooser()
         self.autoChooser.setDefaultOption("Rien", None)
-        self.autoChooser.setDefaultOption("4 Ballons", Auto4Ballons(self.base_pilotable,
+        self.autoChooser.addOption("4 Ballons", Auto4Ballons(self.base_pilotable,
                                                           self.stick, self.shooter,
                                                           self.intake, self.vision_targets, self.grimpeur_secondaire))
-        self.autoChooser.setDefaultOption("2 Ballons", Auto2Ballons(self.base_pilotable,
+        self.autoChooser.addOption("2 Ballons", Auto2Ballons(self.base_pilotable,
                                                           self.stick, self.shooter,
                                                           self.intake, self.vision_targets, self.grimpeur_secondaire))
-        # self.autoChooser.addOption("Auto xxxx", None)
+
         wpilib.SmartDashboard.putData("ModeAutonome", self.autoChooser)
 
         clear_properties()
 
     def setup_triggers(self):
         # JOYSTICK
-        JoystickButton(self.stick, 7).whenPressed(Piloter(self.base_pilotable, self.stick))
-        JoystickButton(self.stick, 2).whenPressed(
-            ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
-        JoystickButton(self.stick, 3).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
-        JoystickButton(self.stick, 4).whenHeld(PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
-        JoystickButton(self.stick, 5).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
+        when_pressed_dashboard("BasePilotable", Piloter(self.base_pilotable, self.stick),self.stick, 7)
+        when_pressed_dashboard("Vision", ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets),self.stick, 2)
+        shootbas = when_pressed_dashboard("Shooter", ManualShoot.bas(self.shooter, self.intake),self.stick, 4, True)
+        viserhub = when_pressed_dashboard("Vision", ViserHub(self.base_pilotable, self.vision_targets),self.stick, 5)
+        visercargoavancer = when_pressed_dashboard("Vision", ViserCargoAvancer(self.base_pilotable, self.vision_targets),self.stick, 3)
 
         # CONSOLE
-        JoystickButton(self.console_1, 5).whenPressed(GrimperNiveau2(self.grimpeur_primaire))
-        JoystickButton(self.console_1, 8).whenPressed(GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire))
-        JoystickButton(self.console_2, 3).whenPressed(GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
-        JoystickButton(self.console_1, 4).whenPressed(PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
-        JoystickButton(self.console_1, 7).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
-        JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
-        JoystickButton(self.console_1, 3).whenPressed(ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))
-        JoystickButton(self.console_1, 6).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
-        JoystickButton(self.console_2, 1).whenPressed(ManualShoot.bas(self.shooter, self.intake))
-        JoystickButton(self.console_1, 2).whenPressed(SequencePrendre(self.grimpeur_secondaire, self.intake))
-        JoystickButton(self.console_1, 1).whenPressed(SequenceBalayer(self.grimpeur_secondaire, self.intake))
-        AxisTrigger(self.console_1, 0, inverted=False).whenActive(MonterIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 0, inverted=True).whenActive(DescendreIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 1, inverted=True).whenActive(MonterIntake(self.grimpeur_secondaire))
-        AxisTrigger(self.console_1, 1, inverted=False).whenActive(DescendreIntake(self.grimpeur_secondaire))
+        when_pressed_dashboard("Grimper", GrimperNiveau2(self.grimpeur_primaire),self.console_1, 5)
+        when_pressed_dashboard("Grimper", GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire),self.console_1, 8)
+        when_pressed_dashboard("Grimper", GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire),self.console_2, 3)
+        when_pressed_dashboard("Grimper", PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire),self.console_1, 4)
+        JoystickButton(self.console_1, 7).whenPressed(viserhub)
+        when_pressed_dashboard("Shooter", InterpolatedShoot(self.shooter, self.intake, self.vision_targets),self.console_2, 2)
+        when_pressed_dashboard("Grimper", ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire),self.console_1, 3)
+        JoystickButton(self.console_1, 6).whenPressed(visercargoavancer)
+        JoystickButton(self.console_2, 1).whenPressed(shootbas)
+        when_pressed_dashboard("Intake", SequencePrendre(self.grimpeur_secondaire, self.intake),self.console_1, 2)
+        when_pressed_dashboard("Intake", SequenceBalayer(self.grimpeur_secondaire, self.intake),self.console_1, 1)
+
+        monterintake = put_command_on_dashboard("Intake", MonterIntake(self.grimpeur_secondaire))
+        descendreintake = put_command_on_dashboard("Intake", DescendreIntake(self.grimpeur_secondaire))
+
+        AxisTrigger(self.console_1, 0, inverted=False).whenActive(monterintake)
+        AxisTrigger(self.console_1, 0, inverted=True).whenActive(descendreintake)
+        AxisTrigger(self.console_1, 1, inverted=True).whenActive(monterintake)
+        AxisTrigger(self.console_1, 1, inverted=False).whenActive(descendreintake)
         # Pour une raison inconnue, le trigger doit être gardé comme attribut pour que les test fonctionnent.
         # self.trigger = WrongCargoTrigger(self.vision_targets)
         # self.trigger.whenActive(EjecterIntake(self.intake))
 
     def setup_dashboard(self):
-        put_command_on_dashboard("Intake", MonterIntake(self.grimpeur_secondaire))
-        put_command_on_dashboard("Intake", DescendreIntake(self.grimpeur_secondaire))
-        put_command_on_dashboard("Intake", PrendreBallon(self.intake))
-        put_command_on_dashboard("Intake", SequencePrendre(self.grimpeur_secondaire, self.intake))
-        put_command_on_dashboard("Intake", BalayerBallon(self.intake))
-        put_command_on_dashboard("Intake", SequenceBalayer(self.grimpeur_secondaire, self.intake))
-
-        put_command_on_dashboard("Shooter", ManualShoot(self.shooter, self.intake, 3000, 3000))
-        put_command_on_dashboard("Shooter", InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
-        put_command_on_dashboard("Shooter", DashboardShoot(self.shooter, self.intake))
-        put_command_on_dashboard("Shooter", EjecterShooter(self.shooter, self.intake))
-        put_command_on_dashboard("Shooter", ManualShoot.bas(self.shooter, self.intake))
-
-        put_command_on_dashboard("BasePilotable", Avancer(self.base_pilotable, 1, 0.15))
-        put_command_on_dashboard("BasePilotable", Tourner(self.base_pilotable, -90, 0.1))
-        put_command_on_dashboard("BasePilotable", SuivreTrajectoire(self.base_pilotable,
-                                                                    [Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                                                                     Pose2d(3, 1, Rotation2d.fromDegrees(0))],
-                                                                    0.6,
-                                                                    reset=True))
-
-        put_command_on_dashboard("BasePilotable", SuivreTrajectoire(self.base_pilotable,
-                                                                    [Pose2d(0, 0, Rotation2d.fromDegrees(180)),
-                                                                     Pose2d(1, -3, Rotation2d.fromDegrees(150))],
-                                                                    0.6, reversed=True), "SuivreTrajectoire reculons")
-
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_max(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", BougerPrimaire.to_clip(self.grimpeur_primaire))
         put_command_on_dashboard("GrimpeurPrimaire", DescendreCompletPrimaire(self.grimpeur_primaire))
@@ -159,17 +136,6 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("GrimpeurSecondaire", DescendreCompletSecondaire(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_aligner_bas(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_next_level(self.grimpeur_secondaire))
-
-        put_command_on_dashboard("Grimper", ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))
-        put_command_on_dashboard("Grimper", PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
-        put_command_on_dashboard("Grimper", GrimperNiveau2(self.grimpeur_primaire))
-        put_command_on_dashboard("Grimper", GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire))
-        put_command_on_dashboard("Grimper", GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
-
-        put_command_on_dashboard("Vision", ViserHub(self.base_pilotable, self.vision_targets))
-        put_command_on_dashboard("Vision", ViserCargo(self.base_pilotable, self.vision_targets))
-        put_command_on_dashboard("Vision", ViserCargoAvancer(self.base_pilotable, self.vision_targets))
-        put_command_on_dashboard("Vision", PiloterAide(self.base_pilotable, self.vision_targets, self.stick))
 
         put_command_on_dashboard("Autonome", Auto4Ballons(self.base_pilotable,
                                                           self.stick, self.shooter,

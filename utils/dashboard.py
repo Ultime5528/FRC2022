@@ -12,3 +12,5 @@ def put_command_on_dashboard(sub_table: str, cmd: commands2.CommandBase, name=No
         name = cmd.getName()
 
     wpilib.SmartDashboard.putData(sub_table + name, cmd)
+
+    return cmd
