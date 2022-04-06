@@ -2,10 +2,8 @@ import pygetwindow
 import os
 import time
 import webbrowser
-from colorama import Fore
 from pathlib import Path
 import subprocess
-import mouse
 
 chrome_path = "C:/Program Files/Google/Chrome/Application/chrome.exe %s"
 
@@ -29,12 +27,19 @@ subprocess.Popen(str(Path(r"dashboard\pynetworktables2js.exe").absolute()) + " -
 time.sleep(1)
 webbrowser.get(chrome_path).open_new_tab(r"http://localhost:8888")
 time.sleep(1)
-print(pygetwindow.getAllTitles())
+chrome_name = None
+
+while chrome_name is None:
+    try:
+        chrome_name = [name for name in pygetwindow.getAllTitles() if "Google Chrome" in name][0]
+    except IndexError:
+
 
 Browser = None
 while Browser is None:
+    
     try:
-        Browser = pygetwindow.getWindowsWithTitle("My Robot Dashboard! - Google Chrome")[0]
+        Browser = pygetwindow.getWindowsWithTitle(chrome_name)[0]
         print(Browser)
     except IndexError:
         print('Chrome not detected')
