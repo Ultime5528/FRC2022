@@ -146,9 +146,9 @@ class LEDController(commands2.SubsystemBase):
             elif ModeLED.INTAKE == self.mode:
                 self.waves(color, self.intake.ballCount())
             elif wpilib.DriverStation.getMatchTime() <= 1:
-                self.explosiveness = 1
                 self.explode(color)
             elif wpilib.DriverStation.getMatchTime() <= 5:
+                self.explosiveness = 1
                 self.flash(color, 10)
             elif wpilib.DriverStation.getMatchTime() <= 15:
                 self.flash(self.orange_hsv, 35)
