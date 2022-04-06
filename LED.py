@@ -158,7 +158,7 @@ class LEDController(commands2.SubsystemBase):
             elif wpilib.DriverStation.getMatchTime() <= 30:
                 self.flash(self.yellow_hsv, 50)
             else:
-                self.set_all(lambda i: color)
+                self.waves(color, self.intake.ballCount())
 
         else:  # game hasn't started
             #print("disabled")
