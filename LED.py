@@ -25,6 +25,7 @@ class ModeLED(Enum):
     NONE = "none"
     SHOOT = "shoot"
     INTAKE = "intake"
+    END = "end"
 
 
 class LEDController(commands2.SubsystemBase):
@@ -123,12 +124,13 @@ class LEDController(commands2.SubsystemBase):
 
     def periodic(self) -> None:
         self.time += 1
-        if self.shooter.setpoint != 0:
-            self.mode = ModeLED.SHOOT
-        elif self.intake.getIntakeSpeed() != 0:
-            self.mode = ModeLED.INTAKE
-        else:
-            self.mode = ModeLED.NONE
+        if self.mode != ModeLED.END:
+            if self.shooter.setpoint != 0:
+                self.mode = ModeLED.SHOOT
+            elif self.intake.getIntakeSpeed() != 0:
+                self.mode = ModeLED.INTAKE
+            else:
+                self.mode = ModeLED.NONE
 
         alliance = wpilib.DriverStation.getAlliance()
         if alliance == wpilib.DriverStation.Alliance.kInvalid:
@@ -140,12 +142,13 @@ class LEDController(commands2.SubsystemBase):
 
         if wpilib.DriverStation.isAutonomousEnabled(): #auto
             self.ripples(color)
-        elif wpilib.DriverStation.isTeleopEnabled(): #teleop
+        elif wpilib.DriverStation.isTeleopEnabled() or self.mode == ModeLED.END: #teleop
             if ModeLED.INTAKE == self.mode:
                 self.waves(color, self.intake.ballCount())
             elif ModeLED.SHOOT == self.mode:
                 self.half_waves(color)
-            elif wpilib.DriverStation.getMatchTime() <= 1:
+            elif wpilib.DriverStation.getMatchTime() <= 0.1:
+                self.mode = ModeLED.END
                 self.explode(color)
             elif wpilib.DriverStation.getMatchTime() <= 5:
                 self.explosiveness = 1
