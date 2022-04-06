@@ -1,5 +1,10 @@
 # FRC2022
 
+## Properties
+```bash
+scp lvuser@10.55.28.2:/home/lvuser/networktables.ini networktables.ini
+```
+
 ## Vision
 
 ### Setup

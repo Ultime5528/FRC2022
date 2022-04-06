@@ -6,6 +6,7 @@ from wpilib.simulation import DIOSim
 import ports
 import properties
 from utils.sparkmaxsim import SparkMaxSim
+from utils.sparkmaxutil import configure_leader
 from utils.subsystembase import SubsystemBase
 
 
@@ -23,9 +24,8 @@ class GrimpeurSecondaire(SubsystemBase):
 
         self._motor_secondaire = rev.CANSparkMax(ports.grimpeur_moteur_secondaire,
                                                  rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_secondaire.restoreFactoryDefaults()
-        self._motor_secondaire.setInverted(True)
-        self._motor_secondaire.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
+        configure_leader(self._motor_secondaire, "brake", inverted=True)
+        self.update_current_limit()
         self._encoder_secondaire = self._motor_secondaire.getEncoder()
 
         if RobotBase.isSimulation():
@@ -73,3 +73,6 @@ class GrimpeurSecondaire(SubsystemBase):
 
     def reset_encoder(self):
         self._encoder_secondaire.setPosition(0)
+
+    def update_current_limit(self):
+        self._motor_secondaire.setSmartCurrentLimit(int(properties.values.grimpeur_secondaire_current_limit))
