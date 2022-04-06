@@ -1,17 +1,16 @@
 import commands2
-import wpilib
-from wpimath.controller import SimpleMotorFeedforwardMeters, BangBangController, PIDController
 import rev
+import wpilib
 from wpilib import RobotBase, RobotController
-from subsystems.intake import Intake
-
-import properties
-from utils.sparkmaxsim import SparkMaxSim
 from wpilib.simulation import FlywheelSim
+from wpimath.controller import SimpleMotorFeedforwardMeters, BangBangController, PIDController
 from wpimath.system.plant import DCMotor
-from utils.linearInterpolator import LinearInterpolator
 
 import ports
+import properties
+from utils.linearinterpolator import LinearInterpolator
+from utils.sparkmaxsim import SparkMaxSim
+from utils.sparkmaxutil import configure_leader, configure_follower
 
 
 def compute_speed_percentage(speed, setpoint):
@@ -22,38 +21,34 @@ def compute_speed_percentage(speed, setpoint):
 
 
 class Shooter(commands2.SubsystemBase):
-    main_verified_points = [[0.05, 2400], [0, 1000], [0.5, 2500], [1, 3000]]
-    backspin_verified_points = [[0.05, 2400], [0, 1000], [0.5, 2500], [1, 3000]]
+    # main_verified_points = [[0.1, 2500], [0.15, 2500], [0.2, 2600], [0.333, 2700], [0.4, 2800], [0.56, 2900], [0.64, 4300], [0.7, 4500]]
+    # backspin_verified_points = main_verified_points
+    main_verified_points = [(-0.4, 1200), (-0.3, 1200), (0, 1400), (0.16, 3750), (0.43, 4100), (0.65, 4750)]
+    backspin_verified_points = [(-0.4, 3300), (-0.3, 3600), (0, 3600), (0.16, 1600), (0.43, 2000), (0.65, 2400)]
     main_interpolator = LinearInterpolator(main_verified_points)
     backspin_interpolator = LinearInterpolator(backspin_verified_points)
 
     def __init__(self) -> None:
         super().__init__()
         self._motor_left = rev.CANSparkMax(ports.shooter_motor_gauche, rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_left.restoreFactoryDefaults()
-        self._motor_left.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
-        self._motor_left.setInverted(True)
+        configure_leader(self._motor_left, "coast", inverted=True)
 
         self._motor_right = rev.CANSparkMax(ports.shooter_motor_droit, rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_right.restoreFactoryDefaults()
-        self._motor_right.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
-        self._motor_right.follow(self._motor_left, invert=True)
+        configure_follower(self._motor_right, self._motor_left, "coast", inverted=True)
 
         self._backspin_motor = rev.CANSparkMax(ports.shooter_backspin_motor, rev.CANSparkMax.MotorType.kBrushless)
-        self._backspin_motor.restoreFactoryDefaults()
-        self._backspin_motor.setIdleMode(rev.CANSparkMax.IdleMode.kCoast)
-        self._backspin_motor.setInverted(True)
+        configure_leader(self._backspin_motor, "coast", inverted=True)
 
-        self.backspin_encoder = self._backspin_motor.getEncoder()
         self.encoder = self._motor_left.getEncoder()
+        self.backspin_encoder = self._backspin_motor.getEncoder()
 
-        self.pid_controller = PIDController(0.001, 0, 0)
+        self.pid_controller = PIDController(0.0001, 0, 0)
         self.addChild("PID Controller", self.pid_controller)
         self.bang_bang_controller = BangBangController()
         self.feed_forward_controller = SimpleMotorFeedforwardMeters(0.124, 0.002105)
 
-        self.setpoint = 1
-        self.backspin_setpoint = 1
+        self.setpoint = 0
+        self.backspin_setpoint = 0
 
         if RobotBase.isSimulation():
             self.motor_left_sim = SparkMaxSim(self._motor_left)
@@ -63,6 +58,9 @@ class Shooter(commands2.SubsystemBase):
             self.backspin_flywheel_sim = FlywheelSim(DCMotor.NEO(1), 1, 0.0025)
 
     def shoot(self, setpoint: float, backspin_setpoint):
+        setpoint = setpoint * 2**(properties.values.shooter_speed_multiplier / 100)
+        backspin_setpoint = backspin_setpoint * 2**(properties.values.shooter_speed_multiplier / 100)
+
         self.setpoint = setpoint
         self.backspin_setpoint = backspin_setpoint
 
@@ -81,8 +79,10 @@ class Shooter(commands2.SubsystemBase):
         # print("Voltage: ", voltage)
 
         # Backspin motor control
-        self._backspin_motor.setVoltage(self.pid_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
-                                        + self.feed_forward_controller.calculate(backspin_setpoint))
+        self._backspin_motor.setVoltage(
+            self.pid_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
+            + self.feed_forward_controller.calculate(backspin_setpoint)
+        )
 
     def shoot_bangbang(self, setpoint: float, backspin_setpoint):
         velocity = self.encoder.getVelocity()
@@ -97,19 +97,31 @@ class Shooter(commands2.SubsystemBase):
         # print("Feedforward Value: ", feedforward_value)
         # print("Voltage: ", voltage)
 
-        self._backspin_motor.setVoltage(self.bang_bang_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
-                                        + properties.values.shooter_feedforward_percentage * self.feed_forward_controller.calculate(backspin_setpoint))
+        self._backspin_motor.setVoltage(
+            self.bang_bang_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
+            + properties.values.shooter_feedforward_percentage
+            * self.feed_forward_controller.calculate(backspin_setpoint)
+        )
 
         self.setpoint = setpoint
         self.backspin_setpoint = backspin_setpoint
 
     def atSetpoint(self):
-        return self.encoder.getVelocity() >= self.setpoint - properties.values.shooter_tolerance and self.backspin_encoder.getVelocity() >= self.backspin_setpoint - properties.values.shooter_tolerance
+        if self.setpoint:
+            return (
+                    self.encoder.getVelocity() >= self.setpoint - properties.values.shooter_tolerance
+                    and self.backspin_encoder.getVelocity() >= self.backspin_setpoint - properties.values.shooter_tolerance
+            )
+        else:
+            return False
 
     def shoot_at_height(self, height):
-        self.shoot(self.main_interpolator.interpolate(height), self.backspin_interpolator.interpolate(height))
+        self.shoot(
+            self.main_interpolator.interpolate(height),
+            self.backspin_interpolator.interpolate(height),
+        )
 
-    def disable(self):
+    def stop(self):
         self._motor_left.set(0)
         self._backspin_motor.set(0)
         self.setpoint = 0
@@ -119,11 +131,14 @@ class Shooter(commands2.SubsystemBase):
         wpilib.SmartDashboard.putNumber("BackspinMotor", self.backspin_encoder.getVelocity())
         wpilib.SmartDashboard.putNumber("MainMotors", self.encoder.getVelocity())
 
-        wpilib.SmartDashboard.putNumber("MainMotorPercentSpeed",
-                                        compute_speed_percentage(self.encoder.getVelocity(), self.setpoint))
-        wpilib.SmartDashboard.putNumber("BackspinMotorPercentSpeed",
-                                        compute_speed_percentage(self.backspin_encoder.getVelocity(),
-                                                                 self.backspin_setpoint))
+        wpilib.SmartDashboard.putNumber(
+            "MainMotorPercentSpeed",
+            compute_speed_percentage(self.encoder.getVelocity(), self.setpoint),
+        )
+        wpilib.SmartDashboard.putNumber(
+            "BackspinMotorPercentSpeed",
+            compute_speed_percentage(self.backspin_encoder.getVelocity(), self.backspin_setpoint),
+        )
 
     def simulationPeriodic(self) -> None:
         motor_value = self._motor_left.get()
@@ -134,7 +149,3 @@ class Shooter(commands2.SubsystemBase):
         self.backspin_flywheel_sim.setInputVoltage(backspin_motor_value * RobotController.getInputVoltage())
         self.backspin_flywheel_sim.update(0.02)
         self.backspin_motor_sim.setVelocity(self.backspin_flywheel_sim.getAngularVelocity() / 6.28 * 60)
-        # self.motor_right_sim.setVelocity(self.bang_bang_controller.calculate(self._encoder_primaire.getVelocity(), setpoint)
-        #                     + 0.9 * self.feed_forward_controller.calculate(setpoint))
-        # self.motor_left_sim.setVelocity(self.bang_bang_controller.calculate(self._encoder_primaire.getVelocity(), setpoint)
-        #                     + 0.9 * self.feed_forward_controller.calculate(setpoint))

@@ -1,16 +1,17 @@
-import commands2
-from subsystems.basepilotable import BasePilotable
 import math
 
-from utils.properties import FloatProperty, to_property
+import commands2
+
+from subsystems.basepilotable import BasePilotable
+from utils.properties import FloatProperty, to_callable
 
 
 class Avancer(commands2.CommandBase):
     def __init__(self, base_pilotable: BasePilotable, distance: FloatProperty, speed: FloatProperty) -> None:
         super().__init__()
         self.base_pilotable = base_pilotable
-        self.get_distance = to_property(distance)
-        self.get_speed = to_property(speed)
+        self.get_distance = to_callable(distance)
+        self.get_speed = to_callable(speed)
         self.addRequirements(base_pilotable)
         self.setName('Avancer')
 

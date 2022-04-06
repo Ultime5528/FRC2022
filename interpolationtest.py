@@ -1,5 +1,6 @@
-from utils.linearInterpolator import LinearInterpolator
 import matplotlib.pyplot as plt
+
+from utils.linearinterpolator import LinearInterpolator
 
 points = [[1, 2], [2, 3], [4, 7], [5, 8], [6, 9], [10, 11], [12, 13]]
 

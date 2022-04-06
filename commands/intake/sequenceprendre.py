@@ -1,8 +1,8 @@
 import commands2
 
-from commands.descendreintake import DescendreIntake
-from commands.monterintake import MonterIntake
-from commands.prendreballon import PrendreBallon
+from commands.intake.descendreintake import DescendreIntake
+from commands.intake.monterintake import MonterIntake
+from commands.intake.prendreballon import PrendreBallon
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
 from subsystems.intake import Intake
 
@@ -16,4 +16,4 @@ class SequencePrendre(commands2.SequentialCommandGroup):
             ),
             MonterIntake(grimpeur_secondaire),
         )
-        self.setName("Sequence Prendre")
+        self.setName(self.__class__.__name__)

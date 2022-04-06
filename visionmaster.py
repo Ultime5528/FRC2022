@@ -1,16 +1,19 @@
+import threading
+
 from networktables.util import NetworkTables
 
-from visionhub import hub_loop
 from visioncargo import cargo_loop
-import threading
+from visionhub import hub_loop
 
 isConnected = threading.Condition()
 notified = [False]
+
 
 def connectionListener(connected, info):
     with isConnected:
         notified[0] = True
         isConnected.notify()
+
 
 def main():
     NetworkTables.initialize(server="10.55.28.2")

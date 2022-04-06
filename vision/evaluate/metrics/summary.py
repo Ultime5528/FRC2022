@@ -193,7 +193,7 @@ def get_coco_summary(groundtruth_bbs, detected_bbs):
         [x['TP'] / x['total positives'] for k in full for x in full[k] if x['TP'] is not None])
 
     small = {
-        i: _evaluate(iou_threshold=i, max_dets=100, area_range=(0, 32**2))
+        i: _evaluate(iou_threshold=i, max_dets=100, area_range=(0, 32 ** 2))
         for i in iou_thresholds
     }
     APsmall = [x['AP'] for k in small for x in small[k] if x['AP'] is not None]
@@ -204,7 +204,7 @@ def get_coco_summary(groundtruth_bbs, detected_bbs):
     ARsmall = np.nan if ARsmall == [] else np.mean(ARsmall)
 
     medium = {
-        i: _evaluate(iou_threshold=i, max_dets=100, area_range=(32**2, 96**2))
+        i: _evaluate(iou_threshold=i, max_dets=100, area_range=(32 ** 2, 96 ** 2))
         for i in iou_thresholds
     }
     APmedium = [x['AP'] for k in medium for x in medium[k] if x['AP'] is not None]
@@ -215,7 +215,7 @@ def get_coco_summary(groundtruth_bbs, detected_bbs):
     ARmedium = np.nan if ARmedium == [] else np.mean(ARmedium)
 
     large = {
-        i: _evaluate(iou_threshold=i, max_dets=100, area_range=(96**2, np.inf))
+        i: _evaluate(iou_threshold=i, max_dets=100, area_range=(96 ** 2, np.inf))
         for i in iou_thresholds
     }
     APlarge = [x['AP'] for k in large for x in large[k] if x['AP'] is not None]

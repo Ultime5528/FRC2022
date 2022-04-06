@@ -1,20 +1,20 @@
 import math
 
 import navx
-import wpilib.drive
+import rev
 import wpilib
+import wpilib.drive
 from wpilib import RobotBase, RobotController
+from wpilib.simulation import DifferentialDrivetrainSim, SimDeviceSim
 from wpimath.geometry import Pose2d, Rotation2d
+from wpimath.kinematics import DifferentialDriveOdometry
 from wpimath.system import LinearSystemId
 from wpimath.system.plant import DCMotor
-from utils.sparkmaxsim import SparkMaxSim
-from wpimath.kinematics import DifferentialDriveOdometry
-from wpilib.simulation import DifferentialDrivetrainSim, SimDeviceSim
-
-from utils.subsystembase import SubsystemBase
-import rev
 
 import ports
+from utils.sparkmaxsim import SparkMaxSim
+from utils.sparkmaxutil import configure_leader, configure_follower
+from utils.subsystembase import SubsystemBase
 
 
 class BasePilotable(SubsystemBase):
@@ -22,28 +22,21 @@ class BasePilotable(SubsystemBase):
         super().__init__()
         # Motors
         self._motor_left = rev.CANSparkMax(ports.basepilotable_left_motor_1, rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_left.restoreFactoryDefaults()
-        self._motor_left.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
+        configure_leader(self._motor_left, "brake")
+
         self._motor_left_follower = rev.CANSparkMax(ports.basepilotable_left_motor_2,
                                                     rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_left_follower.restoreFactoryDefaults()
-        self._motor_left_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
-        self._motor_left_follower.follow(self._motor_left)
+        configure_follower(self._motor_left_follower, self._motor_left, "brake")
 
         self._motor_right = rev.CANSparkMax(ports.basepilotable_right_motor_1,
                                             rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_right.restoreFactoryDefaults()
-        self._motor_right.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
-        # self._motor_right.setInverted(True)
+        configure_leader(self._motor_right, "brake")
+
         self._motor_right_follower = rev.CANSparkMax(ports.basepilotable_right_motor_2,
                                                      rev.CANSparkMax.MotorType.kBrushless)
-        self._motor_right_follower.restoreFactoryDefaults()
-        self._motor_right_follower.setIdleMode(rev.CANSparkMax.IdleMode.kBrake)
-        self._motor_right_follower.follow(self._motor_right)
-
+        configure_follower(self._motor_right_follower, self._motor_right, "brake")
 
         self._drive = wpilib.drive.DifferentialDrive(self._motor_left, self._motor_right)
-
         self.addChild("DifferentialDrive", self._drive)
 
         # Odometry
@@ -65,13 +58,13 @@ class BasePilotable(SubsystemBase):
             self._motor_right_sim = SparkMaxSim(self._motor_right)
             gyro_sim_device = SimDeviceSim("navX-Sensor[1]")
             self._gyro_sim = gyro_sim_device.getDouble("Yaw")
-            self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
+            self._system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 5, 0.3)
             self._drive_sim = DifferentialDrivetrainSim(self._system, 0.64, DCMotor.NEO(4), 1.5, 0.08, [
                 0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005
             ])
-            
-    def arcadeDrive(self, forwardSpeed: float, rotation: float) -> None:
-        self._drive.arcadeDrive(forwardSpeed, rotation, False)
+
+    def arcadeDrive(self, forward: float, rotation: float) -> None:
+        self._drive.arcadeDrive(forward, rotation, False)
 
     def tankDrive(self, left: float, right: float) -> None:
         self._drive.tankDrive(left, right, False)
@@ -83,19 +76,19 @@ class BasePilotable(SubsystemBase):
         self._drive_sim.update(0.02)
         self._motor_left_sim.setPosition(self._drive_sim.getLeftPosition() + self._left_encoder_offset)
         self._motor_left_sim.setVelocity(self._drive_sim.getLeftVelocity())
-        self._motor_right_sim.setPosition(self._drive_sim.getRightPosition() + self._right_encoder_offset)
+        self._motor_right_sim.setPosition(-self._drive_sim.getRightPosition() + self._right_encoder_offset)
         self._motor_right_sim.setVelocity(self._drive_sim.getRightVelocity())
         self._gyro_sim.set(-self._drive_sim.getHeading().degrees())
 
     def resetOdometry(self) -> None:
         self._left_encoder_offset = self._encoder_left.getPosition()
         self._right_encoder_offset = self._encoder_right.getPosition()
-        self._gyro.reset()
         self._odometry.resetPosition(Pose2d(), Rotation2d.fromDegrees(0.0))
-
 
         if RobotBase.isSimulation():
             self._drive_sim.setPose(Pose2d())
+        else:
+            self._gyro.reset()
 
     def getAngle(self):
         return -math.remainder(self._gyro.getAngle(), 360.0)
@@ -136,5 +129,3 @@ class BasePilotable(SubsystemBase):
         # SmartDashboard.putNumber("Wold accel x", self._gyro.getWorldLinearAccelX())
         # SmartDashboard.putNumber("Wold accel z", self._gyro.getWorldLinearAccelZ())
         # SmartDashboard.putNumber("rotation", self._gyro.getRotation2d().degrees())
-    
-

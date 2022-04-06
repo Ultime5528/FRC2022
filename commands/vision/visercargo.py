@@ -1,12 +1,10 @@
 import math
 
-import commands2
 from commands2 import CommandBase
 
-from commands.avancer import Avancer
+import properties
 from subsystems.basepilotable import BasePilotable
 from subsystems.visiontargets import VisionTargets
-import properties
 
 
 class ViserCargo(CommandBase):
@@ -56,15 +54,3 @@ class ViserCargo(CommandBase):
 
     def isFinished(self) -> bool:
         return self.x_stop and self.y_stop
-
-
-class ViserCargoAvancer(commands2.SequentialCommandGroup):
-    def __init__(self, base_pilotable: BasePilotable, vision_targets: VisionTargets):
-        super().__init__(
-            ViserCargo(base_pilotable, vision_targets),
-            Avancer(
-                base_pilotable,
-                lambda: properties.values.viser_cargo_distance_supp,
-                lambda: properties.values.viser_cargo_forward_speed,
-            )
-        )
