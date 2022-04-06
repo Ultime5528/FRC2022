@@ -36,6 +36,7 @@ from commands.vision.visercargo import ViserCargo
 from commands.vision.visercargoavancer import ViserCargoAvancer
 from commands.vision.viserhub import ViserHub
 from commands.vision.visertirer import ViserTirer
+from properties import clear_properties
 from subsystems.basepilotable import BasePilotable
 from subsystems.grimpeurprimaire import GrimpeurPrimaire
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
@@ -90,6 +91,8 @@ class Robot(commands2.TimedCommandRobot):
         # self.autoChooser.addOption("Auto xxxx", None)
         wpilib.SmartDashboard.putData("ModeAutonome", self.autoChooser)
 
+        clear_properties()
+
     def setup_triggers(self):
         # JOYSTICK
         JoystickButton(self.stick, 7).whenPressed(Piloter(self.base_pilotable, self.stick))
@@ -104,8 +107,7 @@ class Robot(commands2.TimedCommandRobot):
         JoystickButton(self.console_1, 8).whenPressed(GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_2, 3).whenPressed(GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 4).whenPressed(PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire))
-        JoystickButton(self.console_1, 7).whenPressed(
-            ViserTirer(self.base_pilotable, self.stick, self.shooter, self.intake, self.vision_targets))
+        JoystickButton(self.console_1, 7).whenPressed(ViserHub(self.base_pilotable, self.vision_targets))
         JoystickButton(self.console_2, 2).whenPressed(InterpolatedShoot(self.shooter, self.intake, self.vision_targets))
         JoystickButton(self.console_1, 3).whenPressed(ResetGrimpeurs(self.grimpeur_primaire, self.grimpeur_secondaire))
         JoystickButton(self.console_1, 6).whenPressed(ViserCargoAvancer(self.base_pilotable, self.vision_targets))
