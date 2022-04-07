@@ -84,10 +84,10 @@ class Robot(commands2.TimedCommandRobot):
         self.autoChooser.setDefaultOption("Rien", None)
         self.autoChooser.addOption("4 Ballons", Auto4Ballons(self.base_pilotable,
                                                           self.stick, self.shooter,
-                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
+                                                          self.intake, self.vision_targets, self.grimpeur_primaire, self.grimpeur_secondaire))
         self.autoChooser.addOption("2 Ballons", Auto2Ballons(self.base_pilotable,
                                                           self.stick, self.shooter,
-                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
+                                                          self.intake, self.vision_targets, self.grimpeur_primaire, self.grimpeur_secondaire))
 
         wpilib.SmartDashboard.putData("ModeAutonome", self.autoChooser)
 
@@ -137,9 +137,6 @@ class Robot(commands2.TimedCommandRobot):
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_aligner_bas(self.grimpeur_secondaire))
         put_command_on_dashboard("GrimpeurSecondaire", BougerSecondaire.to_next_level(self.grimpeur_secondaire))
 
-        put_command_on_dashboard("Autonome", Auto4Ballons(self.base_pilotable,
-                                                          self.stick, self.shooter,
-                                                          self.intake, self.vision_targets, self.grimpeur_secondaire))
 
     def robotPeriodic(self) -> None:
         # TODO if FMS

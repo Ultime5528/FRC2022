@@ -55,8 +55,8 @@ while True:
 
 # Chrome
 
-chrome_path = '"C:/Program Files/Google/Chrome/Application/chrome.exe"'
-# chrome_path = '"C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"'
+# chrome_path = '"C:/Program Files/Google/Chrome/Application/chrome.exe"'
+chrome_path = '"C:/Program Files (x86)/Google/Chrome/Application/chrome.exe"'
 chrome_path += ' --profile-directory="Default" --app=%s'
 chrome = webbrowser.get(chrome_path)
 Thread(target=lambda: chrome.open(dashboard_url)).start()

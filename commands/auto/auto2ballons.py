@@ -4,12 +4,14 @@ from wpimath.geometry import Pose2d, Rotation2d
 
 from commands.basepilotable.avancer import Avancer
 from commands.basepilotable.suivretrajectoire import SuivreTrajectoire
+from commands.grimpeur.resetgrimpeurs import ResetGrimpeurs
 from commands.intake.descendreintake import DescendreIntake
 from commands.intake.monterintake import MonterIntake
 from commands.intake.prendreballon import PrendreBallon
 from commands.shooter.manualshoot import ManualShoot
 from commands.vision.visertirer import ViserTirer
 from subsystems.basepilotable import BasePilotable
+from subsystems.grimpeurprimaire import GrimpeurPrimaire
 from subsystems.grimpeursecondaire import GrimpeurSecondaire
 from subsystems.intake import Intake
 from subsystems.shooter import Shooter
@@ -24,6 +26,7 @@ class Auto2Ballons(commands2.SequentialCommandGroup):
             shooter: Shooter,
             intake: Intake,
             vision: VisionTargets,
+            grimpeur_primaire: GrimpeurPrimaire,
             grimpeur_secondaire: GrimpeurSecondaire
     ):
         super().__init__(
@@ -35,7 +38,10 @@ class Auto2Ballons(commands2.SequentialCommandGroup):
                     SuivreTrajectoire(base_pilotable,
                                       [Pose2d(1.1, 0, Rotation2d.fromDegrees(0))],
                                       0.2, reset=True, addRobotPose=True),
-                    DescendreIntake(grimpeur_secondaire),
+                    commands2.SequentialCommandGroup(
+                        ResetGrimpeurs(grimpeur_primaire, grimpeur_secondaire),
+                        DescendreIntake(grimpeur_secondaire),
+                    )
                 )
             ),
 
