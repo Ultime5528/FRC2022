@@ -100,6 +100,7 @@ class Robot(commands2.TimedCommandRobot):
         shootbas = when_pressed_dashboard("Shooter", ManualShoot.bas(self.shooter, self.intake),self.stick, 4, True)
         viserhub = when_pressed_dashboard("Vision", ViserHub(self.base_pilotable, self.vision_targets),self.stick, 5)
         visercargoavancer = when_pressed_dashboard("Vision", ViserCargoAvancer(self.base_pilotable, self.vision_targets),self.stick, 3)
+        when_pressed_dashboard("Shooter", ManualShoot(self.shooter, self.intake, 3750, 1600), self.stick, 6)
 
         # CONSOLE
         when_pressed_dashboard("Grimper", GrimperNiveau2(self.grimpeur_primaire),self.console_1, 5)
