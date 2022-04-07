@@ -81,8 +81,8 @@ def cargo_loop():
         name="cargo_cam",
         path="/dev/v4l/by-id/usb-HD_Camera_Manufacturer_HD_USB_Camera_SN0008-video-index0",
     )
-    cargo_cam.setResolution(W, H)
-    cargo_cam.setFPS(30)
+    cargo_cam.setResolution(640, 480)
+    cargo_cam.setFPS(15)
 
     cvSink = cs.getVideo(camera=cargo_cam)
 
