@@ -46,6 +46,7 @@ class Shooter(commands2.SubsystemBase):
         self.addChild("PID Controller", self.pid_controller)
         self.bang_bang_controller = BangBangController()
         self.feed_forward_controller = SimpleMotorFeedforwardMeters(0.124, 0.002105)
+        self.backspin_feed_forward_controller = SimpleMotorFeedforwardMeters(0.124, 0.002105)
 
         self.setpoint = 0
         self.backspin_setpoint = 0
@@ -81,7 +82,7 @@ class Shooter(commands2.SubsystemBase):
         # Backspin motor control
         self._backspin_motor.setVoltage(
             self.pid_controller.calculate(self.backspin_encoder.getVelocity(), backspin_setpoint)
-            + self.feed_forward_controller.calculate(backspin_setpoint)
+            + self.backspin_feed_forward_controller.calculate(backspin_setpoint)
         )
 
     def shoot_bangbang(self, setpoint: float, backspin_setpoint):

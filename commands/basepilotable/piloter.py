@@ -1,6 +1,6 @@
 import wpilib
 from commands2 import CommandBase
-from wpimath.filter import MedianFilter
+from wpimath.filter import MedianFilter, LinearFilter
 import properties
 from subsystems.basepilotable import BasePilotable
 
@@ -23,8 +23,8 @@ class Piloter(CommandBase):
         self.setName("Piloter")
 
     def initialize(self) -> None:
-        self.forward_filter = MedianFilter(int(properties.values.piloter_filter_size))
-        self.turn_filter = MedianFilter(int(properties.values.piloter_filter_size))
+        self.forward_filter = LinearFilter.movingAverage(int(properties.values.piloter_filter_size))
+        self.turn_filter = LinearFilter.movingAverage(int(properties.values.piloter_filter_size))
 
     def execute(self):
         forward = interpoler(self.stick.getY(), properties.values.interpolation_courbure) * -1
