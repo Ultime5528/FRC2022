@@ -6,6 +6,8 @@ persistent = True
 
 class Properties:
     aide_pilotage_slow_factor = ntproperty("/Properties/aide_pilotage_slow_factor", 0.5, writeDefault=False, persistent=persistent)
+    piloter_filter_size = ntproperty("/Properties/piloter_filter_size", 15, writeDefault=False, persistent=persistent)
+
 
     interpolation_courbure = ntproperty("/Properties/interpolation_courbure", 0.6, writeDefault=False, persistent=persistent)
 
