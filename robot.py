@@ -5,6 +5,7 @@ from commands2.button import JoystickButton
 from wpilib import PowerDistribution
 
 from LED import LEDController
+from commands.auto.auto2ballonfar import Auto2BallonsFar
 from commands.auto.auto2ballons import Auto2Ballons
 from commands.auto.auto4ballons import Auto4Ballons
 from commands.basepilotable.piloter import Piloter
@@ -85,7 +86,10 @@ class Robot(commands2.TimedCommandRobot):
         self.autoChooser.addOption("4 Ballons", Auto4Ballons(self.base_pilotable,
                                                           self.stick, self.shooter,
                                                           self.intake, self.vision_targets, self.grimpeur_primaire, self.grimpeur_secondaire))
-        self.autoChooser.addOption("2 Ballons", Auto2Ballons(self.base_pilotable,
+        self.autoChooser.addOption("2 Ballons Corner", Auto2Ballons(self.base_pilotable,
+                                                          self.stick, self.shooter,
+                                                          self.intake, self.vision_targets, self.grimpeur_primaire, self.grimpeur_secondaire))
+        self.autoChooser.addOption("2 Ballons Far Middle", Auto2BallonsFar(self.base_pilotable,
                                                           self.stick, self.shooter,
                                                           self.intake, self.vision_targets, self.grimpeur_primaire, self.grimpeur_secondaire))
 
@@ -101,11 +105,12 @@ class Robot(commands2.TimedCommandRobot):
         viserhub = when_pressed_dashboard("Vision", ViserHub(self.base_pilotable, self.vision_targets),self.stick, 5)
         visercargoavancer = when_pressed_dashboard("Vision", ViserCargoAvancer(self.base_pilotable, self.vision_targets),self.stick, 3)
         when_pressed_dashboard("Shooter", ManualShoot(self.shooter, self.intake, 3750, 1600), self.stick, 6)
+        JoystickButton(self.console_2, 3).whenPressed(BougerPrimaire.to_max(self.grimpeur_primaire))
 
         # CONSOLE
         when_pressed_dashboard("Grimper", GrimperNiveau2(self.grimpeur_primaire),self.console_1, 5)
         when_pressed_dashboard("Grimper", GrimperNiveau3(self.grimpeur_primaire, self.grimpeur_secondaire),self.console_1, 8)
-        when_pressed_dashboard("Grimper", GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire),self.console_2, 3)
+        # when_pressed_dashboard("Grimper", GrimperNiveau4(self.grimpeur_primaire, self.grimpeur_secondaire),self.console_2, 3)
         when_pressed_dashboard("Grimper", PreparerGrimper(self.grimpeur_primaire, self.grimpeur_secondaire),self.console_1, 4)
         JoystickButton(self.console_1, 7).whenPressed(viserhub)
         when_pressed_dashboard("Shooter", InterpolatedShoot(self.shooter, self.intake, self.vision_targets),self.console_2, 2)
