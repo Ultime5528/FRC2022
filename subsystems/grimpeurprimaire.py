@@ -26,6 +26,8 @@ class GrimpeurPrimaire(SubsystemBase):
                                                         rev.CANSparkMax.MotorType.kBrushless)
         configure_follower(self._motor_primaire_follower, self._motor_primaire, "brake", inverted=True)
 
+        self.update_current_limit()
+
         if RobotBase.isSimulation():
             self._motor_primaire_sim = SparkMaxSim(self._motor_primaire)
             self._switch_bas_sim = DIOSim(self._switch_bas)
@@ -61,3 +63,7 @@ class GrimpeurPrimaire(SubsystemBase):
 
     def reset_encoder(self):
         self._encoder_primaire.setPosition(0)
+
+    def update_current_limit(self):
+        self._motor_primaire.setSmartCurrentLimit(int(properties.values.grimpeur_primaire_current_limit))
+        self._motor_primaire_follower.setSmartCurrentLimit(int(properties.values.grimpeur_primaire_current_limit))

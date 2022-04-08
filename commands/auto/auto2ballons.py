@@ -30,18 +30,17 @@ class Auto2Ballons(commands2.SequentialCommandGroup):
             grimpeur_secondaire: GrimpeurSecondaire
     ):
         super().__init__(
+            commands2.SequentialCommandGroup(
+                ResetGrimpeurs(grimpeur_primaire, grimpeur_secondaire),
+                DescendreIntake(grimpeur_secondaire),
+            ),
             commands2.ParallelRaceGroup(
-                commands2.WaitCommand(2.5),
                 commands2.ParallelDeadlineGroup(
                     PrendreBallon(intake),
 
                     SuivreTrajectoire(base_pilotable,
-                                      [Pose2d(1.1, 0, Rotation2d.fromDegrees(0))],
+                                      [Pose2d(20, 0, Rotation2d.fromDegrees(0))],
                                       0.2, reset=True, addRobotPose=True),
-                    commands2.SequentialCommandGroup(
-                        ResetGrimpeurs(grimpeur_primaire, grimpeur_secondaire),
-                        DescendreIntake(grimpeur_secondaire),
-                    )
                 )
             ),
 

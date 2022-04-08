@@ -1,6 +1,7 @@
 import wpilib
 from commands2 import CommandBase
 
+import properties
 from subsystems.basepilotable import BasePilotable
 
 
@@ -23,4 +24,5 @@ class Piloter(CommandBase):
         self.setName("Piloter")
 
     def execute(self):
-        self.base_pilotable.arcadeDrive(interpoler(self.stick.getY()) * -1, interpoler(self.stick.getX()))
+        self.base_pilotable.arcadeDrive(interpoler(self.stick.getY(), properties.values.interpolation_courbure) * -1,
+                                        interpoler(self.stick.getX(), properties.values.interpolation_courbure))

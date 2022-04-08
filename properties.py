@@ -7,6 +7,8 @@ persistent = True
 class Properties:
     aide_pilotage_slow_factor = ntproperty("/Properties/aide_pilotage_slow_factor", 0.5, writeDefault=False, persistent=persistent)
 
+    interpolation_courbure = ntproperty("/Properties/interpolation_courbure", 0.6, writeDefault=False, persistent=persistent)
+
     shooter_backspin_speed = ntproperty("/Properties/shooter_backspin_speed", 1500, writeDefault=False, persistent=persistent)
     shooter_speed = ntproperty("/Properties/shooter_speed", 1500, writeDefault=False, persistent=persistent)
     shooter_speed_multiplier = ntproperty("/Properties/shooter_speed_multiplier", 0, writeDefault=False, persistent=persistent)
@@ -40,6 +42,7 @@ class Properties:
     grimpeur_primaire_accel = ntproperty("/Properties/grimpeur_primaire_accel", 0.03, writeDefault=False, persistent=persistent)
     grimpeur_primaire_hauteur_clip = ntproperty("/Properties/grimpeur_primaire_hauteur_clip", 255, writeDefault=False, persistent=persistent)
     grimpeur_primaire_hauteur_max = ntproperty("/Properties/grimpeur_primaire_hauteur_max", 275, writeDefault=False, persistent=persistent)
+    grimpeur_primaire_current_limit = ntproperty("/Properties/grimpeur_primaire_current_limit", 10, writeDefault=False, persistent=persistent)
 
     grimpeur_secondaire_vitesse_descendre = ntproperty("/Properties/grimpeur_secondaire_vitesse_descendre", -1, writeDefault=False, persistent=persistent)
     grimpeur_secondaire_vitesse_descendre_lent = ntproperty("/Properties/grimpeur_secondaire_vitesse_descendre_lent", -0.35, writeDefault=False, persistent=persistent)

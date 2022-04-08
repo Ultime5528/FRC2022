@@ -60,6 +60,7 @@ class BougerPrimaire(SafeCommandBase):
             end_speed=self.get_speed(),
             accel=properties.values.grimpeur_primaire_accel
         )
+        self.grimpeur.update_current_limit()
 
     def execute(self) -> None:
         self.motion.set_position(self.grimpeur.getPosition())
